@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppointDoc - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-heartbeat text-danger"></i> AppointDoc
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="profile.html">Profile</a>
+                <a class="nav-link" href="#" id="logoutBtn">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Upcoming Appointments</h5>
+                    </div>
+                    <div class="card-body" id="appointmentsList">
+                        <!-- Daftar appointment akan dimuat secara dinamis -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Book New Appointment</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="bookAppointmentForm">
+                            <div class="mb-3">
+                                <label for="doctorSelect" class="form-label">Select Doctor</label>
+                                <select class="form-select" id="doctorSelect" required>
+                                    <option value="">Choose a doctor</option>
+                                    <!-- Opsi dokter akan dimuat secara dinamis -->
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="appointmentDate" class="form-label">Select Date</label>
+                                <input type="date" class="form-control" id="appointmentDate" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Book Appointment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>
