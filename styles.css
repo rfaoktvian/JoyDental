@@ -9,6 +9,11 @@ body.dashboard{
     color: black;
 }
 
+body.profile{
+    background-color:#f3ecec;
+    color: black;
+}
+
 .card{
     background-color: #F2F2F2;
     color: black;
@@ -16,6 +21,11 @@ body.dashboard{
 
 .card-header{
     background-color: #FFCDD2;
+}
+
+.prof{
+    background-color: #FFCDD2;
+    color:white ;
 }
 
 
