@@ -6,17 +6,24 @@
     <title>AppointDoc - Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body class="dashboard">
     <nav class="das navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-heartbeat text-danger"></i> AppointDoc
+                <i class="fas fa-heartbeat text-danger"> AppointDoc</i>
+                <br>
+                <span class="ms-5 text-black-50 fs-6 fst-italic subtitle">by RS Siaga Sedia</span>
             </a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="profile.html">Profile</a>
-                <a class="nav-link" href="#" id="logoutBtn">Logout</a>
+            <div>
+                <a href="profile_view.php" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-person-circle"></i> Profile
+                </a>
+                <a href="logout.php" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
         </div>
     </nav>

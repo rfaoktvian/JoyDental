@@ -9,8 +9,8 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/styles.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
     <!-- Navbar -->
@@ -37,10 +37,10 @@
                         <a class="nav-link" href="#doctors">Dokter</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="pages/login.html">Login</a>
+                        <a class="nav-link" href="../views/login.php">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary" href="pages/register.html">Daftar</a>
+                        <a class="btn btn-primary" href="register.php">Daftar</a>
                     </li>
                 </ul>
             </div>
@@ -49,7 +49,7 @@
 
     <!-- Hero Section -->
     <header class="bg-light py-5">
-        <div class="container">
+        <div class="container text-black">
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <h1 class="display-4 mb-4">Temukan Dokter Terbaik Dengan Mudah</h1>
@@ -58,12 +58,12 @@
                         dengan dokter profesional secara online maupun offline di RS Siaga Sedia.
                     </p>
                     <div class="d-flex gap-3">
-                        <a href="pages/register.html" class="btn btn-primary btn-lg">Mulai Sekarang</a>
+                        <a href="register.php" class="btn btn-primary btn-lg">Mulai Sekarang</a>
                         <a href="#services" class="btn btn-outline-primary btn-lg">Pelajari Lebih Lanjut</a>
                     </div>
                 </div>
                 <div class="col-md-6 text-center">
-                    <img src="img/Occupations.png" class="img-fluid" alt="Doctors Illustration">
+                    <img src="../assets/img/Occupations.png" class="img-fluid" alt="Doctors Illustration">
                 </div>
             </div>
         </div>

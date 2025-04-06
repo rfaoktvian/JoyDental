@@ -6,7 +6,7 @@
     <title>AppointDoc - Register</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
@@ -18,7 +18,7 @@
                     <div class="banner-image h-100 d-flex flex-column justify-content-between">
                         <div class="logo">
                             <h2 class="text-danger"><i class="fas fa-heartbeat text-danger"></i>AppointDoc</h2>
-                            <img src="/img/register_photo.png" alt="">
+                            <img src="../assets//img//register_photo.png" alt="">
                         </div>
                     </div>
                 </div>
@@ -26,13 +26,13 @@
                 <!-- Right Panel -->
                 <div class="col-md-7 right-panel d-flex align-items-center justify-content-center position-relative">
                     <div class="back-btn">
-                        <a href="/index.html">
+                        <a href="index.php">
                             <i class="bi bi-arrow-left-circle"></i>
                         </a>
                     </div> 
                     <div class="w-75">
                         <h2 class="fw-bold text-center mb-2">Buat Akun</h2>
-                        <p class="text-center mb-4">Sudah punya akun? <a href="login.html" class="text-primary">Log in</a></p>
+                        <p class="text-center mb-4">Sudah punya akun? <a href="../views/login.php" class="text-primary">Log in</a></p>
                         
                         <form id="registerForm">
                             <div class="mb-3">
