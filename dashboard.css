@@ -1,0 +1,571 @@
+        :root {
+            --primary: #E32929;
+            --primary-light: #f9e1e1;
+            --primary-dark: #c91c1c;
+            --secondary: #2D95C9;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --success: #28a745;
+            --surgical: #9ed8ff;
+            --pediatric: #ffadb9;
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 70px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            transition: all 0.3s;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            height: 100vh;
+            position: fixed;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            z-index: 100;
+            width: var(--sidebar-width);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+        
+        body.sidebar-collapsed .sidebar {
+            width: var(--sidebar-collapsed-width);
+        }
+        
+        .sidebar .logo {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: bold;
+            padding: 27px 18px; /* Adjusted padding */
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Tambahkan gap antara logo dan nama */
+        .sidebar .logo .logo-content {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Gap antara ikon dan nama */
+        }
+        
+        /* Toggle Button dalam Sidebar */
+        .sidebar-toggle {
+            cursor: pointer;
+            color: var(--gray);
+            background: transparent;
+            border: none;
+            padding: 0;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-toggle:hover {
+            color: var(--primary);
+        }
+        
+        .sidebar .nav-link {
+            color: var(--gray);
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Ketika sidebar collapsed */
+        body.sidebar-collapsed .sidebar .logo .logo-content {
+            display: none;
+        }
+        
+        body.sidebar-collapsed .sidebar .nav-link span {
+            display: none;
+        }
+        
+        body.sidebar-collapsed .sidebar .logo {
+            justify-content: center;
+            padding: 20px 0;
+        }
+        
+        body.sidebar-collapsed .sidebar .nav-link {
+            text-align: center;
+            padding: 12px 0;
+        }
+        
+        body.sidebar-collapsed .sidebar .nav-link i {
+            margin-right: 0;
+        }
+        
+        .imgdashboard {
+            height: 105%; /* Lebih tinggi dari banner */
+            position: absolute;
+            bottom: 0;
+            /* Agar pas dengan bagian bawah banner */
+            right:0;
+            z-index: 1;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            padding-top: 80px;
+            transition: all 0.3s ease;
+        }
+        
+        body.sidebar-collapsed .main-content {
+            margin-left: var(--sidebar-collapsed-width);
+        }
+        
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 18.3rem;
+            height: 97px;
+            background-color: white;
+            z-index: 99;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+        }
+        
+        body.sidebar-collapsed .header {
+            left: var(--sidebar-collapsed-width);
+        }
+        
+        .header .welcome {
+            font-weight: 500;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        /* Banner */
+        .banner {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 10px;
+            padding:30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+        
+        .banner .text {
+            flex: 0 0 60%;
+        }
+        
+        .banner .image {
+            flex: 0 0 30%;
+            text-align: right;
+        }
+        
+        .banner .image img {
+            max-width: 100%;
+            height: auto;
+            max-height: 150px;
+        }
+        
+        /* Cards */
+        .appointment-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .section-header a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        /* Doctor Cards */
+        .doctor-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            padding-bottom: 30px;
+            padding-top: 25px;
+        }
+        
+        .doctor-header {
+            display: flex;
+            padding: 15px;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .doctor-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        .doctor-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .doctor-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .doctor-info .specialty {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .badge-specialty {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+        
+        .badge-specialty.surgical {
+            background-color: var(--surgical);
+            color: #0062cc;
+        }
+        
+        .badge-specialty.pediatric {
+            background-color: var(--pediatric);
+            color: #c91c1c;
+        }
+        
+        .doctor-schedule {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-top: 1px solid var(--gray-light);
+            align-items: center;
+        }
+        
+        .schedule-info i {
+            color: var(--gray);
+            margin-right: 5px;
+        }
+        
+        .price {
+            font-weight: 600;
+            color: var(--gray);
+        }
+        
+        .price .amount {
+            color: var(--dark);
+        }
+        
+        .btn-book {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-book:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        /* Calendar */
+        .calendar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .calendar-nav button {
+            background-color: var(--gray-light);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+        
+        .calendar-day {
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        
+        .calendar-date {
+            padding: 10px 0;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .calendar-date.today {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+        }
+        
+        .calendar-date.has-appointment::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+        
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            padding-left: 40px;
+            border: 1px solid var(--gray-light);
+            border-radius: 25px;
+            outline: none;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+
+                /* Button *//* Styling untuk Modal Keluar */
+        .modal-confirm .icon-box {
+            text-align: center;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+
+        .modal-confirm .icon-box i {
+            font-size: 4.5rem;
+            color: #ff9800;
+        }
+
+        .modal-confirm .modal-title {
+            text-align: center;
+            font-size: 26px;
+            margin: 0;
+        }
+
+        .modal-confirm p {
+            text-align: center;
+            color: #666;
+        }
+
+        .modal-confirm .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+        }
+                
+        /* Mobile Responsive */
+        @media (max-width: 991px) {
+            :root {
+                --sidebar-width: 70px;
+            }
+            
+            body {
+                padding-left: 0;
+            }
+            
+            body:not(.sidebar-expanded) .sidebar .logo .logo-content {
+                display: none;
+            }
+            
+            body:not(.sidebar-expanded) .sidebar .nav-link span {
+                display: none;
+            }
+            
+            body:not(.sidebar-expanded) .sidebar .logo {
+                text-align: center;
+                padding: 15px 0;
+                justify-content: center;
+            }
+            
+            body:not(.sidebar-expanded) .sidebar .nav-link {
+                text-align: center;
+                padding: 12px 0;
+            }
+            
+            body:not(.sidebar-expanded) .sidebar .nav-link i {
+                margin-right: 0;
+            }
+            
+            /* Expanded sidebar on mobile */
+            body.sidebar-expanded .sidebar {
+                width: 240px;
+            }
+            
+            body.sidebar-expanded .sidebar .logo .logo-content {
+                display: flex;
+            }
+            
+            body.sidebar-expanded .sidebar .nav-link span {
+                display: inline;
+            }
+            
+            body.sidebar-expanded .sidebar .logo {
+                justify-content: space-between;
+                padding: 20px 15px;
+            }
+            
+            body.sidebar-expanded .sidebar .nav-link {
+                text-align: left;
+                padding: 12px 20px;
+            }
+            
+            body.sidebar-expanded .sidebar .nav-link i {
+                margin-right: 10px;
+            }
+            
+            body.sidebar-expanded .main-content,
+            body.sidebar-expanded .header {
+                margin-left: 240px;
+                left: 0;
+            }
+            
+            .banner {
+                flex-direction: column;
+            }
+            
+            .banner .text, .banner .image {
+                flex: 0 0 100%;
+                text-align: center;
+            }
+            
+            .banner .image {
+                margin-top: 15px;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .header {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .main-content {
+                padding-top: 120px;
+            }
+            
+            /* Full width sidebar when expanded on mobile */
+            body.sidebar-expanded .sidebar {
+                width: 100%;
+            }
+            
+            body.sidebar-expanded .main-content,
+            body.sidebar-expanded .header {
+                margin-left: 0;
+            }
+            
+            body.sidebar-expanded .sidebar-toggle {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+            }
+        }
+        
+        @media (max-width: 575px) {
+            .doctor-schedule {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .calendar-days {
+                grid-template-columns: repeat(7, 1fr);
+                font-size: 12px;
+            }
+        }
