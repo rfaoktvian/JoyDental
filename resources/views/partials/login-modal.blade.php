@@ -3,7 +3,7 @@
     <div class="modal-content">
       <div id="login-form-view">
         <div class="modal-header border-0">
-          <h5 class="modal-title fw-bold" id="loginModalLabel">Masuk</h5>
+          <h4 class="modal-title fw-bold" id="loginModalLabel">Masuk</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 

@@ -12,7 +12,7 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -21,26 +21,27 @@
 <body>
     <div id="app">
         @if(!in_array(Route::currentRouteName(), $hideNavRoutes))
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2" id="beranda">
+            <div>
+                <a class="navbar-brand d-flex align-items-center text-danger fw-bold fs-4" href="#">
+                    <i class="bi bi-heart-pulse-fill me-2"></i> AppointDoc
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <span class="ms-5 text-black-50 fs-6 fst-italic subtitle">by RS Siaga Sedia</span>
+            </div>
 
+            <div class="d-flex align-items-center gap-3">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari dokter, poliklinik...">
+                </div>
+            </div>
+            <div class="ms-auto d-flex align-items-center gap-3">
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
 
                     </ul>
 
-                    <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
                         @guest
                         <div class="ms-auto d-flex align-items-center gap-3">
                             @if (Route::has('login'))
@@ -69,7 +70,7 @@
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
-                                                                                                                                                                 document.getElementById('logout-form').submit();">
+                                        document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
 
@@ -85,10 +86,23 @@
         </nav>
         @endif
 
-        <main>
-            @yield('content')
-        </main>
+        <div class="d-flex">
+            {{-- Sidebar --}}
+            @if(!in_array(Route::currentRouteName(), $hideNavRoutes))
+            <div class="sidebar-wrapper">
+                @include('partials.sidebar')
+            </div>
+            @endif
+
+            {{-- Page content --}}
+            <div id="content-wrapper" class="flex-grow-1">
+                <main>
+                    @yield('content')
+                </main>
+            </div>
+        </div>
     </div>
+    @vite(['resources/js/app.js']) {{-- or your compiled JS --}}
 </body>
 
 </html>
