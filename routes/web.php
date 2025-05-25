@@ -26,18 +26,8 @@ Route::get('login', [LoginController::class, 'showLoginForm'])
 Route::post('login', [LoginController::class, 'login']);
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-// Handle Check Email
-use Illuminate\Http\Request;
-use App\Models\User;
-
-Route::get('/check-email', function (Request $req) {
-  $email = $req->query('email');
-  if (!$email) {
-    return response()->json(['error' => 'email missing'], 400);
-  }
-  return User::where('email', $email)->exists()
-    ? response()->noContent()
-    : response()->json(['message' => 'not found'], 404);
-})->name('check.email');
+$hideNav = [
+  'register',
+  'login',
+];
+View::share('hideNavRoutes', $hideNav);
