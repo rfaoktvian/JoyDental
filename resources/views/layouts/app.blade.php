@@ -13,13 +13,6 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <style>
-        /* ----- Navbar sticky ----- */
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
         /* ----- Sidebar base ----- */
         #sidebar {
             position: fixed;
@@ -33,9 +26,7 @@
             /* no scroll inside sidebar */
             transition: width 0.2s ease-in-out;
             z-index: 900;
-        }
 
-        #sidebar {
             top: 56px;
             height: calc(100vh - 56px);
         }
@@ -131,6 +122,19 @@
         body.sidebar-collapsed .toggle-btn .sidebar-text {
             opacity: 0;
             transform: translateX(-10px);
+        }
+
+        .modal-backdrop {
+            z-index: 1100 !important;
+        }
+
+        .modal,
+        .modal-dialog {
+            z-index: 1101 !important;
+        }
+
+        #sidebar {
+            z-index: 1000;
         }
     </style>
 </head>

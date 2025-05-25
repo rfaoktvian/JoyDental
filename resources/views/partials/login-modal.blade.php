@@ -1,4 +1,4 @@
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginModal" tabindex="5" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div id="login-form-view">
@@ -12,19 +12,13 @@
             @csrf
             <div class="mb-3">
               <label for="nik" class="form-label small">NIK</label>
-              <input type="text"
-                name="nik"
-                id="nik"
-                class="form-control @error('nik') is-invalid @enderror"
-                value="{{ old('nik') }}"
-                required autocomplete="nik" autofocus>
+              <input type="text" name="nik" id="nik" class="form-control @error('nik') is-invalid @enderror"
+                value="{{ old('nik') }}" required autocomplete="nik" autofocus>
 
               <label for="password" class="form-label small">Password</label>
-              <input type="password"
-                id="password"
-                name="password"
-                class="form-control @error('password') is-invalid @enderror"
-                required autocomplete="current-password" disabled>
+              <input type="password" id="password" name="password"
+                class="form-control @error('password') is-invalid @enderror" required autocomplete="current-password"
+                disabled>
             </div>
 
             <div id="form-error" class="text-danger small mb-3 d-none"></div>
