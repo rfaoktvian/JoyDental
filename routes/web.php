@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +19,71 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'dashboard');
 Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index']);
 
+Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])
+  ->name('dashboard');
+
+Route::get('/janji-temu', fn() => view('janji-temu'))
+  ->name('janji-temu');
+
+Route::get('/dokter', fn() => view('dokter'))
+  ->name('dokter');
+
+Route::get('/poliklinik', fn() => view('poliklinik'))
+  ->name('poliklinik');
+
+Route::get('/tiket-antrian', fn() => view('tiket-antrian'))
+  ->name('tiket-antrian');
+
+Route::get('/profil', fn() => view('profil'))
+  ->name('profil');
+
+$sidebarMenu = [
+  [
+    'label' => 'Dashboard',
+    'icon' => 'fas fa-home',
+    'route' => 'dashboard',
+    'pattern' => 'dashboard*',
+  ],
+  [
+    'label' => 'Janji Temu',
+    'icon' => 'fas fa-calendar-alt',
+    'route' => 'janji-temu',
+    'pattern' => 'janji-temu*',
+  ],
+  [
+    'label' => 'Dokter',
+    'icon' => 'fas fa-user-md',
+    'route' => 'dokter',
+    'pattern' => 'dokter*',
+  ],
+  [
+    'label' => 'Poliklinik',
+    'icon' => 'fas fa-hospital',
+    'route' => 'poliklinik',
+    'pattern' => 'poliklinik*',
+  ],
+  [
+    'label' => 'Tiket Antrian',
+    'icon' => 'fas fa-notes-medical',
+    'route' => 'tiket-antrian',
+    'pattern' => 'tiket-antrian*',
+  ],
+  [
+    'label' => 'Profil',
+    'icon' => 'fas fa-user',
+    'route' => 'profil',
+    'pattern' => 'profil*',
+  ],
+];
+View::share('sidebarMenu', $sidebarMenu);
+
+
+$hideNav = [
+  'register',
+  'login',
+];
+View::share('hideNavRoutes', $hideNav);
+
 // Handle authentication
 use App\Http\Controllers\Auth\LoginController;
 
@@ -26,17 +93,10 @@ Route::get('login', [LoginController::class, 'showLoginForm'])
 Route::post('login', [LoginController::class, 'login']);
 Auth::routes();
 
-$hideNav = [
-  'register',
-  'login',
-];
-View::share('hideNavRoutes', $hideNav);
-
-use Illuminate\Http\Request;
-use App\Models\User;
 
 Route::get('/check-nik', function (Request $req) {
   return User::where('nik', $req->query('nik'))->exists()
     ? response()->noContent()
     : response()->json([], 404);
 })->name('check.nik');
+
