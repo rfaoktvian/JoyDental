@@ -31,3 +31,12 @@ $hideNav = [
   'login',
 ];
 View::share('hideNavRoutes', $hideNav);
+
+use Illuminate\Http\Request;
+use App\Models\User;
+
+Route::get('/check-nik', function (Request $req) {
+  return User::where('nik', $req->query('nik'))->exists()
+    ? response()->noContent()
+    : response()->json([], 404);
+})->name('check.nik');
