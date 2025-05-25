@@ -32,12 +32,6 @@
             <button type="submit" id="login-submit" class="btn btn-danger w-100 py-2" disabled>
               Masuk
             </button>
-
-            @if (Route::has('password.request'))
-            <a class="btn btn-link text-danger" href="{{ route('password.request') }}">
-              {{ __('Forgot Your Password?') }}
-            </a>
-            @endif
           </form>
         </div>
       </div>
