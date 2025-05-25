@@ -29,7 +29,7 @@
 
             <div id="form-error" class="text-danger small mb-3 d-none"></div>
 
-            <button type="submit" id="login-submit" class="btn btn-danger w-100 py-2">
+            <button type="submit" id="login-submit" class="btn btn-danger w-100 py-2" disabled>
               Masuk
             </button>
 
