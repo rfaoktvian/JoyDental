@@ -306,7 +306,8 @@
 
     <!-- JavaScript untuk toggle sidebar -->
     <script>
-      document.addEventListener('DOMContentLoaded', function () {=
+      document.addEventListener('DOMContentLoaded', function () {
+      const sidebarToggle = document.getElementById('sidebarToggle');
       const body = document.body;
 
       // Event listener untuk menu keluar
@@ -318,7 +319,11 @@
         logoutModal.show();
         });
       }
-  =
+
+      // Fungsi toggle yang diperbarui
+      sidebarToggle.addEventListener('click', function () {
+        body.classList.toggle('sidebar-collapsed');
+      });
       });
       function removeUnwantedIframes() {
       // Mencari semua iframe dengan URL yang berisi "remove.video"

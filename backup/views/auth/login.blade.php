@@ -1,73 +1,134 @@
-@extends('layouts.app')
+@extends('layouts.auth')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+@section('sub_content')
+<h2 class="fw-bold text-center mb-2">Selamat Datang Kembali</h2>
+<p class="text-muted text-center mb-4">
+  Belum punya akun?
+  <a href="{{ route('register') }}" class="text-danger">Daftar</a>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+<form id="loginForm" method="POST"">
+  @csrf
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+  <div class=" mb-2">
+  <label for="nik" class="form-label">NIK</label>
+  <input type="text"
+    name="nik"
+    id="nik"
+    class="form-control @error('nik') is-invalid @enderror"
+    value="{{ old('nik') }}"
+    required autocomplete="nik" autofocus>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Password</label>
+    <input type="password"
+      id="password"
+      name="password"
+      class="form-control @error('password') is-invalid @enderror"
+      required autocomplete="current-password" disabled>
+  </div>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+  <div id="form-error" class="text-danger small mb-3 d-none"></div>
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+  <button type="submit" id="login-submit" class="btn btn-danger w-100" disabled>
+    Masuk
+  </button>
+</form>
+</p>
 @endsection
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const nikInput = document.getElementById('nik');
+    const pwdInput = document.getElementById('password');
+    const submitBtn = document.getElementById('login-submit');
+    const formError = document.getElementById('form-error');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const checkNikUrl = "{{ route('check.nik') }}";
+
+    let nikIsValid = false;
+
+    async function recheckNik() {
+      const val = nikInput.value.trim();
+
+      formError.classList.add('d-none');
+      formError.textContent = '';
+      pwdInput.value = '';
+      pwdInput.disabled = true;
+      submitBtn.disabled = true;
+      nikIsValid = false;
+
+      if (val.length === 0) {
+        return;
+      }
+      if (val.length != 16) {
+        formError.textContent = 'NIK harus 16 digit.';
+        formError.classList.remove('d-none');
+        return;
+      }
+      try {
+        const res = await fetch(`${checkNikUrl}?nik=${encodeURIComponent(val)}`, {
+          headers: {
+            'X-CSRF-TOKEN': csrfToken
+          }
+        });
+        if (res.ok) {
+          nikIsValid = true;
+          pwdInput.disabled = false;
+          pwdInput.focus();
+        } else {
+          formError.textContent = 'NIK tidak terdaftar.';
+          formError.classList.remove('d-none');
+        }
+      } catch {
+        formError.textContent = 'Gagal memeriksa NIK.';
+        formError.classList.remove('d-none');
+      }
+    }
+
+    nikInput.addEventListener('input', recheckNik);
+
+    nikInput.addEventListener('input', () => {
+      if (pwdInput.value.length > 0) {
+        pwdInput.value = '';
+      }
+    });
+
+    pwdInput.addEventListener('input', () => {
+      submitBtn.disabled = !(nikIsValid && pwdInput.value.length > 0);
+    });
+
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      formError.classList.add('d-none');
+      formError.textContent = '';
+
+      const orig = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Memuat…';
+
+      try {
+        const res = await fetch("{{ route('login') }}", {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
+          },
+          body: new FormData(e.target)
+        });
+        if (res.ok) {
+          window.location.href = "{{ session()->pull('url.intended', url('/')) }}";
+          return;
+        }
+        formError.textContent = res.status === 422 ?
+          'NIK atau kata sandi salah.' :
+          'Terjadi kesalahan.';
+      } catch {
+        formError.textContent = 'Gagal terhubung ke server.';
+      } finally {
+        formError.classList.remove('d-none');
+        submitBtn.disabled = false;
+        submitBtn.textContent = orig;
+      }
+    });
+  });
+</script>

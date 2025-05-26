@@ -13,6 +13,13 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <style>
+        .main-content-adjusted {
+            position: relative;
+            top: 56px;
+            height: calc(100vh - 56px);
+            overflow-y: auto;
+        }
+
         /* ----- Sidebar base ----- */
         #sidebar {
             position: fixed;
@@ -96,6 +103,11 @@
             transition: margin-left 0.2s ease-in-out;
         }
 
+        .wrapper-content {
+            top: 56px;
+            height: calc(100vh - 56px);
+        }
+
         .toggle-btn {
             background: none;
             border: none;
@@ -123,7 +135,9 @@
         }
 
         nav.navbar {
-            position: sticky;
+
+            position: fixed;
+            width: 100vw;
             top: 0;
             z-index: 1000;
             /* sit above sidebar/content */
@@ -133,7 +147,7 @@
 
 <body>
     <div id="app">
-        {{-- NAVBAR --}}
+        {{-- NAVBAR & SIDEBAR --}}
         @if(!in_array(Route::currentRouteName(), $hideNavRoutes))
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
                 <a class="navbar-brand text-danger ms-3" href="#">
@@ -171,10 +185,7 @@
                     @endguest
                 </div>
             </nav>
-        @endif
 
-        {{-- SIDEBAR --}}
-        @if(!in_array(Route::currentRouteName(), $hideNavRoutes))
             <nav id="sidebar">
                 <div class="sidebar-header">
                     <button id="sidebarToggle"><i class="fas fa-bars"></i></button>
@@ -191,14 +202,22 @@
                     @endforeach
                 </ul>
             </nav>
-        @endif
-
-        {{-- MAIN CONTENT --}}
-        <div id="content-wrapper">
+            <div id="content-wrapper">
+                <div class="container-fluid main-content-adjusted">
+                    <div class="container-fluid col-12 col-lg-15 px-4 py-3">
+                        <main>
+                            @yield('content')
+                        </main>
+                    </div>
+                </div>
+            </div>
+        @else
             <main>
                 @yield('content')
             </main>
-        </div>
+        @endif
+
+        {{-- MAIN CONTENT --}}
     </div>
 
     <script>

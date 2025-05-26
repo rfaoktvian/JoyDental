@@ -790,7 +790,11 @@
       logoutModal.show();
       });
     }
-    =
+
+    // Fungsi toggle yang diperbarui
+    sidebarToggle.addEventListener('click', function () {
+      body.classList.toggle('sidebar-collapsed');
+    });
     });
 
     function removeUnwantedIframes() {
@@ -859,16 +863,16 @@
 
     // Ganti konten body dengan preview tiket
     document.body.innerHTML = `
-      <div class="print-only" style="padding: 20px;">
-      ${printContents}
-      </div>
-      <style>
-      @media print {
-        body { margin: 0; padding: 20px; }
-        .print-only { max-width: 800px; margin: 0 auto; }
-      }
-      </style>
-      `;
+          <div class="print-only" style="padding: 20px;">
+            ${printContents}
+          </div>
+          <style>
+            @media print {
+              body { margin: 0; padding: 20px; }
+              .print-only { max-width: 800px; margin: 0 auto; }
+            }
+          </style>
+        `;
 
     // Panggil dialog print browser
     window.print();
@@ -883,7 +887,11 @@
       var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl);
       });
-    =
+
+      // Reinit sidebar toggle
+      document.getElementById('sidebarToggle').addEventListener('click', function () {
+      document.body.classList.toggle('sidebar-collapsed');
+      });
 
       // Reinit print buttons
       document.querySelectorAll('.btn-print').forEach(button => {

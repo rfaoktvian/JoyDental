@@ -302,6 +302,7 @@
   <!-- JavaScript untuk toggle sidebar -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+    const sidebarToggle = document.getElementById('sidebarToggle');
     const body = document.body;
 
     // Event listener untuk menu keluar
@@ -314,6 +315,10 @@
       });
     }
 
+    // Fungsi toggle yang diperbarui
+    sidebarToggle.addEventListener('click', function () {
+      body.classList.toggle('sidebar-collapsed');
+    });
     });
 
     function removeUnwantedIframes() {

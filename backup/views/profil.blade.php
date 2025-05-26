@@ -528,7 +528,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <!-- JavaScript untuk toggle sidebar -->
   <script>
-    document.addEventListener('DOMContentLoaded', function () {=
+    document.addEventListener('DOMContentLoaded', function () {
+    const sidebarToggle = document.getElementById('sidebarToggle');
     const body = document.body;
 
     // Event listener untuk menu keluar
@@ -540,7 +541,11 @@
       logoutModal.show();
       });
     }
-  =
+
+    // Fungsi toggle yang diperbarui
+    sidebarToggle.addEventListener('click', function () {
+      body.classList.toggle('sidebar-collapsed');
+    });
 
     // Fungsi untuk modal Edit
     const editModal = document.getElementById('editModal');
