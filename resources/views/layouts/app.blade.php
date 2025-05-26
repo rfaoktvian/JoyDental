@@ -48,12 +48,16 @@
             transform: translateX(-10px);
         }
 
+        .sidebar-group {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
         /* ----- Sidebar header (toggle) ----- */
         .sidebar-header {
             display: flex;
             align-items: center;
             padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
             flex-shrink: 0;
         }
 
@@ -148,7 +152,7 @@
 <body>
     <div id="app">
         {{-- NAVBAR & SIDEBAR --}}
-        @if(!in_array(Route::currentRouteName(), $hideNavRoutes))
+        @if (!in_array(Route::currentRouteName(), $hideNavRoutes))
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
                 <a class="navbar-brand text-danger ms-3" href="#">
                     <i class="bi bi-heart-pulse-fill me-1"></i> AppointDoc
@@ -162,22 +166,24 @@
                     </div>
                     @guest
                         @includeWhen(Route::has('login'), 'partials.login-modal')
-                        @if(Route::has('login'))
+                        @if (Route::has('login'))
                             <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk</a>
                         @endif
-                        @if(Route::has('register'))
-                            <a class="btn btn-danger text-white" href="{{route('register')}}">Daftar</a>
+                        @if (Route::has('register'))
+                            <a class="btn btn-danger text-white" href="{{ route('register') }}">Daftar</a>
                         @endif
                     @else
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">{{Auth::user()->name}}</a>
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                                href="#">{{ Auth::user()->name }}</a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a class="dropdown-item" href="{{route('logout')}}"
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
                                         onclick="event.preventDefault();document.getElementById('logout-form').submit()">
                                         Logout
                                     </a>
-                                    <form id="logout-form" action="{{route('logout')}}" method="POST" class="d-none">@csrf
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
                                     </form>
                                 </li>
                             </ul>
@@ -190,8 +196,30 @@
                 <div class="sidebar-header">
                     <button id="sidebarToggle"><i class="fas fa-bars"></i></button>
                 </div>
-                <ul class="nav flex-column">
-                    @foreach($sidebarMenu as $item)
+                <ul class="nav flex-column sidebar-group">
+                    @foreach ($sidebarMenu as $item)
+                        <li class="nav-item">
+                            <a href="{{ route($item['route']) }}"
+                                class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                <i class="{{ $item['icon'] }}"></i>
+                                <span class="sidebar-text">{{ $item['label'] }}</span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+                <ul class="nav flex-column sidebar-group">
+                    @foreach ($siderbarAdminMenu as $item)
+                        <li class="nav-item">
+                            <a href="{{ route($item['route']) }}"
+                                class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                <i class="{{ $item['icon'] }}"></i>
+                                <span class="sidebar-text">{{ $item['label'] }}</span>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+                <ul class="nav flex-column sidebar-group">
+                    @foreach ($sidebarDokterMenu as $item)
                         <li class="nav-item">
                             <a href="{{ route($item['route']) }}"
                                 class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
@@ -202,6 +230,7 @@
                     @endforeach
                 </ul>
             </nav>
+
             <div id="content-wrapper">
                 <div class="container-fluid main-content-adjusted">
                     <div class="container-fluid col-12 col-lg-15 px-4 py-3" style="background-color: #F5F5F5;">
