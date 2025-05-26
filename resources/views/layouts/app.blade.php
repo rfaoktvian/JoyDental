@@ -204,7 +204,7 @@
             </nav>
             <div id="content-wrapper">
                 <div class="container-fluid main-content-adjusted">
-                    <div class="container-fluid col-12 col-lg-15 px-4 py-3">
+                    <div class="container-fluid col-12 col-lg-15 px-4 py-3" style="background-color: #F5F5F5;">
                         <main>
                             @yield('content')
                         </main>
@@ -216,8 +216,6 @@
                 @yield('content')
             </main>
         @endif
-
-        {{-- MAIN CONTENT --}}
     </div>
 
     <script>

@@ -68,12 +68,6 @@ $sidebarMenu = [
     'route' => 'tiket-antrian',
     'pattern' => 'tiket-antrian*',
   ],
-  [
-    'label' => 'Profil',
-    'icon' => 'fas fa-user',
-    'route' => 'profil',
-    'pattern' => 'profil*',
-  ],
 ];
 View::share('sidebarMenu', $sidebarMenu);
 
