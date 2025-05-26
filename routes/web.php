@@ -34,8 +34,8 @@ Route::get('/poliklinik', fn() => view('poliklinik'))
 Route::get('/tiket-antrian', fn() => view('tiket-antrian'))
   ->name('tiket-antrian');
 
-Route::get('/profil', fn() => view('profil'))
-  ->name('profil');
+Route::get('/bantuan', fn() => view('bantuan'))
+  ->name('bantuan');
 
 $sidebarMenu = [
   [
@@ -67,6 +67,12 @@ $sidebarMenu = [
     'icon' => 'fas fa-notes-medical',
     'route' => 'tiket-antrian',
     'pattern' => 'tiket-antrian*',
+  ],
+  [
+    'label' => 'Bantuan',
+    'icon' => 'fas fa-question-circle',
+    'route' => 'bantuan',
+    'pattern' => 'bantuan*',
   ],
 ];
 View::share('sidebarMenu', $sidebarMenu);
