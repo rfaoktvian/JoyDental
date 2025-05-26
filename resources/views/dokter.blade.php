@@ -117,8 +117,7 @@
             @foreach ($doctors as $doctor)
                 <div class="col-md-4 col-sm-6">
                     <div class="card shadow-sm border-0 h-100">
-                        <img src="{{ asset('images/doctors_dashboard.png') }}" class="card-img-top"
-                            alt="{{ $doctor['name'] }}">
+                        <img src="{{ asset('images/doctors_dashboard.png') }}" class="card-img-top" alt="{{ $doctor['name'] }}">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title mb-1 fw-bold">{{ $doctor['name'] }}</h5>
                             <small class="text-muted">{{ $doctor['specialty'] }}</small>
