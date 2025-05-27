@@ -120,7 +120,8 @@
                             @php
                                 $badge = $poliklinikTypes[$data['type']];
                             @endphp
-                            <div class="polyclinic-item d-flex align-items-center p-2 border-bottom">
+                            <div
+                                class="polyclinic-item d-flex align-items-center p-2 {{ $loop->last ? '' : 'border-bottom' }}">
                                 <div class="flex-shrink-0">
                                     <div class="icon-box">
                                         <i class="fas fa-baby"></i>
