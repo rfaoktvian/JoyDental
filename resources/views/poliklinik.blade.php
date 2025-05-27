@@ -11,122 +11,7 @@
 
     <section class="container py-2 px-0">
         <div class="row g-3">
-            @php
-                $polikliniks = [
-                    [
-                        'name' => 'Klinik Anak',
-                        'type' => 1,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Rabu',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 5,
-                        'max_capacity' => 30,
-                    ],
-                    [
-                        'name' => 'Klinik Bedah Mulut',
-                        'type' => 2,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Jumat',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 1,
-                        'max_capacity' => 15,
-                    ],
-                    [
-                        'name' => 'Klinik Anak',
-                        'type' => 1,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Rabu',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 5,
-                        'max_capacity' => 30,
-                    ],
-                    [
-                        'name' => 'Klinik Bedah Mulut',
-                        'type' => 2,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Jumat',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 1,
-                        'max_capacity' => 15,
-                    ],
-                    [
-                        'name' => 'Klinik Anak',
-                        'type' => 1,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Rabu',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 5,
-                        'max_capacity' => 30,
-                    ],
-                    [
-                        'name' => 'Klinik Bedah Mulut',
-                        'type' => 2,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Jumat',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 1,
-                        'max_capacity' => 15,
-                    ],
-                    [
-                        'name' => 'Klinik Anak',
-                        'type' => 1,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Rabu',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 5,
-                        'max_capacity' => 30,
-                    ],
-                    [
-                        'name' => 'Klinik Bedah Mulut',
-                        'type' => 2,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Jumat',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 1,
-                        'max_capacity' => 15,
-                    ],
-                    [
-                        'name' => 'Klinik Anak',
-                        'type' => 1,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Rabu',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 5,
-                        'max_capacity' => 30,
-                    ],
-                    [
-                        'name' => 'Klinik Bedah Mulut',
-                        'type' => 2,
-                        'room' => 'Gedung Cokro Aminoto Lt.3',
-                        'date_from' => 'Senin',
-                        'date_to' => 'Jumat',
-                        'time_from' => '13:00',
-                        'time_to' => '17:00',
-                        'capacity' => 1,
-                        'max_capacity' => 15,
-                    ],
-                ];
-            @endphp
-
-            @foreach ($polikliniks as $poliklinik)
+            @foreach ($polyclinics as $poliklinik)
                 <div class="col-md-3 col-sm-6">
                     <div class="custom_card h-100">
                         <div class="card-body d-flex flex-column">
@@ -134,21 +19,18 @@
                                 <img src="{{ asset('images/hospital.svg') }}" alt="Ikon Hospital" width="45"
                                     height="45" class="rounded-circle me-3 bg-danger">
                                 <div>
-                                    <h6 class="mb-0">{{ $poliklinik['name'] }}</h6>
-                                    <small>{{ $poliklinik['room'] }}</small><br>
+                                    <h6 class="mb-0">{{ $poliklinik->name }}</h6>
+                                    <small>{{ $poliklinik->location }}</small><br>
                                     @php
-                                        $badge = $poliklinikTypes[$poliklinik['type']];
+                                        $badge = $poliklinikTypes[$poliklinik->type];
                                     @endphp
                                     <span class="badge {{ $badge['class'] }} mt-1">{{ $badge['label'] }}</span>
                                 </div>
                             </div>
 
-                            <p class="mt-2 mb-0">{{ $poliklinik['date_from'] }} - {{ $poliklinik['date_to'] }} |
-                                {{ $poliklinik['time_from'] }} - {{ $poliklinik['time_to'] }}
-                            </p>
-                            <p>Kapasitas {{ $poliklinik['capacity'] }} / {{ $poliklinik['max_capacity'] }}
-                            </p>
-                            <a href="janji_temu.html" class="btn btn-danger btn-sm">Buat Janji Temu</a>
+                            <p class="mt-2 mb-0">Senin - Jumat | 08:00 - 16:00</p>
+                            <p>Kapasitas {{ $poliklinik->capacity }} pasien</p>
+                            <a href="#" class="btn btn-danger btn-sm">Buat Janji Temu</a>
                         </div>
                     </div>
                 </div>

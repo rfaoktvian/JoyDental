@@ -110,61 +110,6 @@
                     @include('partials.calendar')
                 </div>
 
-                @php
-                    $test = [
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 1,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Anak',
-                            'type' => 2,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 3,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 4,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 5,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 6,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 7,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 8,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 9,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                        [
-                            'name' => 'Klinik Bedah Mulut',
-                            'type' => 10,
-                            'room' => 'Gedung Cokro Aminoto Lt.3',
-                        ],
-                    ];
-                @endphp
-
                 <div class="custom_card p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h2 class="mb-0">Daftar Poliklinik</h2>
@@ -183,7 +128,7 @@
                                 </div>
                                 <div class="flex-grow-1 ms-3">
                                     <h4 class="mb-0 fs-6">{{ $data['name'] }}</h4>
-                                    <div class="small text-muted">{{ $data['room'] }}</div>
+                                    <div class="small text-muted">{{ $data['location'] }}</div>
                                 </div>
                                 <div>
                                     <span class="badge {{ $badge['class'] }} mt-1">{{ $badge['label'] }}</span>

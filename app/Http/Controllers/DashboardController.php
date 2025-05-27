@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Polyclinic;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        $test = Polyclinic::inRandomOrder()->take(3)->get();
+        return view('dashboard', compact('test'));
     }
 }

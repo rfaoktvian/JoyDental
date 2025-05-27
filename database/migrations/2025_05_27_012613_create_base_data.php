@@ -14,9 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('location')->nullable();
-            $table->unsignedTinyInteger('category')->default(1);
-            $table->time('open_time');
-            $table->time('close_time');
+            $table->unsignedTinyInteger('type')->default(1);
             $table->integer('capacity')->default(0);
             $table->timestamps();
         });
@@ -26,11 +24,20 @@ return new class extends Migration {
             $table->string('nik')->unique();
             $table->string('name');
             $table->string('specialization');
-            $table->string('practice_location')->nullable();
             $table->string('photo')->nullable();
+            $table->foreignId('polyclinic_id')->constrained()->onDelete('cascade');
             $table->timestamps();
 
             $table->foreign('nik')->references('nik')->on('users')->onDelete('cascade');
+        });
+        Schema::create('doctor_schedules', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->string('day'); // 'Senin', 'Selasa', etc.
+            $table->time('time_from');
+            $table->time('time_to');
+            $table->integer('max_capacity')->default(10);
+            $table->timestamps();
         });
 
         Schema::create('appointment_ticket', function (Blueprint $table) {
@@ -39,10 +46,8 @@ return new class extends Migration {
             $table->string('booking_code')->unique();
 
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('doctor_id');
-            $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');
-
-            $table->foreignId('polyclinic_id')->constrained('polyclinics')->onDelete('cascade');
+            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->foreignId('doctor_schedule_id')->constrained()->onDelete('cascade');
 
             $table->enum('status', [1, 2, 3])->default(1);
             $table->date('appointment_date');

@@ -16,17 +16,48 @@ class BaseDataSeed extends Seeder
     public function run(): void
     {
 
-        DB::table('users')->insert([
-            [
-                'name' => 'Nandog',
-                'nik' => '1234123412341234',
-                'email' => 'nandog@example.com',
-                'password' => Hash::make('password'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
+        $now = Carbon::now();
+
+
+        $polyclinics = [
+            ['name' => 'Klinik Umum', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 1, 'capacity' => 30],
+            ['name' => 'Klinik Anak', 'location' => 'Gedung Cokro Aminoto Lt.3', 'type' => 2, 'capacity' => 30],
+            ['name' => 'Klinik Gigi', 'location' => 'Gedung Cokro Aminoto Lt.4', 'type' => 3, 'capacity' => 30],
+            ['name' => 'Klinik Bedah', 'location' => 'Gedung Cokro Aminoto Lt.5', 'type' => 4, 'capacity' => 30],
+            ['name' => 'Klinik Jantung', 'location' => 'Gedung Cokro Aminoto Lt.1', 'type' => 5, 'capacity' => 30],
+            ['name' => 'Klinik THT', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 6, 'capacity' => 30],
+            ['name' => 'Klinik Mata', 'location' => 'Gedung Cokro Aminoto Lt.3', 'type' => 7, 'capacity' => 30],
+            ['name' => 'Klinik Saraf', 'location' => 'Gedung Cokro Aminoto Lt.4', 'type' => 8, 'capacity' => 30],
+            ['name' => 'Klinik Kulit & Kelamin', 'location' => 'Gedung Cokro Aminoto Lt.5', 'type' => 9, 'capacity' => 30],
+            ['name' => 'Klinik Penyakit Dalam', 'location' => 'Gedung Cokro Aminoto Lt.1', 'type' => 10, 'capacity' => 30],
+            ['name' => 'Klinik Gizi', 'location' => 'Gedung Cokro Aminoto Lt.3', 'type' => 11, 'capacity' => 30],
+            ['name' => 'Klinik Rehabilitasi', 'location' => 'Gedung Cokro Aminoto Lt.4', 'type' => 12, 'capacity' => 30],
+            ['name' => 'Klinik Psikologi', 'location' => 'Gedung Cokro Aminoto Lt.5', 'type' => 13, 'capacity' => 30],
+            ['name' => 'Klinik Gizi Klinik', 'location' => 'Gedung Cokro Aminoto Lt.1', 'type' => 14, 'capacity' => 30],
+            ['name' => 'Klinik Urologi', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 15, 'capacity' => 30],
+            ['name' => 'Klinik Imunologi', 'location' => 'Gedung Cokro Aminoto Lt.5', 'type' => 16, 'capacity' => 30],
+            ['name' => 'Klinik Infeksi', 'location' => 'Gedung Cokro Aminoto Lt.5', 'type' => 17, 'capacity' => 30],
+            ['name' => 'Klinik Alergi', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 18, 'capacity' => 30],
+            ['name' => 'Klinik Tumbuh Kembang', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 19, 'capacity' => 30],
+            ['name' => 'Klinik Gawat Darurat', 'location' => 'Gedung Cokro Aminoto Lt.1', 'type' => 20, 'capacity' => 30],
+            ['name' => 'Klinik Radiologi', 'location' => 'Gedung Cokro Aminoto Lt.3', 'type' => 21, 'capacity' => 30],
+            ['name' => 'Klinik Anestesi', 'location' => 'Gedung Cokro Aminoto Lt.4', 'type' => 22, 'capacity' => 30],
+            ['name' => 'Klinik Laboratorium', 'location' => 'Gedung Cokro Aminoto Lt.5', 'type' => 23, 'capacity' => 30],
+            ['name' => 'Klinik Nefrologi', 'location' => 'Gedung Cokro Aminoto Lt.1', 'type' => 24, 'capacity' => 30],
+            ['name' => 'Klinik Hematologi', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 25, 'capacity' => 30],
+            ['name' => 'Klinik Psikiatri', 'location' => 'Gedung Cokro Aminoto Lt.3', 'type' => 26, 'capacity' => 30],
+            ['name' => 'Klinik Gastroenterologi', 'location' => 'Gedung Cokro Aminoto Lt.4', 'type' => 27, 'capacity' => 30],
+            ['name' => 'Klinik Bedah Saraf', 'location' => 'Gedung Cokro Aminoto Lt.5', 'type' => 28, 'capacity' => 30],
+            ['name' => 'Klinik Reproduksi', 'location' => 'Gedung Cokro Aminoto Lt.1', 'type' => 29, 'capacity' => 30],
+            ['name' => 'Klinik Ginekologi', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 30, 'capacity' => 30],
+        ];
+        foreach ($polyclinics as &$clinic) {
+            $clinic['created_at'] = $now;
+            $clinic['updated_at'] = $now;
+        }
+
+        DB::table('polyclinics')->insert($polyclinics);
+
 
         DB::table('users')->insert([
             [
@@ -35,9 +66,9 @@ class BaseDataSeed extends Seeder
                 'email' => 'admin@example.com',
                 'role' => 'admin',
                 'password' => Hash::make('admin'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'email_verified_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
             ]
         ]);
 
@@ -48,9 +79,9 @@ class BaseDataSeed extends Seeder
                 'email' => 'amanda@example.com',
                 'role' => 'doctor',
                 'password' => Hash::make('password'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'email_verified_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'name' => 'Bima Raharja',
@@ -58,9 +89,9 @@ class BaseDataSeed extends Seeder
                 'email' => 'bima@example.com',
                 'role' => 'doctor',
                 'password' => Hash::make('password'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'email_verified_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'name' => 'Citra Ayu',
@@ -68,92 +99,59 @@ class BaseDataSeed extends Seeder
                 'email' => 'citra@example.com',
                 'role' => 'doctor',
                 'password' => Hash::make('password'),
-                'email_verified_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'email_verified_at' => $now,
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
         ]);
 
-        DB::table('polyclinics')->insert([
-            [
-                'name' => 'Klinik Anak',
-                'location' => 'Gedung Cokro Aminoto Lt.3',
-                'category' => 1,
-                'open_time' => '08:00',
-                'close_time' => '13:00',
-                'capacity' => 30,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Klinik Bedah Mulut',
-                'location' => 'Gedung Cokro Aminoto Lt.3',
-                'category' => 2,
-                'open_time' => '07:00',
-                'close_time' => '11:00',
-                'capacity' => 15,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Klinik Dokter Gigi',
-                'location' => 'Gedung Cokro Aminoto Lt.4',
-                'category' => 3,
-                'open_time' => '09:00',
-                'close_time' => '12:00',
-                'capacity' => 20,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
-
-        // Assume users already exist with matching NIKs
-        DB::table('doctors')->insert([
+        $doctors = [
             [
                 'nik' => '1234123412340001',
-                'name' => 'Dr. Amanda Wijaya',
-                'specialization' => 'Pediatric',
-                'practice_location' => 'Gedung Cokro Lt.3',
-                'photo' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'Amanda Wijaya',
+                'specialization' => 'Dokter Anak',
+                'photo' => 'amanda.png',
+                'polyclinic_id' => 2, // Klinik Anak
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'nik' => '1234123412340002',
-                'name' => 'Dr. Bima Raharja',
-                'specialization' => 'Pediatric',
-                'practice_location' => 'Gedung Cokro Lt.3',
-                'photo' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'Bima Raharja',
+                'specialization' => 'Bedah Mulut',
+                'photo' => 'bima.png',
+                'polyclinic_id' => 4, // Klinik Bedah
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'nik' => '1234123412340003',
-                'name' => 'Dr. Citra Ayu',
-                'specialization' => 'Pediatric',
-                'practice_location' => 'Gedung Cokro Lt.3',
-                'photo' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'Citra Ayu',
+                'specialization' => 'Dokter Gigi',
+                'photo' => 'citra.png',
+                'polyclinic_id' => 3, // Klinik Gigi
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
-        ]);
+        ];
 
-        // Optional: Add appointment tickets
-        DB::table('appointment_ticket')->insert([
-            [
-                'queue_number' => 'A01',
-                'booking_code' => strtoupper(Str::random(10)),
-                'user_id' => 1,
-                'doctor_id' => 1,
-                'polyclinic_id' => 1,
-                'status' => 1,
-                'appointment_date' => Carbon::now()->addDays(3)->format('Y-m-d'),
-                'appointment_time' => '09:00',
-                'payment_method' => 'Umum',
-                'consultation_fee' => 225000,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        DB::table('doctors')->insert($doctors);
+
+        // DB::table('appointment_ticket')->insert([
+        //     [
+        //         'queue_number' => 'A01',
+        //         'booking_code' => strtoupper(Str::random(10)),
+        //         'user_id' => 1,
+        //         'doctor_id' => 1,
+        //         'polyclinic_id' => 1,
+        //         'status' => 1,
+        //         'appointment_date' => Carbon::now()->addDays(3)->format('Y-m-d'),
+        //         'appointment_time' => '09:00',
+        //         'payment_method' => 'Umum',
+        //         'consultation_fee' => 225000,
+        //         'created_at' => $now,
+        //         'updated_at' => $now,
+        //     ],
+        // ]);
     }
 }
