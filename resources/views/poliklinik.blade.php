@@ -128,11 +128,11 @@
 
             @foreach ($polikliniks as $poliklinik)
                 <div class="col-md-3 col-sm-6">
-                    <div class="card shadow-sm h-100">
+                    <div class="custom_card h-100">
                         <div class="card-body d-flex flex-column">
                             <div class="d-flex align-items-center mb-2">
-                                <img src="{{ asset('images/hospital.svg') }}" alt="Ikon Hospital" width="45" height="45"
-                                    class="rounded-circle me-3 bg-danger">
+                                <img src="{{ asset('images/hospital.svg') }}" alt="Ikon Hospital" width="45"
+                                    height="45" class="rounded-circle me-3 bg-danger">
                                 <div>
                                     <h6 class="mb-0">{{ $poliklinik['name'] }}</h6>
                                     <small>{{ $poliklinik['room'] }}</small><br>

@@ -10,6 +10,8 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}">
+
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <style>
@@ -139,7 +141,6 @@
         }
 
         nav.navbar {
-
             position: fixed;
             width: 100vw;
             top: 0;
@@ -150,7 +151,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         {{-- NAVBAR & SIDEBAR --}}
         @if (!in_array(Route::currentRouteName(), $hideNavRoutes))
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
@@ -174,7 +175,8 @@
                         @endif
                     @else
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">{{ Auth::user()->name }}</a>
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
+                                href="#">{{ Auth::user()->name }}</a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
@@ -245,6 +247,7 @@
             </div>
         @else
             <main>
+
                 @yield('content')
             </main>
         @endif

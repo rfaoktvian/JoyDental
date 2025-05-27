@@ -5,15 +5,15 @@
 @endphp
 
 
-<div class="calendar p-3">
+<div class="calendar">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0" id="calendarMonthLabel"></h5>
         <div>
-            <button class="btn btn-sm rounded-circle shadow-sm" id="prevMonth"
+            <button class="btn btn-sm rounded-circle" id="prevMonth"
                 style="background: #E9ECEF; width: 32px; height: 32px;">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <button class="btn btn-sm rounded-circle shadow-sm" id="nextMonth"
+            <button class="btn btn-sm rounded-circle" id="nextMonth"
                 style="background: #E9ECEF; width: 32px; height: 32px;">
                 <i class="fas fa-chevron-right"></i>
             </button>
@@ -61,6 +61,15 @@
         height: 6px;
         background-color: red;
         border-radius: 50%;
+    }
+
+    .calendar,
+    .calendar .table,
+    .calendar .table-responsive,
+    .calendar .table tbody,
+    .calendar .table thead,
+    .calendar .table td {
+        background-color: #fff !important;
     }
 </style>
 
