@@ -197,6 +197,9 @@
                 </div>
                 <ul class="nav flex-column sidebar-group">
                     @foreach ($sidebarMenu as $item)
+                        @if (isset($item['auth']) && $item['auth'] && !Auth::check())
+                            @continue
+                        @endif
                         <li class="nav-item">
                             <a href="{{ route($item['route']) }}"
                                 class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">

@@ -198,7 +198,7 @@
                     calendarBody.appendChild(row);
                 }
                 calendarBody.style.opacity = 1;
-            }, 200);
+            });
         }
 
         prevBtn.addEventListener('click', () => {

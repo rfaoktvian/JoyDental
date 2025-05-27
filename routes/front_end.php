@@ -8,6 +8,7 @@ $sidebarMenu = [
     'pattern' => 'dashboard*',
   ],
   [
+    'auth' => true,
     'label' => 'Janji Temu',
     'icon' => 'fas fa-calendar-alt',
     'route' => 'janji-temu',

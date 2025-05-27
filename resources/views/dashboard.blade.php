@@ -112,28 +112,27 @@
 
                 <div class="custom_card p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h2 class="mb-0">Daftar Poliklinik</h2>
-                        <a href="poliklinik.html">Lihat Semua</a>
+                        <h2 class="mb-0 fs-5">Daftar Poliklinik</h2>
+                        <a href="{{ route('poliklinik') }}" class="text-danger small">Lihat Semua</a>
                     </div>
+
                     <div class="polyclinic-list">
                         @foreach ($test as $data)
                             @php
                                 $badge = $poliklinikTypes[$data['type']];
                             @endphp
+
                             <div
-                                class="polyclinic-item d-flex align-items-center p-2 {{ $loop->last ? '' : 'border-bottom' }}">
-                                <div class="flex-shrink-0">
-                                    <div class="icon-box">
-                                        <i class="fas fa-baby"></i>
-                                    </div>
+                                class="d-flex align-items-center gap-2 px-2 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                <div class="rounded d-flex justify-content-center align-items-center bg-danger text-white"
+                                    style="width: 40px; height: 40px;">
+                                    <i class="fas {{ $badge['icon'] }}"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h4 class="mb-0 fs-6">{{ $data['name'] }}</h4>
-                                    <div class="small text-muted">{{ $data['location'] }}</div>
+                                <div class="flex-grow-1">
+                                    <div class="fw-semibold">{{ $data['name'] }}</div>
+                                    <div class="text-muted small">{{ $data['location'] }}</div>
                                 </div>
-                                <div>
-                                    <span class="badge {{ $badge['class'] }} mt-1">{{ $badge['label'] }}</span>
-                                </div>
+                                <span class="badge {{ $badge['class'] }}">{{ $badge['label'] }}</span>
                             </div>
                         @endforeach
                     </div>
