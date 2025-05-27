@@ -118,8 +118,15 @@
                                             </div>
 
                                             <div class="d-flex gap-2 justify-content-md-end mt-3 mt-md-0">
-                                                <a href="{{ route('janji-temu') }}" class="btn btn-danger btn-sm">Buat
-                                                    Janji Temu</a>
+                                                @guest
+                                                    <a data-bs-toggle="modal" data-bs-target="#loginModal"
+                                                        class="btn btn-danger btn-sm">
+                                                        Buat Janji Temu
+                                                    </a>
+                                                @else
+                                                    <a href="#" class="btn btn-danger btn-sm">Buat Janji
+                                                        Temu</a>
+                                                @endguest
                                                 <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
                                                     data-bs-target="#reviewModal-{{ $data->id }}">
                                                     <i class="fas fa-comment-dots"></i>
@@ -128,6 +135,8 @@
                                                     data-bs-target="#scheduleModal-{{ $data->id }}">
                                                     <i class="fas fa-calendar-alt"></i>
                                                 </button>
+
+
                                             </div>
                                         </div>
                                     </div>

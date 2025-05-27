@@ -47,7 +47,15 @@
                                 <i class="fas fa-users me-2 text-secondary"></i>
                                 <span>Kapasitas <strong>{{ $poliklinik->capacity }}</strong> Orang </span>
                             </div>
-                            <a href="#" class="btn btn-danger btn-sm mt-auto rounded-3 shadow-sm">Buat Janji Temu</a>
+
+                            @guest
+                                <a data-bs-toggle="modal" data-bs-target="#loginModal"
+                                    class="btn btn-danger btn-sm mt-auto rounded-3 shadow-sm">
+                                    Buat Janji Temu
+                                </a>
+                            @else
+                                <a href="#" class="btn btn-danger btn-sm mt-auto rounded-3 shadow-sm">Buat Janji Temu</a>
+                            @endguest
                         </div>
                     </div>
                 </div>

@@ -103,10 +103,18 @@
                         </div>
                         <div class="w-100">
                             <div class="d-flex justify-content-center gap-2">
-                                <a href="{{ route('janji-temu') }}"
-                                    class="btn btn-danger btn-sm w-100 fw-semibold rounded">
-                                    Buat Janji Temu
-                                </a>
+
+                                @guest
+                                    <a data-bs-toggle="modal" data-bs-target="#loginModal"
+                                        class="btn btn-danger btn-sm w-100 fw-semibold rounded">
+                                        Buat Janji Temu
+                                    </a>
+                                @else
+                                    <a href="{{ route('janji-temu') }}"
+                                        class="btn btn-danger btn-sm w-100 fw-semibold rounded">
+                                        Buat Janji Temu
+                                    </a>
+                                @endguest
                                 <button
                                     class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
                                     style="width: 36px; height: 36px;" data-bs-toggle="modal"
