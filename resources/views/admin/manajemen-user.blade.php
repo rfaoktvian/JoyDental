@@ -95,28 +95,35 @@
                                                 <input type="email" class="form-control" name="email"
                                                     value="{{ $user->email }}">
                                             </div>
-                                            <div class="mb-3">
-                                                <label>Role</label>
-                                                <select class="form-select" name="role">
-                                                    <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>
-                                                        User</option>
-                                                    <option value="doctor" {{ $user->role == 'doctor' ? 'selected' : '' }}>
-                                                        Doctor</option>
-                                                    <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>
-                                                        Admin</option>
-                                                </select>
-                                            </div>
+                                            @if ($user->id !== auth()->id())
+                                                <div class="mb-3">
+                                                    <label>Role</label>
+                                                    <select class="form-select" name="role">
+                                                        <option value="user"
+                                                            {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
+                                                        <option value="doctor"
+                                                            {{ $user->role == 'doctor' ? 'selected' : '' }}>Doctor</option>
+                                                        <option value="admin"
+                                                            {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                                    </select>
+                                                </div>
+                                            @else
+                                                <input type="hidden" name="role" value="{{ $user->role }}">
+                                            @endif
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-danger">Simpan</button>
                                         </form>
-                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-outline-danger"
-                                                onclick="return confirm('Hapus akun ini?')">
-                                                Hapus Akun
-                                            </button>
-                                        </form>
+
+                                        @if ($user->id !== auth()->id())
+                                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-outline-danger"
+                                                    onclick="return confirm('Hapus akun ini?')">
+                                                    Hapus Akun
+                                                </button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
