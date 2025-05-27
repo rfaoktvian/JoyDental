@@ -69,7 +69,7 @@
     .calendar .table tbody,
     .calendar .table thead,
     .calendar .table td {
-        background-color: #fff !important;
+        background-color: #ffffff00 !important;
     }
 </style>
 

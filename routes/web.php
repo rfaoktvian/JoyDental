@@ -31,7 +31,7 @@ Route::get('/bantuan', fn() => view('bantuan'))
   ->name('bantuan');
 
 Route::prefix('admin')->middleware('admin')->group(function () {
-  Route::get('/dashboard', fn() => view('admin.dashboard'))->name('admin.dashboard');
+  Route::get('/', fn() => view('admin.dashboard'))->name('admin.dashboard');
 
   Route::get('/users', [AdminController::class, 'manageUsers'])->name('admin.users');
   Route::post('/users', [AdminController::class, 'store'])->name('admin.users.store');
@@ -40,7 +40,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 });
 
 Route::prefix('doctor')->middleware('doctor')->group(function () {
-  Route::get('/dashboard', fn() => view('doctor.dashboard'))->name('doctor.dashboard');
+  Route::get('/', fn() => view('doctor.dashboard'))->name('doctor.dashboard');
   Route::get('/jadwal', fn() => view('doctor.jadwal'))->name('doctor.jadwal');
   Route::get('/antrian', fn() => view('doctor.antrian'))->name('doctor.antrian');
 });
