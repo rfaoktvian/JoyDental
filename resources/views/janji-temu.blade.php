@@ -86,7 +86,7 @@
         <div class="row" id="ticketContainer">
             @foreach ($data_antrian as $data)
                 <div class="col-md-6 col-lg-4 ticket-wrapper" data-status="{{ $data['status'] }}">
-                    <div class="ticket-card bg-white overflow-hidden rounded shadow-sm mb-3">
+                    <div class="card bg-white overflow-hidden rounded shadow-sm mb-3 ">
                         <p class="clinic-name">{{ $data['queue'] }}</p>
                         <p class="clinic-name">{{ $data['booking_code'] }}</p>
                         <p class="clinic-name">{{ $data['poliklinik'] }}</p>

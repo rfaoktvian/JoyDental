@@ -44,8 +44,8 @@ $siderbarAdminMenu = [
   [
     'label' => 'Manajemen Akun',
     'icon' => 'fas fa-users-cog',
-    'route' => 'admin.management-account',
-    'pattern' => 'admin.management-account*',
+    'route' => 'admin.users',
+    'pattern' => 'admin.users*',
   ],
 ];
 View::share('siderbarAdminMenu', $siderbarAdminMenu);
