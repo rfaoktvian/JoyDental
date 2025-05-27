@@ -151,6 +151,7 @@
 <body>
     <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         {{-- NAVBAR & SIDEBAR --}}
+        @includeWhen(Route::has('login'), 'partials.login-modal')
         @if (!in_array(Route::currentRouteName(), $hideNavRoutes))
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
                 <a class="navbar-brand text-danger ms-3" href="#">
@@ -164,7 +165,6 @@
                         <input class="form-control" placeholder="Cari dokter, poliklinik...">
                     </div>
                     @guest
-                        @includeWhen(Route::has('login'), 'partials.login-modal')
                         @if (Route::has('login'))
                             <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk</a>
                         @endif
