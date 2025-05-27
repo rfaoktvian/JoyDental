@@ -36,28 +36,16 @@ View::share('sidebarMenu', $sidebarMenu);
 
 $siderbarAdminMenu = [
   [
-    'label' => 'Dashboard',
+    'label' => 'Dashboard Admin',
     'icon' => 'fas fa-chart-line',
-    'route' => 'dashboard',
-    'pattern' => 'dashboard*',
+    'route' => 'admin.dashboard',
+    'pattern' => 'admin.dashboard*',
   ],
   [
     'label' => 'Manajemen Akun',
     'icon' => 'fas fa-users-cog',
-    'route' => 'dashboard',
-    'pattern' => 'manage-akun*',
-  ],
-  [
-    'label' => 'Grafik Antrian',
-    'icon' => 'fas fa-chart-pie',
-    'route' => 'dashboard',
-    'pattern' => 'grafik-antrian*',
-  ],
-  [
-    'label' => 'Kelola Poliklinik',
-    'icon' => 'fas fa-clinic-medical',
-    'route' => 'dashboard',
-    'pattern' => 'manage-poliklinik*',
+    'route' => 'admin.management-account',
+    'pattern' => 'admin.management-account*',
   ],
 ];
 View::share('siderbarAdminMenu', $siderbarAdminMenu);
@@ -67,26 +55,20 @@ $sidebarDokterMenu = [
   [
     'label' => 'Dashboard',
     'icon' => 'fas fa-tachometer-alt',
-    'route' => 'dashboard',
-    'pattern' => 'dashboard*',
+    'route' => 'doctor.dashboard',
+    'pattern' => 'doctor.dashboard*',
   ],
   [
     'label' => 'Lihat Jadwal Saya',
     'icon' => 'fas fa-calendar-day',
-    'route' => 'dashboard',
-    'pattern' => 'jadwal-dokter*',
+    'route' => 'doctor.jadwal',
+    'pattern' => 'doctor.jadwal*',
   ],
   [
     'label' => 'Antrian Pasien',
     'icon' => 'fas fa-users',
-    'route' => 'dashboard',
-    'pattern' => 'antrian-pasien*',
-  ],
-  [
-    'label' => 'Riwayat Konsultasi',
-    'icon' => 'fas fa-history',
-    'route' => 'dashboard',
-    'pattern' => 'riwayat-konsultasi*',
+    'route' => 'doctor.antrian',
+    'pattern' => 'doctor.antrian*',
   ],
 ];
 View::share('sidebarDokterMenu', $sidebarDokterMenu);
