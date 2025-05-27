@@ -1,6 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
+    @php
+        use Illuminate\Support\Carbon;
+
+        $today = ucfirst(Carbon::now()->locale('id')->translatedFormat('l'));
+        $timeNow = Carbon::now();
+    @endphp
+
+    <style>
+        .custom_card {
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .custom_card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-outline-secondary i {
+            pointer-events: none;
+        }
+
+        .btn-outline-danger {
+            border-width: 1.5px;
+        }
+
+        .btn-outline-secondary {
+            border-radius: 6px;
+        }
+
+        .review-item {
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .review-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .list-group-item {
+            background-color: #fff;
+        }
+    </style>
+
     <div class="banner d-flex justify-content-center align-items-center text-center text-white mb-2 rounded py-4 px-3"
         style="background: linear-gradient(135deg, #d32f2f, #f44336);">
         <div style="z-index: 2;">
@@ -11,122 +58,89 @@
 
     <section class="container py-2 px-0">
         <div class="row g-3">
-            @php
-                $doctors = [
-                    [
-                        'name' => 'dr. Amanda Putri, Sp.A',
-                        'specialty' => 'Dokter Spesialis Anak',
-                        'description' =>
-                            'Berpengalaman lebih dari 8 tahun di klinik tumbuh kembang anak. Klinik Anak - Gedung Cokro Lt.3.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Bima Raharja, Sp.BM',
-                        'specialty' => 'Bedah Mulut Maksilofasial',
-                        'description' =>
-                            'Menangani berbagai kasus bedah mulut kompleks. Praktik di Klinik Bedah - Gedung Cokro Lt.3.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                    [
-                        'name' => 'drg. Citra Ayu',
-                        'specialty' => 'Dokter Gigi Umum',
-                        'description' =>
-                            'Melayani konsultasi dan perawatan gigi umum. Praktik di Klinik Gigi - Gedung Cokro Lt.4.',
-                        'image' => 'doctors_login.png',
-                    ],
-                ];
-            @endphp
-
             @foreach ($doctors as $doctor)
                 <div class="col-md-4 col-sm-6">
-                    <div class="card shadow-sm h-100">
-                        <img src="{{ asset('images/doctors_dashboard.png') }}" class="card-img-top" alt="{{ $doctor['name'] }}">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title mb-1 fw-bold">{{ $doctor['name'] }}</h5>
-                            <small class="text-muted">{{ $doctor['specialty'] }}</small>
-                            <p class="mt-2 mb-0">{{ $doctor['description'] }}</p>
-                            <a href="janji_temu.html" class="btn btn-outline-danger btn-sm mt-3">Buat Janji Temu</a>
+                    <div class="custom_card text-center p-3 d-flex flex-column align-items-center h-100">
+                        <div><img src="{{ asset('images/doctors_dashboard.png') }}" alt="{{ $doctor->name }}"
+                                class="rounded-circle mb-3" width="80" height="80" style="object-fit: cover;">
+
+                            <h5 class="fw-bold mb-1">Dr. {{ $doctor->name }}</h5>
+                            <p class="text-muted mb-1">{{ $doctor->specialization }}</p>
+
+                            @php
+                                $todaySchedule = $doctor->schedules->firstWhere('day', $today);
+                            @endphp
+
+                            @if ($todaySchedule && $todaySchedule->polyclinic)
+                                <p class="small text-muted mb-1">
+                                    <i class="fas fa-hospital-alt text-danger me-1"></i>
+                                    {{ $todaySchedule->polyclinic->name }}
+                                </p>
+
+                                @php
+                                    $start = Carbon::parse($todaySchedule->time_from);
+                                    $end = Carbon::parse($todaySchedule->time_to);
+                                    $isActive = $timeNow->between($start, $end);
+                                @endphp
+
+                                <p class="small {{ $isActive ? 'text-success fw-semibold' : 'text-muted' }}">
+                                    {{ $today }}, {{ $start->format('H:i') }} - {{ $end->format('H:i') }}
+                                </p>
+                            @else
+                                <p class="small text-muted mb-2">
+                                    <i class="fas fa-ban text-secondary me-1"></i>
+                                    Tidak praktik hari ini
+                                </p>
+                            @endif
                         </div>
+                        <div class="mt-auto">
+                            @if ($doctor->reviews->count())
+                                <div class="mb-2 small text-warning">
+                                    <i class="fas fa-star me-1"></i>
+                                    {{ number_format($doctor->reviews->avg('rating'), 1) }} / 5
+                                </div>
+                            @endif
+                        </div>
+                        <div class="w-100">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{{ route('janji-temu') }}"
+                                    class="btn btn-outline-danger btn-sm w-100 fw-semibold rounded">
+                                    Buat Janji Temu
+                                </a>
+                                <button
+                                    class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
+                                    style="width: 36px; height: 36px;" data-bs-toggle="modal"
+                                    data-bs-target="#reviewModal-{{ $doctor->id }}" title="Lihat Ulasan">
+                                    <i class="fas fa-comment-dots"></i>
+                                </button>
+
+                                <button
+                                    class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
+                                    style="width: 36px; height: 36px;" data-bs-toggle="modal"
+                                    data-bs-target="#scheduleModal-{{ $doctor->id }}" title="Lihat Jadwal">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </button>
+                            </div>
+
+                        </div>
+
                     </div>
                 </div>
+
+                @include('partials.review-modal', [
+                    'id' => $doctor->id,
+                    'name' => $doctor->name,
+                    'reviews' => $doctor->reviews,
+                ])
+
+                @include('partials.schedule-modal', [
+                    'id' => $doctor->id,
+                    'name' => $doctor->name,
+                    'schedules' => $doctor->schedules,
+                    'today' => $today,
+                ])
             @endforeach
+
         </div>
     </section>
 @endsection

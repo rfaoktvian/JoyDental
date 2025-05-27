@@ -7,13 +7,13 @@
 
 <div class="calendar">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0" id="calendarMonthLabel"></h5>
+        <h5 class="mb-0" id="calendarMonthLabel-{{ $calendarId }}"></h5>
         <div>
-            <button class="btn btn-sm rounded-circle" id="prevMonth"
+            <button class="btn btn-sm rounded-circle" id="prevMonth-{{ $calendarId }}"
                 style="background: #E9ECEF; width: 32px; height: 32px;">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <button class="btn btn-sm rounded-circle" id="nextMonth"
+            <button class="btn btn-sm rounded-circle" id="nextMonth-{{ $calendarId }}"
                 style="background: #E9ECEF; width: 32px; height: 32px;">
                 <i class="fas fa-chevron-right"></i>
             </button>
@@ -33,7 +33,7 @@
                     <th>Sab</th>
                 </tr>
             </thead>
-            <tbody id="calendarBody" class="transition-opacity">
+            <tbody id="calendarBody-{{ $calendarId }}" class="transition-opacity">
                 <!-- JavaScript will fill this -->
             </tbody>
         </table>
@@ -98,10 +98,11 @@
         let currentMonth = today.getMonth();
         let currentYear = today.getFullYear();
 
-        const calendarBody = document.getElementById('calendarBody');
-        const monthLabel = document.getElementById('calendarMonthLabel');
-        const prevBtn = document.getElementById('prevMonth');
-        const nextBtn = document.getElementById('nextMonth');
+        const id = '{{ $calendarId }}';
+        const monthLabel = document.getElementById(`calendarMonthLabel-${id}`);
+        const calendarBody = document.getElementById(`calendarBody-${id}`);
+        const prevBtn = document.getElementById(`prevMonth-${id}`);
+        const nextBtn = document.getElementById(`nextMonth-${id}`);
 
         const staticHolidays = {
             '1-1': 'Tahun Baru 2025 Masehi', // New Year 2025

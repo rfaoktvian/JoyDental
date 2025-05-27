@@ -18,7 +18,6 @@ class BaseDataSeed extends Seeder
 
         $now = Carbon::now();
 
-
         $polyclinics = [
             ['name' => 'Klinik Umum', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 1, 'capacity' => 30],
             ['name' => 'Klinik Anak', 'location' => 'Gedung Cokro Aminoto Lt.3', 'type' => 2, 'capacity' => 30],
@@ -108,28 +107,25 @@ class BaseDataSeed extends Seeder
         $doctors = [
             [
                 'nik' => '1234123412340001',
-                'name' => 'Amanda Wijaya',
+                'name' => 'dr. Amanda Wijaya',
                 'specialization' => 'Dokter Anak',
                 'photo' => 'amanda.png',
-                'polyclinic_id' => 2, // Klinik Anak
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
             [
                 'nik' => '1234123412340002',
-                'name' => 'Bima Raharja',
+                'name' => 'dr. Bima Raharja',
                 'specialization' => 'Bedah Mulut',
                 'photo' => 'bima.png',
-                'polyclinic_id' => 4, // Klinik Bedah
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
             [
                 'nik' => '1234123412340003',
-                'name' => 'Citra Ayu',
+                'name' => 'drg. Citra Ayu',
                 'specialization' => 'Dokter Gigi',
                 'photo' => 'citra.png',
-                'polyclinic_id' => 3, // Klinik Gigi
                 'created_at' => $now,
                 'updated_at' => $now,
             ],
@@ -137,21 +133,76 @@ class BaseDataSeed extends Seeder
 
         DB::table('doctors')->insert($doctors);
 
-        // DB::table('appointment_ticket')->insert([
-        //     [
-        //         'queue_number' => 'A01',
-        //         'booking_code' => strtoupper(Str::random(10)),
-        //         'user_id' => 1,
-        //         'doctor_id' => 1,
-        //         'polyclinic_id' => 1,
-        //         'status' => 1,
-        //         'appointment_date' => Carbon::now()->addDays(3)->format('Y-m-d'),
-        //         'appointment_time' => '09:00',
-        //         'payment_method' => 'Umum',
-        //         'consultation_fee' => 225000,
-        //         'created_at' => $now,
-        //         'updated_at' => $now,
-        //     ],
-        // ]);
+        $doctorSchedules = [
+            [
+                'doctor_id' => 1, // Amanda Wijaya
+                'day' => 'Senin',
+                'time_from' => '09:00',
+                'time_to' => '14:00',
+                'max_capacity' => 10,
+                'created_at' => $now,
+                'updated_at' => $now,
+                'polyclinic_id' => 2, // Klinik Anak
+            ],
+            [
+                'doctor_id' => 2, // Bima Raharja
+                'day' => 'Selasa',
+                'time_from' => '10:00',
+                'time_to' => '15:00',
+                'max_capacity' => 12,
+                'created_at' => $now,
+                'updated_at' => $now,
+                'polyclinic_id' => 4, // Klinik Bedah
+            ],
+            [
+                'doctor_id' => 3, // Citra Ayu
+                'day' => 'Rabu',
+                'time_from' => '08:00',
+                'time_to' => '12:00',
+                'max_capacity' => 8,
+                'created_at' => $now,
+                'updated_at' => $now,
+                'polyclinic_id' => 3, // Klinik Gigi
+            ],
+        ];
+
+        DB::table('doctor_schedules')->insert($doctorSchedules);
+
+        $reviews = [
+            [
+                'doctor_id' => 1,
+                'user_id' => 1,
+                'rating' => 5,
+                'comment' => 'Dokter sangat ramah dan informatif. Terima kasih!',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'doctor_id' => 1,
+                'user_id' => 2,
+                'rating' => 4,
+                'comment' => 'Pelayanan cepat dan jelas, tapi ruang tunggu agak penuh.',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'doctor_id' => 2,
+                'user_id' => 3,
+                'rating' => 5,
+                'comment' => 'Sangat puas dengan hasil konsultasi. Rekomendasi!',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'doctor_id' => 3,
+                'user_id' => 3,
+                'rating' => 3,
+                'comment' => 'Dokternya oke, tapi agak terburu-buru menjelaskan.',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ];
+
+        DB::table('doctor_reviews')->insert($reviews);
     }
 }

@@ -19,8 +19,9 @@ Route::get('/poliklinik', [PoliklinikController::class, 'index'])->name('polikli
 Route::get('/janji-temu', fn() => view('janji-temu'))
   ->name('janji-temu');
 
-Route::get('/dokter', fn() => view('dokter'))
-  ->name('dokter');
+
+use App\Http\Controllers\DoctorController;
+Route::get('/dokter', [DoctorController::class, 'index'])->name('dokter');
 
 
 Route::get('/tiket-antrian', fn() => view('tiket-antrian'))

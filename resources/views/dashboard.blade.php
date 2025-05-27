@@ -1,6 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .doctor-card {
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        .doctor-card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.3em 0.6em;
+        }
+    </style>
+
     <div class="banner position-relative p-4 rounded text-white d-flex align-items-center justify-content-between overflow-hidden"
         style="background: linear-gradient(135deg, #d32f2f, #f44336); height: 250px;">
         <div style="z-index: 2; max-width: 60%;">
@@ -35,70 +53,102 @@
                         </div>
                     </div>
 
+                    @php
+                        use Illuminate\Support\Carbon;
+
+                        $today = ucfirst(Carbon::now()->locale('id')->translatedFormat('l'));
+                        $timeNow = Carbon::now();
+                    @endphp
+
                     <div class="col-12">
                         <div class="custom_card p-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h2 class="mb-0">Dokter Rekomendasi</h2>
-                                <a href="dokter.html">Lihat Semua</a>
+                                <h2 class="mb-0 fs-5">Dokter Rekomendasi</h2>
+                                <a href="{{ route('dokter') }}" class="text-danger small">Lihat Semua</a>
                             </div>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="doctor-card">
-                                        <div class="doctor-header">
-                                            <div class="doctor-image">
-                                                <img src="doctors_login.png" alt="Dr. Amanda">
-                                            </div>
-                                            <div class="doctor-info">
-                                                <h3>Dr. Amanda Wijaya</h3>
-                                                <div class="specialty">Spesialis | 12 tahun pengalaman</div>
-                                                <span class="badge-specialty pediatric">Pediatric</span>
-                                            </div>
-                                        </div>
-                                        <div class="doctor-schedule">
-                                            <div class="schedule-info">
-                                                <div><i class="far fa-calendar"></i> Sel, Kam</div>
-                                                <div><i class="far fa-clock"></i> 09:00 - 14:00</div>
-                                            </div>
-                                            <div class="price">
-                                                <div>Rp <span class="amount">225.000</span></div>
-                                            </div>
-                                        </div>
-                                        <a href="janji_temu.html">
-                                            <div class="p-3">
-                                                <button class="btn-book w-100">Buat Janji Temu</button>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                    <div class="doctor-card">
-                                        <div class="doctor-header">
-                                            <div class="doctor-image">
-                                                <img src="doctors_login.png" alt="Dr. Jason">
+                            <div class="row g-3">
+                                @foreach ($doctors as $data)
+                                    @php
+                                        $todaySchedule = $data->schedules->firstWhere('day', $today);
+                                        $start = $todaySchedule
+                                            ? \Carbon\Carbon::parse($todaySchedule->time_from)
+                                            : null;
+                                        $end = $todaySchedule ? \Carbon\Carbon::parse($todaySchedule->time_to) : null;
+                                        $isActive = $todaySchedule ? $timeNow->between($start, $end) : false;
+
+                                        $rating = $data->reviews->avg('rating') ?? 0;
+                                        $ratingFormatted = number_format($rating, 1);
+                                        $badge =
+                                            $poliklinikTypes[$data->schedules->first()->polyclinic->type ?? 1] ?? null;
+                                    @endphp
+                                    <div class="col-12">
+                                        <div
+                                            class="doctor-card border rounded shadow-sm p-3 d-md-flex align-items-center justify-content-between gap-3">
+                                            {{-- Doctor Image + Info --}}
+                                            <div class="d-flex gap-3 align-items-center">
+                                                <img src="{{ asset('images/doctors_dashboard.png') }}"
+                                                    class="rounded-circle" width="64" height="64"
+                                                    style="object-fit: cover;">
+                                                <div>
+                                                    <h6 class="fw-bold mb-1 mb-md-0">Dr. {{ $data->name }}</h6>
+                                                    <small class="text-muted d-block">
+                                                        {{ $data->specialization }} | 10 tahun pengalaman
+                                                    </small>
+                                                    @if ($badge)
+                                                        <span class="badge {{ $badge['class'] }} mt-1">
+                                                            {{ $badge['label'] }}
+                                                        </span>
+                                                    @endif
+                                                </div>
                                             </div>
-                                            <div class="doctor-info">
-                                                <h3>Dr. Jason Santoso</h3>
-                                                <div class="specialty">Spesialis | 10 tahun pengalaman</div>
-                                                <span class="badge-specialty surgical">Surgical</span>
+
+                                            {{-- Schedule Info --}}
+                                            <div class="text-muted small text-center text-md-start">
+                                                @if ($todaySchedule)
+                                                    <div><i class="fas fa-calendar-alt me-1"></i>{{ $today }}</div>
+                                                    <div><i class="fas fa-clock me-1"></i>{{ $start->format('H:i') }} -
+                                                        {{ $end->format('H:i') }}</div>
+                                                @else
+                                                    <div class="text-muted"><i class="fas fa-ban me-1"></i> Tidak praktik
+                                                        hari ini</div>
+                                                @endif
+                                            </div>
+
+                                            {{-- Rating --}}
+                                            <div class="text-warning small text-center text-md-start">
+                                                <i class="fas fa-star me-1"></i>{{ $ratingFormatted }} / 5
+                                            </div>
+
+                                            {{-- Action Buttons --}}
+                                            <div class="d-flex gap-2 justify-content-md-end mt-3 mt-md-0">
+                                                <a href="{{ route('janji-temu') }}" class="btn btn-danger btn-sm">Buat
+                                                    Janji Temu</a>
+                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#reviewModal-{{ $data->id }}">
+                                                    <i class="fas fa-comment-dots"></i>
+                                                </button>
+                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                                                    data-bs-target="#scheduleModal-{{ $data->id }}">
+                                                    <i class="fas fa-calendar-alt"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="doctor-schedule">
-                                            <div class="schedule-info">
-                                                <div><i class="far fa-calendar"></i> Sel, Kam</div>
-                                                <div><i class="far fa-clock"></i> 10:00 - 15:00</div>
-                                            </div>
-                                            <div class="price">
-                                                <div>Rp <span class="amount">235.000</span></div>
-                                            </div>
-                                        </div>
-                                        <a href="janji_temu.html">
-                                            <div class="p-3">
-                                                <button class="btn-book w-100">Buat Janji Temu</button>
-                                            </div>
-                                        </a>
                                     </div>
-                                </div>
+
+                                    @include('partials.review-modal', [
+                                        'id' => $data->id,
+                                        'name' => $data->name,
+                                        'reviews' => $data->reviews,
+                                    ])
+
+                                    @include('partials.schedule-modal', [
+                                        'id' => $data->id,
+                                        'name' => $data->name,
+                                        'schedules' => $data->schedules,
+                                        'today' => $today,
+                                    ])
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -107,7 +157,7 @@
 
             <div class="col-xl-4">
                 <div class="custom_card p-3 mb-4">
-                    @include('partials.calendar')
+                    @include('partials.calendar', ['calendarId' => 'dashboard'])
                 </div>
 
                 <div class="custom_card p-3">
@@ -117,7 +167,7 @@
                     </div>
 
                     <div class="polyclinic-list">
-                        @foreach ($test as $data)
+                        @foreach ($polyclinics as $data)
                             @php
                                 $badge = $poliklinikTypes[$data['type']];
                             @endphp

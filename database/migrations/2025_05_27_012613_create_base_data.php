@@ -23,9 +23,9 @@ return new class extends Migration {
             $table->id();
             $table->string('nik')->unique();
             $table->string('name');
+            $table->string('description')->nullable();
             $table->string('specialization');
             $table->string('photo')->nullable();
-            $table->foreignId('polyclinic_id')->constrained()->onDelete('cascade');
             $table->timestamps();
 
             $table->foreign('nik')->references('nik')->on('users')->onDelete('cascade');
@@ -37,6 +37,15 @@ return new class extends Migration {
             $table->time('time_from');
             $table->time('time_to');
             $table->integer('max_capacity')->default(10);
+            $table->foreignId('polyclinic_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
+        Schema::create('doctor_reviews', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->integer('rating')->default(0);
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
 
