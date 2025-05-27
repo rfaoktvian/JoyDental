@@ -104,7 +104,7 @@
                         <div class="w-100">
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="{{ route('janji-temu') }}"
-                                    class="btn btn-outline-danger btn-sm w-100 fw-semibold rounded">
+                                    class="btn btn-danger btn-sm w-100 fw-semibold rounded">
                                     Buat Janji Temu
                                 </a>
                                 <button

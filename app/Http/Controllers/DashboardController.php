@@ -16,7 +16,7 @@ class DashboardController extends Controller
             ->selectRaw('AVG(doctor_reviews.rating) as avg_rating')
             ->groupBy('doctors.id')
             ->orderByDesc('avg_rating')
-            ->take(value: 2)
+            ->take(value: 3)
             ->get();
 
         return view('dashboard', compact('polyclinics', 'doctors'));

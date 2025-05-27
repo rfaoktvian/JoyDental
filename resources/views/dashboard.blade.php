@@ -84,8 +84,7 @@
                                     @endphp
                                     <div class="col-12">
                                         <div
-                                            class="doctor-card border rounded shadow-sm p-3 d-md-flex align-items-center justify-content-between gap-3">
-                                            {{-- Doctor Image + Info --}}
+                                            class="doctor-card border rounded shadow-sm p-3 d-md-flex align-items-center justify-content-between gap-2">
                                             <div class="d-flex gap-3 align-items-center">
                                                 <img src="{{ asset('images/doctors_dashboard.png') }}"
                                                     class="rounded-circle" width="64" height="64"
@@ -103,7 +102,6 @@
                                                 </div>
                                             </div>
 
-                                            {{-- Schedule Info --}}
                                             <div class="text-muted small text-center text-md-start">
                                                 @if ($todaySchedule)
                                                     <div><i class="fas fa-calendar-alt me-1"></i>{{ $today }}</div>
@@ -115,12 +113,10 @@
                                                 @endif
                                             </div>
 
-                                            {{-- Rating --}}
                                             <div class="text-warning small text-center text-md-start">
                                                 <i class="fas fa-star me-1"></i>{{ $ratingFormatted }} / 5
                                             </div>
 
-                                            {{-- Action Buttons --}}
                                             <div class="d-flex gap-2 justify-content-md-end mt-3 mt-md-0">
                                                 <a href="{{ route('janji-temu') }}" class="btn btn-danger btn-sm">Buat
                                                     Janji Temu</a>
