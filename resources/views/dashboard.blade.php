@@ -125,7 +125,7 @@
                             <div
                                 class="d-flex align-items-center gap-2 px-2 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                                 <div class="rounded d-flex justify-content-center align-items-center bg-danger text-white"
-                                    style="width: 40px; height: 40px;">
+                                    style="width: 40px; height: 40px; font-size: 1.1rem;">
                                     <i class="fas {{ $badge['icon'] }}"></i>
                                 </div>
                                 <div class="flex-grow-1">
