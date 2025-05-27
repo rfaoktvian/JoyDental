@@ -9,8 +9,6 @@ Route::middleware('web')
 
 // Default route
 Route::view('/', 'dashboard');
-Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index']);
-
 Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])
   ->name('dashboard');
 

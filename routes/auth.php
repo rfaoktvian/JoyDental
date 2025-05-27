@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Http\Request;
 use App\Models\User;
 
 Route::get('login', [LoginController::class, 'showLoginForm'])
@@ -11,7 +12,7 @@ Auth::routes();
 
 
 Route::get('/check-nik', function (Request $req) {
-  return User::where('nik', $req->query('nik'))->exists()
+  return User::where('nik', $req->get('nik'))->exists()
     ? response()->noContent()
     : response()->json([], 404);
 })->name('check.nik');
