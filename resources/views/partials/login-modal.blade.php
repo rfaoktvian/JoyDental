@@ -7,6 +7,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
+
                 <div class="modal-body">
                     <form id="loginForm" method="POST">
                         @csrf
@@ -29,6 +30,10 @@
                         </button>
                     </form>
                 </div>
+
+                <p class="text-muted text-center mb-4">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="text-danger">Daftar</a>
             </div>
         </div>
     </div>

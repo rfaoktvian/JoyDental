@@ -1,6 +1,10 @@
 @extends('layouts.auth')
 
 @section('sub_content')
+    <div class="d-flex justify-content-end">
+        <a href="{{ route('dashboard') }}" class="btn-close" aria-label="Close"></a>
+    </div>
+
     <h2 class="fw-bold text-center mb-2">Selamat Datang Kembali</h2>
     <p class="text-muted text-center mb-4">
         Belum punya akun?
