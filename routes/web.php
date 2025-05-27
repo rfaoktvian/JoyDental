@@ -44,8 +44,20 @@ Route::prefix('doctor')->middleware('doctor')->group(function () {
 });
 
 
-$hideNav = [
+View::share('hideNavRoutes', value: [
   'register',
   'login',
-];
-View::share('hideNavRoutes', $hideNav);
+]);
+
+View::share('poliklinikTypes', [
+  1 => ['label' => 'Pediatric', 'class' => 'bg-danger-subtle text-danger'],
+  2 => ['label' => 'Surgical', 'class' => 'bg-primary-subtle text-primary'],
+  3 => ['label' => 'Cardiology', 'class' => 'bg-warning-subtle text-warning'],
+  4 => ['label' => 'Ophthalmology', 'class' => 'bg-info-subtle text-info'],
+  5 => ['label' => 'Neurology', 'class' => 'bg-purple-subtle text-purple'],
+  6 => ['label' => 'Orthopedics', 'class' => 'bg-success-subtle text-success'],
+  7 => ['label' => 'Dermatology', 'class' => 'bg-secondary-subtle text-secondary'],
+  8 => ['label' => 'Internal Medicine', 'class' => 'bg-dark-subtle text-dark'],
+  9 => ['label' => 'ENT', 'class' => 'bg-teal-subtle text-teal'],
+  10 => ['label' => 'General Practice', 'class' => 'bg-light text-muted'],
+]);

@@ -110,56 +110,86 @@
                     @include('partials.calendar')
                 </div>
 
+                @php
+                    $test = [
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 1,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Anak',
+                            'type' => 2,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 3,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 4,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 5,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 6,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 7,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 8,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 9,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                        [
+                            'name' => 'Klinik Bedah Mulut',
+                            'type' => 10,
+                            'room' => 'Gedung Cokro Aminoto Lt.3',
+                        ],
+                    ];
+                @endphp
+
                 <div class="custom_card p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h2 class="mb-0">Daftar Poliklinik</h2>
                         <a href="poliklinik.html">Lihat Semua</a>
                     </div>
                     <div class="polyclinic-list">
-                        <div class="polyclinic-item d-flex align-items-center p-2 border-bottom">
-                            <div class="flex-shrink-0">
-                                <div class="icon-box">
-                                    <i class="fas fa-baby"></i>
+                        @foreach ($test as $data)
+                            @php
+                                $badge = $poliklinikTypes[$data['type']];
+                            @endphp
+                            <div class="polyclinic-item d-flex align-items-center p-2 border-bottom">
+                                <div class="flex-shrink-0">
+                                    <div class="icon-box">
+                                        <i class="fas fa-baby"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h4 class="mb-0 fs-6">{{ $data['name'] }}</h4>
+                                    <div class="small text-muted">{{ $data['room'] }}</div>
+                                </div>
+                                <div>
+                                    <span class="badge {{ $badge['class'] }} mt-1">{{ $badge['label'] }}</span>
                                 </div>
                             </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h4 class="mb-0 fs-6">Klinik Anak</h4>
-                                <div class="small text-muted">Gedung Cokro Aminoto Lt.3</div>
-                            </div>
-                            <div>
-                                <span class="badge-specialty pediatric">Pediatric</span>
-                            </div>
-                        </div>
-
-                        <div class="polyclinic-item d-flex align-items-center p-2 border-bottom">
-                            <div class="flex-shrink-0">
-                                <div class="icon-box">
-                                    <i class="fas fa-teeth"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h4 class="mb-0 fs-6">Klinik Dokter Gigi</h4>
-                                <div class="small text-muted">Gedung Cokro Aminoto Lt.4</div>
-                            </div>
-                            <div>
-                                <span class="badge-specialty surgical">Surgical</span>
-                            </div>
-                        </div>
-
-                        <div class="polyclinic-item d-flex align-items-center p-2">
-                            <div class="flex-shrink-0">
-                                <div class="icon-box">
-                                    <i class="fas fa-stethoscope"></i>
-                                </div>
-                            </div>
-                            <div class="flex-grow-1 ms-3">
-                                <h4 class="mb-0 fs-6">Klinik Bedah Mulut</h4>
-                                <div class="small text-muted">Gedung Cokro Aminoto Lt.3</div>
-                            </div>
-                            <div>
-                                <span class="badge-specialty surgical">Surgical</span>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

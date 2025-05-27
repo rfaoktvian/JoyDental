@@ -136,11 +136,10 @@
                                 <div>
                                     <h6 class="mb-0">{{ $poliklinik['name'] }}</h6>
                                     <small>{{ $poliklinik['room'] }}</small><br>
-                                    @if ($poliklinik['type'] == 1)
-                                        <span class="badge bg-danger-subtle text-danger mt-1">Pediatric</span>
-                                    @else
-                                        <span class="badge bg-info-subtle text-primary mt-1">Surgical</span>
-                                    @endif
+                                    @php
+                                        $badge = $poliklinikTypes[$poliklinik['type']];
+                                    @endphp
+                                    <span class="badge {{ $badge['class'] }} mt-1">{{ $badge['label'] }}</span>
                                 </div>
                             </div>
 
