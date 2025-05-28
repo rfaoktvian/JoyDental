@@ -153,7 +153,7 @@
     $user = Auth::user();
 @endphp
 
-<body hx-boost="true" hx-target="#page-content" hx-push-url="true" hx-ws="connect:/updates">
+<body hx-boost="true" hx-target="#page-content" hx-push-url="true">
     @includeWhen(Route::has('login'), 'partials.login-modal')
 
     <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">

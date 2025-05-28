@@ -152,87 +152,83 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cards = Array.from(document.querySelectorAll('.ticket-wrapper'));
-            const paginationContainer = document.getElementById('paginationContainer');
-            const tabs = document.querySelectorAll('#statusTabs .nav-link');
-            const cardsPerPage = 6;
-            let currentPage = 1;
-            let currentFilter = 'all';
+        const cards = Array.from(document.querySelectorAll('.ticket-wrapper'));
+        const paginationContainer = document.getElementById('paginationContainer');
+        const tabs = document.querySelectorAll('#statusTabs .nav-link');
+        const cardsPerPage = 6;
+        let currentPage = 1;
+        let currentFilter = 'all';
 
-            function filterAndPaginate() {
-                const filtered = cards.filter(card => {
-                    const status = card.getAttribute('data-status');
-                    return currentFilter === 'all' || status === currentFilter;
-                });
-
-                const totalPages = Math.ceil(filtered.length / cardsPerPage);
-
-                // hide all cards
-                cards.forEach(card => card.style.display = 'none');
-
-                // show cards for current page
-                const start = (currentPage - 1) * cardsPerPage;
-                const end = start + cardsPerPage;
-                filtered.slice(start, end).forEach(card => {
-                    card.style.display = '';
-                });
-
-                // render pagination
-                renderPagination(totalPages);
-            }
-
-            function renderPagination(totalPages) {
-                paginationContainer.innerHTML = '';
-
-                const prev = document.createElement('li');
-                prev.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
-                prev.innerHTML = `<a class="page-link" href="#">&laquo;</a>`;
-                prev.onclick = () => {
-                    if (currentPage > 1) {
-                        currentPage--;
-                        filterAndPaginate();
-                    }
-                };
-                paginationContainer.appendChild(prev);
-
-                for (let i = 1; i <= totalPages; i++) {
-                    const li = document.createElement('li');
-                    li.className = `page-item ${i === currentPage ? 'active' : ''}`;
-                    li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-                    li.onclick = () => {
-                        currentPage = i;
-                        filterAndPaginate();
-                    };
-                    paginationContainer.appendChild(li);
-                }
-
-                const next = document.createElement('li');
-                next.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
-                next.innerHTML = `<a class="page-link" href="#">&raquo;</a>`;
-                next.onclick = () => {
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        filterAndPaginate();
-                    }
-                };
-                paginationContainer.appendChild(next);
-            }
-
-            // tab click filter handler
-            tabs.forEach(tab => {
-                tab.addEventListener('click', e => {
-                    e.preventDefault();
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    currentFilter = tab.getAttribute('data-filter');
-                    currentPage = 1;
-                    filterAndPaginate();
-                });
+        function filterAndPaginate() {
+            const filtered = cards.filter(card => {
+                const status = card.getAttribute('data-status');
+                return currentFilter === 'all' || status === currentFilter;
             });
 
-            // initial load
-            filterAndPaginate();
+            const totalPages = Math.ceil(filtered.length / cardsPerPage);
+
+            // hide all cards
+            cards.forEach(card => card.style.display = 'none');
+
+            // show cards for current page
+            const start = (currentPage - 1) * cardsPerPage;
+            const end = start + cardsPerPage;
+            filtered.slice(start, end).forEach(card => {
+                card.style.display = '';
+            });
+
+            // render pagination
+            renderPagination(totalPages);
+        }
+
+        function renderPagination(totalPages) {
+            paginationContainer.innerHTML = '';
+
+            const prev = document.createElement('li');
+            prev.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prev.innerHTML = `<a class="page-link" href="#">&laquo;</a>`;
+            prev.onclick = () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    filterAndPaginate();
+                }
+            };
+            paginationContainer.appendChild(prev);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                li.onclick = () => {
+                    currentPage = i;
+                    filterAndPaginate();
+                };
+                paginationContainer.appendChild(li);
+            }
+
+            const next = document.createElement('li');
+            next.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            next.innerHTML = `<a class="page-link" href="#">&raquo;</a>`;
+            next.onclick = () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    filterAndPaginate();
+                }
+            };
+            paginationContainer.appendChild(next);
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', e => {
+                e.preventDefault();
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.getAttribute('data-filter');
+                currentPage = 1;
+                filterAndPaginate();
+            });
         });
+
+        filterAndPaginate();
     </script>
 @endsection

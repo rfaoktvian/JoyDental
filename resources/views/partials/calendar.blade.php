@@ -221,6 +221,5 @@
 
         renderCalendar(currentMonth, currentYear);
     }
-
-    document.addEventListener('DOMContentLoaded', initCalendar);
+    initCalendar();
 </script>
