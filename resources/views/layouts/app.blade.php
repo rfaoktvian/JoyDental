@@ -16,82 +16,50 @@
     <style>
         .sidebar-scrollable {
             scrollbar-width: none;
-            /* Firefox */
             -ms-overflow-style: none;
-            /* Internet Explorer 10+ */
         }
 
         .sidebar-scrollable::-webkit-scrollbar {
             width: 0;
             height: 0;
             display: none;
-            /* Chrome, Safari, Edge */
-        }
-
-        .main-content-adjusted {
-            position: relative;
-            top: 56px;
-            height: calc(100vh - 56px);
-            overflow-y: auto;
-        }
-
-        /* ----- Sidebar base ----- */
-        #sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 240px;
-            background: #d32f2f;
-            color: #fff;
-            overflow: hidden;
-            transition: width 0.2s ease-in-out;
-            z-index: 900;
-
-            top: 56px;
-            height: calc(100vh - 56px);
-        }
-
-        /* ----- Collapsed state ----- */
-        body.sidebar-collapsed #sidebar {
-            width: 56px;
-        }
-
-        /* hide text when collapsed */
-        body.sidebar-collapsed #sidebar .sidebar-text {
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-
-        .sidebar-group {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        /* ----- Sidebar header (toggle) ----- */
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-            flex-shrink: 0;
         }
 
         #sidebarToggle {
             background: none;
             border: none;
-            color: #fff;
+            color: #000000;
             font-size: 1.25rem;
             cursor: pointer;
             padding: 0;
         }
 
-        /* ----- Sidebar nav ----- */
+        #sidebar {
+            width: 250px;
+            transition: width 0.3s ease;
+        }
+
+        #sidebar .sidebar-text {
+            transition: opacity 0.3s ease;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        body.sidebar-collapsed #sidebar {
+            width: 3rem;
+        }
+
+        body.sidebar-collapsed #sidebar .sidebar-text {
+            opacity: 0;
+        }
+
+        /* Sidebar nav */
         #sidebar .nav-link {
             display: flex;
             align-items: center;
             color: rgba(255, 255, 255, 0.8);
             padding: .75rem 1rem;
-            transition: background .2s, color .2s;
+            transition: all 0.2s ease;
         }
 
         #sidebar .nav-link i {
@@ -99,11 +67,6 @@
             text-align: center;
             margin-right: .75rem;
             flex-shrink: 0;
-        }
-
-        #sidebar .nav-link .sidebar-text {
-            white-space: nowrap;
-            transition: opacity .2s, transform .2s;
         }
 
         #sidebar .nav-link.active,
@@ -114,51 +77,6 @@
 
         #sidebar .nav-link.active i {
             color: #fff;
-        }
-
-        /* ----- Content wrapper ----- */
-        #content-wrapper {
-            margin-left: 240px;
-            transition: margin-left 0.2s ease-in-out;
-        }
-
-        .wrapper-content {
-            top: 56px;
-            height: calc(100vh - 56px);
-        }
-
-        .toggle-btn {
-            background: none;
-            border: none;
-            color: inherit;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            padding: .75rem 1rem;
-            cursor: pointer;
-        }
-
-        .toggle-btn i {
-            width: 1.25rem;
-            text-align: center;
-            margin-right: .75rem;
-        }
-
-        body.sidebar-collapsed #content-wrapper {
-            margin-left: 56px;
-        }
-
-        body.sidebar-collapsed .toggle-btn .sidebar-text {
-            opacity: 0;
-            transform: translateX(-10px);
-        }
-
-        nav.navbar {
-            position: fixed;
-            width: 100vw;
-            top: 0;
-            z-index: 1000;
-            /* sit above sidebar/content */
         }
     </style>
 </head>
@@ -179,87 +97,16 @@
             htmx.on("htmx:configRequest", () =>
                 document.getElementById("htmx-indicator").style.width = "100%");
             htmx.on("htmx:afterSwap", () =>
-
                 document.getElementById("htmx-indicator").style.width = "0%");
         </script>
 
-        @if (!in_array(Route::currentRouteName(), $hideNavRoutes))
-
-            @unless (!empty($noNavbar))
-                <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
-                    <a class="navbar-brand text-danger ms-3" href="#">
-                        <i class="bi bi-heart-pulse-fill me-1"></i> AppointDoc
-                    </a>
-                    <span class="ms-2 text-muted fst-italic">by RS Siaga Sedia</span>
-
-                    <div class="ms-auto d-flex align-items-center gap-3">
-                        <div class="input-group" style="width:300px">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
-                            <input class="form-control" placeholder="Cari dokter, poliklinik...">
-                        </div>
-                        <div class="vr"></div>
-                        @guest
-                            @if (Route::has('login'))
-                                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk</a>
-                            @endif
-                            @if (Route::has('register'))
-                                <a class="btn btn-danger text-white" href="{{ route('register') }}">Daftar</a>
-                            @endif
-                        @else
-                            <div class="dropdown">
-                                <a class="d-flex align-items-center text-decoration-none rounded" href="#" role="button"
-                                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                    style="min-width: 220px;">
-                                    <img src="{{ asset('images/doctors_login.png') }}" alt="Profile" width="40"
-                                        height="40" class="rounded-circle me-2" style="object-fit: cover;">
-                                    <div class="text-start">
-                                        <div class="fw-semibold text-dark">{{ $user->name }}</div>
-                                        <div class="text-muted small">{{ ucfirst($user->role) }}</div>
-                                    </div>
-                                    <i class="fas fa-chevron-down ms-auto text-muted"></i>
-                                </a>
-
-                                <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="profileDropdown">
-                                    <li>
-                                        <a class="dropdown-item" href="#">Profil Saya</a>
-                                    </li>
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
-                            </div>
-                        @endguest
-                    </div>
-                </nav>
-            @endunless
-
-            <main id="page-content">
-                <div id="content-wrapper" style="background-color: #F5F5F5;">
-                    <div class="container-fluid main-content-adjusted" style="background-color: #F5F5F5;">
-                        <div class="container-fluid col-12 col-lg-15 px-4 py-3">
-                            <main>
-                                @yield('content')
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
-            @unless (!empty($noSidebar))
+        <div style="display: flex; height: 100%; width: 100%; overflow: hidden; margin: 0;">
+            <div
+                style="width: 100vw; height: 100vh; background: white; overflow: hidden; justify-content: flex-start; align-items: stretch; display: flex;">
                 <nav id="sidebar">
-                    <div class="sidebar-header">
-                        <button id="sidebarToggle"><i class="fas fa-bars"></i></button>
-                    </div>
-                    <div class="sidebar-scrollable" style="height: calc(100vh - 70px); overflow-y: auto;">
+                    <div class="sidebar-scrollable bg-danger" style="height: 100vh; overflow-y: auto;">
+                        <button class="bg-black" id="sidebarToggle" style="height:3rem; width:100%"><i
+                                class="fas fa-bars"></i></button>
                         <ul class="nav flex-column sidebar-group">
                             @foreach ($sidebarMenu as $item)
                                 @if (isset($item['auth']) && $item['auth'] && !Auth::check())
@@ -302,14 +149,15 @@
                         @endif
                     </div>
                 </nav>
-            @endunless
-        @else
-            <main id="page-content">
-                <main>
-                    @yield('content')
-                </main>
-            </main>
-        @endif
+                <div style="flex: 1;">
+                    <nav class="bg-white" style="height:3rem">
+                        <button id="sidebarToggle" style="height:3rem; width:3rem"><i class="fas fa-bars"></i></button>
+                    </nav>
+                    <div style="height:100%; background-color: #F5F5F5;"></div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
