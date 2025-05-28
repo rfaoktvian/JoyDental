@@ -165,64 +165,68 @@
             htmx.on("htmx:configRequest", () =>
                 document.getElementById("htmx-indicator").style.width = "100%");
             htmx.on("htmx:afterSwap", () =>
+
                 document.getElementById("htmx-indicator").style.width = "0%");
         </script>
 
         @if (!in_array(Route::currentRouteName(), $hideNavRoutes))
-            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
-                <a class="navbar-brand text-danger ms-3" href="#">
-                    <i class="bi bi-heart-pulse-fill me-1"></i> AppointDoc
-                </a>
-                <span class="ms-2 text-muted fst-italic">by RS Siaga Sedia</span>
 
-                <div class="ms-auto d-flex align-items-center gap-3">
-                    <div class="input-group" style="width:300px">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        <input class="form-control" placeholder="Cari dokter, poliklinik...">
-                    </div>
-                    <div class="vr"></div>
-                    @guest
-                        @if (Route::has('login'))
-                            <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk</a>
-                        @endif
-                        @if (Route::has('register'))
-                            <a class="btn btn-danger text-white" href="{{ route('register') }}">Daftar</a>
-                        @endif
-                    @else
-                        <div class="dropdown">
-                            <a class="d-flex align-items-center text-decoration-none rounded" href="#" role="button"
-                                id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="min-width: 220px;">
-                                <img src="{{ asset('images/doctors_login.png') }}" alt="Profile" width="40"
-                                    height="40" class="rounded-circle me-2" style="object-fit: cover;">
-                                <div class="text-start">
-                                    <div class="fw-semibold text-dark">{{ $user->name }}</div>
-                                    <div class="text-muted small">{{ ucfirst($user->role) }}</div>
-                                </div>
-                                <i class="fas fa-chevron-down ms-auto text-muted"></i>
-                            </a>
+            @unless (!empty($noNavbar))
+                <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
+                    <a class="navbar-brand text-danger ms-3" href="#">
+                        <i class="bi bi-heart-pulse-fill me-1"></i> AppointDoc
+                    </a>
+                    <span class="ms-2 text-muted fst-italic">by RS Siaga Sedia</span>
 
-                            <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="profileDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="#">Profil Saya</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li>
-                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </li>
-                            </ul>
+                    <div class="ms-auto d-flex align-items-center gap-3">
+                        <div class="input-group" style="width:300px">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input class="form-control" placeholder="Cari dokter, poliklinik...">
                         </div>
-                    @endguest
-                </div>
-            </nav>
+                        <div class="vr"></div>
+                        @guest
+                            @if (Route::has('login'))
+                                <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk</a>
+                            @endif
+                            @if (Route::has('register'))
+                                <a class="btn btn-danger text-white" href="{{ route('register') }}">Daftar</a>
+                            @endif
+                        @else
+                            <div class="dropdown">
+                                <a class="d-flex align-items-center text-decoration-none rounded" href="#" role="button"
+                                    id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                    style="min-width: 220px;">
+                                    <img src="{{ asset('images/doctors_login.png') }}" alt="Profile" width="40"
+                                        height="40" class="rounded-circle me-2" style="object-fit: cover;">
+                                    <div class="text-start">
+                                        <div class="fw-semibold text-dark">{{ $user->name }}</div>
+                                        <div class="text-muted small">{{ ucfirst($user->role) }}</div>
+                                    </div>
+                                    <i class="fas fa-chevron-down ms-auto text-muted"></i>
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="profileDropdown">
+                                    <li>
+                                        <a class="dropdown-item" href="#">Profil Saya</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                            Logout
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        @endguest
+                    </div>
+                </nav>
+            @endunless
 
             <main id="page-content">
                 <div id="content-wrapper" style="background-color: #F5F5F5;">
@@ -236,27 +240,16 @@
                 </div>
             </main>
 
-            <nav id="sidebar">
-                <div class="sidebar-header">
-                    <button id="sidebarToggle"><i class="fas fa-bars"></i></button>
-                </div>
-                <ul class="nav flex-column sidebar-group">
-                    @foreach ($sidebarMenu as $item)
-                        @if (isset($item['auth']) && $item['auth'] && !Auth::check())
-                            @continue
-                        @endif
-                        <li class="nav-item">
-                            <a href="{{ route($item['route']) }}"
-                                class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
-                                <i class="{{ $item['icon'] }}"></i>
-                                <span class="sidebar-text">{{ $item['label'] }}</span>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-                @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
+            @unless (!empty($noSidebar))
+                <nav id="sidebar">
+                    <div class="sidebar-header">
+                        <button id="sidebarToggle"><i class="fas fa-bars"></i></button>
+                    </div>
                     <ul class="nav flex-column sidebar-group">
-                        @foreach ($siderbarAdminMenu as $item)
+                        @foreach ($sidebarMenu as $item)
+                            @if (isset($item['auth']) && $item['auth'] && !Auth::check())
+                                @continue
+                            @endif
                             <li class="nav-item">
                                 <a href="{{ route($item['route']) }}"
                                     class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
@@ -266,21 +259,34 @@
                             </li>
                         @endforeach
                     </ul>
-                @endif
-                @if (Auth::check() && $user->role === 'admin')
-                    <ul class="nav flex-column sidebar-group">
-                        @foreach ($sidebarDokterMenu as $item)
-                            <li class="nav-item">
-                                <a href="{{ route($item['route']) }}"
-                                    class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
-                                    <i class="{{ $item['icon'] }}"></i>
-                                    <span class="sidebar-text">{{ $item['label'] }}</span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
-            </nav>
+                    @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
+                        <ul class="nav flex-column sidebar-group">
+                            @foreach ($siderbarAdminMenu as $item)
+                                <li class="nav-item">
+                                    <a href="{{ route($item['route']) }}"
+                                        class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                        <i class="{{ $item['icon'] }}"></i>
+                                        <span class="sidebar-text">{{ $item['label'] }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                    @if (Auth::check() && $user->role === 'admin')
+                        <ul class="nav flex-column sidebar-group">
+                            @foreach ($sidebarDokterMenu as $item)
+                                <li class="nav-item">
+                                    <a href="{{ route($item['route']) }}"
+                                        class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                        <i class="{{ $item['icon'] }}"></i>
+                                        <span class="sidebar-text">{{ $item['label'] }}</span>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
+                </nav>
+            @endunless
         @else
             <main id="page-content">
                 <main>

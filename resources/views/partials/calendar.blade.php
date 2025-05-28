@@ -4,7 +4,6 @@
     $carbon->setLocale('id');
 @endphp
 
-
 <div class="calendar">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0" id="calendarMonthLabel-{{ $calendarId }}"></h5>
@@ -74,7 +73,7 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    function initCalendar() {
         const monthNames = [
             'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
@@ -221,5 +220,7 @@
         });
 
         renderCalendar(currentMonth, currentYear);
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', initCalendar);
 </script>
