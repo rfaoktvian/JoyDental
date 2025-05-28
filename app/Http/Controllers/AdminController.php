@@ -18,7 +18,7 @@ class AdminController extends Controller
                 ->orWhere('nik', 'like', "%{$search}%");
         })->paginate(10);
 
-        return view('admin.manajemen-user', compact('users'));
+        return view('admin.user', compact('users'));
     }
 
     public function store(Request $request)

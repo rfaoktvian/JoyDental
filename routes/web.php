@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PoliklinikController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 
@@ -16,8 +17,8 @@ Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])
 Route::get('/janji-temu', fn() => view('janji-temu'))
   ->name('janji-temu');
 
-Route::get('/riwayat-medis', fn() => view('riwayat-medis'))
-  ->name('riwayat-medis');
+Route::get('/rekam-medis', fn() => view('rekam-medis'))
+  ->name('rekam-medis');
 
 Route::get('/tiket-antrian', fn() => view('tiket-antrian'))
   ->name('tiket-antrian');
@@ -25,8 +26,7 @@ Route::get('/tiket-antrian', fn() => view('tiket-antrian'))
 use App\Http\Controllers\DoctorController;
 Route::get('/dokter', [DoctorController::class, 'index'])->name('dokter');
 
-Route::get('/poliklinik', fn() => view('poliklinik'))
-  ->name('poliklinik');
+Route::get('/poliklinik', [PoliklinikController::class, 'index'])->name('poliklinik');
 
 Route::get('/bantuan', fn() => view('bantuan'))
   ->name('bantuan');

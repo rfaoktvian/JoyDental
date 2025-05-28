@@ -14,9 +14,9 @@ $sidebarMenu = [
   ],
   [
     'auth' => true,
-    'label' => 'Riwayat Medis',
+    'label' => 'Rekam Medis',
     'icon' => 'fas fa-file-medical-alt',
-    'route' => 'riwayat-medis',
+    'route' => 'rekam-medis',
   ],
   [
     'auth' => true,
