@@ -43,7 +43,7 @@
                         <div class="custom_card p-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h2 class="mb-0">Janji Temu Mendatang</h2>
-                                <a href="tiket.html">Lihat Semua</a>
+                                <a class="text-decoration-none" href="tiket.html">Lihat Semua</a>
                             </div>
                             <div class="upcoming-appointment text-center py-4">
                                 <img src="" alt="No appointments" class="mb-3">
@@ -64,7 +64,8 @@
                         <div class="custom_card p-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h2 class="mb-0 fs-5">Dokter Rekomendasi</h2>
-                                <a href="{{ route('dokter') }}" class="text-danger small">Lihat Semua</a>
+                                <a href="{{ route('dokter') }}" class="text-decoration-none text-danger small">Lihat
+                                    Semua</a>
                             </div>
 
                             <div class="row g-3">
@@ -168,7 +169,7 @@
                 <div class="custom_card p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h2 class="mb-0 fs-5">Daftar Poliklinik</h2>
-                        <a href="{{ route('poliklinik') }}" class="text-danger small">Lihat Semua</a>
+                        <a href="{{ route('poliklinik') }}" class="text-decoration-none text-danger small">Lihat Semua</a>
                     </div>
 
                     <div class="polyclinic-list">

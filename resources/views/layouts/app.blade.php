@@ -148,6 +148,10 @@
     </style>
 </head>
 
+@php
+    $user = Auth::user();
+@endphp
+
 <body>
     <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
         {{-- NAVBAR & SIDEBAR --}}
@@ -164,6 +168,7 @@
                         <span class="input-group-text"><i class="fas fa-search"></i></span>
                         <input class="form-control" placeholder="Cari dokter, poliklinik...">
                     </div>
+                    <div class="vr"></div>
                     @guest
                         @if (Route::has('login'))
                             <a class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#loginModal">Masuk</a>
@@ -173,12 +178,28 @@
                         @endif
                     @else
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-                                href="#">{{ Auth::user()->name }}</a>
-                            <ul class="dropdown-menu dropdown-menu-end">
+                            <a class="d-flex align-items-center text-decoration-none rounded" href="#" role="button"
+                                id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                style="min-width: 220px;">
+                                <img src="{{ asset('images/doctors_login.png') }}" alt="Profile" width="40"
+                                    height="40" class="rounded-circle me-2" style="object-fit: cover;">
+                                <div class="text-start">
+                                    <div class="fw-semibold text-dark">{{ $user->name }}</div>
+                                    <div class="text-muted small">{{ ucfirst($user->role) }}</div>
+                                </div>
+                                <i class="fas fa-chevron-down ms-auto text-muted"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm" aria-labelledby="profileDropdown">
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                        onclick="event.preventDefault();document.getElementById('logout-form').submit()">
+                                    <a class="dropdown-item" href="#">Profil Saya</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                         Logout
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -209,7 +230,7 @@
                         </li>
                     @endforeach
                 </ul>
-                @if (Auth::check() && in_array(Auth::user()->role, ['doctor', 'admin']))
+                @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
                     <ul class="nav flex-column sidebar-group">
                         @foreach ($siderbarAdminMenu as $item)
                             <li class="nav-item">
@@ -222,7 +243,7 @@
                         @endforeach
                     </ul>
                 @endif
-                @if (Auth::check() && Auth::user()->role === 'admin')
+                @if (Auth::check() && $user->role === 'admin')
                     <ul class="nav flex-column sidebar-group">
                         @foreach ($sidebarDokterMenu as $item)
                             <li class="nav-item">
