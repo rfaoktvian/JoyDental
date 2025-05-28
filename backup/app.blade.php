@@ -11,7 +11,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
     <style>
         .main-content-adjusted {
@@ -153,21 +152,10 @@
     $user = Auth::user();
 @endphp
 
-<body hx-boost="true" hx-target="#page-content" hx-push-url="true" hx-ws="connect:/updates">
-    @includeWhen(Route::has('login'), 'partials.login-modal')
-
+<body>
     <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-        <div id="htmx-indicator" class="progress"
-            style="position:fixed;top:0;left:0;width:0;height:3px;background:#d32f2f;z-index:2000;
-                transition:width .2s">
-        </div>
-        <script>
-            htmx.on("htmx:configRequest", () =>
-                document.getElementById("htmx-indicator").style.width = "100%");
-            htmx.on("htmx:afterSwap", () =>
-                document.getElementById("htmx-indicator").style.width = "0%");
-        </script>
-
+        {{-- NAVBAR & SIDEBAR --}}
+        @includeWhen(Route::has('login'), 'partials.login-modal')
         @if (!in_array(Route::currentRouteName(), $hideNavRoutes))
             <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 py-2">
                 <a class="navbar-brand text-danger ms-3" href="#">
@@ -224,18 +212,6 @@
                 </div>
             </nav>
 
-            <main id="page-content">
-                <div id="content-wrapper" style="background-color: #F5F5F5;">
-                    <div class="container-fluid main-content-adjusted" style="background-color: #F5F5F5;">
-                        <div class="container-fluid col-12 col-lg-15 px-4 py-3">
-                            <main>
-                                @yield('content')
-                            </main>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
             <nav id="sidebar">
                 <div class="sidebar-header">
                     <button id="sidebarToggle"><i class="fas fa-bars"></i></button>
@@ -281,36 +257,37 @@
                     </ul>
                 @endif
             </nav>
+
+            <div id="content-wrapper" style="background-color: #F5F5F5;">
+                <div class="container-fluid main-content-adjusted" style="background-color: #F5F5F5;">
+                    <div class="container-fluid col-12 col-lg-15 px-4 py-3">
+                        <main>
+                            @yield('content')
+                        </main>
+                    </div>
+                </div>
+            </div>
         @else
-            <main id="page-content">
-                <main>
-                    @yield('content')
-                </main>
+            <main>
+
+                @yield('content')
             </main>
         @endif
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const body = document.body;
-
-            const toggles = document.querySelectorAll('#sidebarToggle');
+            const toggle = document.querySelectorAll('#sidebarToggle');
             if (localStorage.getItem('sidebar-collapsed') === 'true') {
                 body.classList.add('sidebar-collapsed');
             }
-            toggles.forEach(btn => btn.addEventListener('click', () => {
-                const state = body.classList.toggle('sidebar-collapsed');
-                localStorage.setItem('sidebar-collapsed', state);
-            }));
-        });
-
-        htmx.on('htmx:afterSwap', () => {
-            const path = window.location.pathname.replace(/\/+$/, '');
-            document.querySelectorAll('#sidebar .nav-link').forEach(link => {
-                const href = new URL(link.href).pathname.replace(/\/+$/, '');
-                link.classList.toggle('active', href === path);
-            });
+            toggle.forEach(btn =>
+                btn.addEventListener('click', () => {
+                    const isCollapsed = body.classList.toggle('sidebar-collapsed');
+                    localStorage.setItem('sidebar-collapsed', isCollapsed);
+                })
+            );
         });
     </script>
 </body>
