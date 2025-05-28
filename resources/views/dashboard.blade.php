@@ -125,7 +125,8 @@
                                                         Buat Janji Temu
                                                     </a>
                                                 @else
-                                                    <a href="#" class="btn btn-danger btn-sm">Buat Janji
+                                                    <a href="{{ route('dokter') }}" class="btn btn-danger btn-sm">Buat
+                                                        Janji
                                                         Temu</a>
                                                 @endguest
                                                 <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
@@ -136,8 +137,6 @@
                                                     data-bs-target="#scheduleModal-{{ $data->id }}">
                                                     <i class="fas fa-calendar-alt"></i>
                                                 </button>
-
-
                                             </div>
                                         </div>
                                     </div>

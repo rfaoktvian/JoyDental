@@ -14,6 +14,20 @@
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
     <style>
+        .sidebar-scrollable {
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+        }
+
+        .sidebar-scrollable::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            display: none;
+            /* Chrome, Safari, Edge */
+        }
+
         .main-content-adjusted {
             position: relative;
             top: 56px;
@@ -245,23 +259,12 @@
                     <div class="sidebar-header">
                         <button id="sidebarToggle"><i class="fas fa-bars"></i></button>
                     </div>
-                    <ul class="nav flex-column sidebar-group">
-                        @foreach ($sidebarMenu as $item)
-                            @if (isset($item['auth']) && $item['auth'] && !Auth::check())
-                                @continue
-                            @endif
-                            <li class="nav-item">
-                                <a href="{{ route($item['route']) }}"
-                                    class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
-                                    <i class="{{ $item['icon'] }}"></i>
-                                    <span class="sidebar-text">{{ $item['label'] }}</span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                    @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
+                    <div class="sidebar-scrollable" style="height: calc(100vh - 70px); overflow-y: auto;">
                         <ul class="nav flex-column sidebar-group">
-                            @foreach ($siderbarAdminMenu as $item)
+                            @foreach ($sidebarMenu as $item)
+                                @if (isset($item['auth']) && $item['auth'] && !Auth::check())
+                                    @continue
+                                @endif
                                 <li class="nav-item">
                                     <a href="{{ route($item['route']) }}"
                                         class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
@@ -271,20 +274,33 @@
                                 </li>
                             @endforeach
                         </ul>
-                    @endif
-                    @if (Auth::check() && $user->role === 'admin')
-                        <ul class="nav flex-column sidebar-group">
-                            @foreach ($sidebarDokterMenu as $item)
-                                <li class="nav-item">
-                                    <a href="{{ route($item['route']) }}"
-                                        class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
-                                        <i class="{{ $item['icon'] }}"></i>
-                                        <span class="sidebar-text">{{ $item['label'] }}</span>
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endif
+                        @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
+                            <ul class="nav flex-column sidebar-group">
+                                @foreach ($siderbarAdminMenu as $item)
+                                    <li class="nav-item">
+                                        <a href="{{ route($item['route']) }}"
+                                            class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                            <i class="{{ $item['icon'] }}"></i>
+                                            <span class="sidebar-text">{{ $item['label'] }}</span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                        @if (Auth::check() && $user->role === 'admin')
+                            <ul class="nav flex-column sidebar-group">
+                                @foreach ($sidebarDokterMenu as $item)
+                                    <li class="nav-item">
+                                        <a href="{{ route($item['route']) }}"
+                                            class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                            <i class="{{ $item['icon'] }}"></i>
+                                            <span class="sidebar-text">{{ $item['label'] }}</span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
                 </nav>
             @endunless
         @else

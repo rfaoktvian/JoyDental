@@ -13,19 +13,20 @@ Route::view('/', 'dashboard');
 Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])
   ->name('dashboard');
 
-use App\Http\Controllers\PoliklinikController;
-Route::get('/poliklinik', [PoliklinikController::class, 'index'])->name('poliklinik');
-
 Route::get('/janji-temu', fn() => view('janji-temu'))
   ->name('janji-temu');
 
+Route::get('/riwayat-medis', fn() => view('riwayat-medis'))
+  ->name('riwayat-medis');
+
+Route::get('/tiket-antrian', fn() => view('tiket-antrian'))
+  ->name('tiket-antrian');
 
 use App\Http\Controllers\DoctorController;
 Route::get('/dokter', [DoctorController::class, 'index'])->name('dokter');
 
-
-Route::get('/tiket-antrian', fn() => view('tiket-antrian'))
-  ->name('tiket-antrian');
+Route::get('/poliklinik', fn() => view('poliklinik'))
+  ->name('poliklinik');
 
 Route::get('/bantuan', fn() => view('bantuan'))
   ->name('bantuan');
@@ -37,12 +38,24 @@ Route::prefix('admin')->middleware('admin')->group(function () {
   Route::post('/users', [AdminController::class, 'store'])->name('admin.users.store');
   Route::put('/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
   Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+
+  Route::get('/dokter', fn() => view('admin.dokter'))->name('admin.dokter');
+  Route::get('/poliklinik', fn() => view('admin.poliklinik'))->name('admin.poliklinik');
+  Route::get('/jadwal', fn() => view('admin.jadwal'))->name('admin.jadwal');
+  Route::get('/antrian', fn() => view('admin.dashboard'))->name('admin.antrian');
+  Route::get('/laporan', fn() => view('admin.dashboard'))->name('admin.laporan');
+
 });
 
 Route::prefix('doctor')->middleware('doctor')->group(function () {
   Route::get('/', fn() => view('doctor.dashboard'))->name('doctor.dashboard');
-  Route::get('/jadwal', fn() => view('doctor.jadwal'))->name('doctor.jadwal');
   Route::get('/antrian', fn() => view('doctor.antrian'))->name('doctor.antrian');
+  Route::get('/jadwal', fn() => view('doctor.jadwal'))->name('doctor.jadwal');
+  Route::get('/rekam-medis', fn() => view('doctor.rekam-medis'))->name('doctor.rekam-medis');
+  Route::get('/resep', fn() => view('doctor.resep'))->name('doctor.resep');
+  Route::get('/riwayat', fn() => view('doctor.riwayat'))->name('doctor.riwayat');
+  Route::get('/profil', fn() => view('doctor.profil'))->name('doctor.profil');
+  Route::get('/laporan', fn() => view('doctor.laporan'))->name('doctor.laporan');
 });
 
 
