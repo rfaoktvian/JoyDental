@@ -1,0 +1,360 @@
+@extends('layouts.app')
+
+@section('content')
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="container-fluid">
+    <div class="appointment-card">
+      <div class="section-header">
+      <h2>Form Pendaftaran Janji Temu</h2>
+      </div>
+      <div class="form-section">
+      <form id="appointmentForm">
+        <!-- Bagian 1: Pilih Poliklinik -->
+        <h3 class="section-title">Pilih Poliklinik</h3>
+        <div class="mb-4">
+        <label for="polyclinic" class="form-label">Daftar Poliklinik</label>
+        <select class="form-select" id="polyclinic" required>
+          <option value="" selected disabled>Pilih Poliklinik</option>
+          <option value="1">Klinik Anak (Pediatric)</option>
+          <option value="2">Klinik Dokter Gigi (Surgical)</option>
+          <option value="3">Klinik Bedah Mulut (Surgical)</option>
+          <option value="4">Klinik Penyakit Dalam (Internal Medicine)</option>
+          <option value="5">Klinik Mata (Ophthalmology)</option>
+          <option value="6">Klinik Jantung (Cardiology)</option>
+        </select>
+        <div class="form-text">Pilih poliklinik yang akan Anda kunjungi</div>
+        </div>
+
+        <!-- Bagian 2: Pilih Dokter dan Jadwal -->
+        <h3 class="section-title">Pilih Dokter dan Jadwal</h3>
+
+        <h5 class="mb-3">Dokter yang Tersedia:</h5>
+        <div class="doctor-list mb-4">
+        <div class="doctor-option selected" onclick="selectDoctor(this)">
+          <div class="doctor-option-header">
+          <div class="doctor-image">
+            <img src="doctors_login.png" alt="Dr. Amanda">
+          </div>
+          <div class="doctor-info">
+            <h4>Dr. Amanda Wijaya</h4>
+            <div class="specialty">Spesialis | 12 tahun pengalaman</div>
+            <span class="badge-specialty pediatric">Pediatric</span>
+          </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="far fa-calendar"></i> Sel, Kam
+            <span class="ms-3"><i class="far fa-clock"></i> 09:00 - 14:00</span>
+          </div>
+          <div class="price">
+            Rp <span class="amount">225.000</span>
+          </div>
+          </div>
+        </div>
+
+        <div class="doctor-option" onclick="selectDoctor(this)">
+          <div class="doctor-option-header">
+          <div class="doctor-image">
+            <img src="doctors_login.png" alt="Dr. Jason">
+          </div>
+          <div class="doctor-info">
+            <h4>Dr. Jason Santoso</h4>
+            <div class="specialty">Spesialis | 10 tahun pengalaman</div>
+            <span class="badge-specialty surgical">Surgical</span>
+          </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="far fa-calendar"></i> Sel, Kam
+            <span class="ms-3"><i class="far fa-clock"></i> 10:00 - 15:00</span>
+          </div>
+          <div class="price">
+            Rp <span class="amount">235.000</span>
+          </div>
+          </div>
+        </div>
+
+        <div class="doctor-option" onclick="selectDoctor(this)">
+          <div class="doctor-option-header">
+          <div class="doctor-image">
+            <img src="doctors_login.png" alt="Dr. Dian">
+          </div>
+          <div class="doctor-info">
+            <h4>Dr. Dian Pratiwi</h4>
+            <div class="specialty">Spesialis | 8 tahun pengalaman</div>
+            <span class="badge-specialty pediatric">Pediatric</span>
+          </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="far fa-calendar"></i> Sen, Rab, Jum
+            <span class="ms-3"><i class="far fa-clock"></i> 13:00 - 17:00</span>
+          </div>
+          <div class="price">
+            Rp <span class="amount">210.000</span>
+          </div>
+          </div>
+        </div>
+        </div>
+
+        <div class="row mb-4">
+        <div class="col-md-12">
+          <label class="form-label">Tanggal Kunjungan</label>
+          <input type="date" class="form-control" min="2025-05-13" required>
+        </div>
+        </div>
+
+        <!-- Bagian 3: Identitas Pasien -->
+        <h3 class="section-title">Identitas Pasien</h3>
+
+        <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <label class="form-label m-0">Pilih Pasien</label>
+          <div class="form-check form-switch">
+          <a href="ganti_identitas.php" class="text-danger fw-bold text-decoration-underline">Ganti Identitas</a>
+          </div>
+        </div>
+
+        <div id="selfPatient">
+          <div class="patient-card selected" onclick="selectPatient(this)">
+          <div class="d-flex justify-content-between">
+            <div>
+            <h5 class="mb-1">Walidddd</h5>
+            <div>NIK: 3173011509950001</div>
+            <div>Laki-laki, 30 tahun</div>
+            </div>
+            <div>
+            <span class="badge bg-success">Pribadi</span>
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <div id="otherPatient" style="display: none;">
+          <div class="mb-3">
+          <label class="form-label">Nama Lengkap</label>
+          <input type="text" class="form-control">
+          </div>
+          <div class="mb-3">
+          <label class="form-label">NIK</label>
+          <input type="text" class="form-control">
+          </div>
+          <div class="row mb-3">
+          <div class="col">
+            <label class="form-label">Jenis Kelamin</label>
+            <select class="form-select">
+            <option value="" selected disabled>Pilih</option>
+            <option value="L">Laki-laki</option>
+            <option value="P">Perempuan</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label">Tanggal Lahir</label>
+            <input type="date" class="form-control">
+          </div>
+          </div>
+          <div class="mb-3">
+          <label class="form-label">Alamat</label>
+          <textarea class="form-control" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+          <label class="form-label">No. Handphone</label>
+          <input type="tel" class="form-control">
+          </div>
+        </div>
+        </div>
+
+        <div class="mb-4">
+        <label class="form-label">Keluhan</label>
+        <textarea class="form-control" rows="3" placeholder="Deskripsikan keluhan Anda secara detail..."
+          required></textarea>
+        </div>
+
+        <!-- Bagian 4: Cara Bayar -->
+        <h3 class="section-title">Cara Bayar</h3>
+
+        <div class="payment-options mb-4">
+        <label class="form-label mb-3">Pilih Metode Pembayaran</label>
+
+        <div class="payment-option selected" onclick="selectPayment(this)" data-payment="bpjs">
+          <div class="payment-icon">
+          <i class="fas fa-hand-holding-medical"></i>
+          </div>
+          <div>
+          <h5 class="mb-1">Tanpa Asuransi/Umum</h5>
+          </div>
+        </div>
+
+        <div class="payment-option" onclick="selectPayment(this)" data-payment="digital">
+          <div class="payment-icon">
+          <i class="fas fa-credit-card"></i>
+          </div>
+          <div>
+          <h5 class="mb-1">Rujuk Internal</h5>
+          </div>
+        </div>
+
+        <div class="payment-option" onclick="selectPayment(this)" data-payment="cash">
+          <div class="payment-icon">
+          <i class="fas fa-money-bill-wave"></i>
+          </div>
+          <div>
+          <h5 class="mb-1">PT. Jasa Raharja</h5>
+          </div>
+        </div>
+
+        <div class="payment-option" onclick="selectPayment(this)" data-payment="insurance">
+          <div class="payment-icon">
+          <i class="fas fa-building"></i>
+          </div>
+          <div>
+          <h5 class="mb-1">Inhealt</h5>
+          </div>
+        </div>
+        <div class="payment-option" onclick="selectPayment(this)" data-payment="insurance">
+          <div class="payment-icon">
+          <i class="fas fa-building"></i>
+          </div>
+          <div>
+          <h5 class="mb-1">PT. Kereta Api Indonesia</h5>
+          </div>
+        </div>
+        </div>
+
+        <div class="mb-4">
+        <div class="alert alert-info d-flex align-items-center" role="alert">
+          <i class="fas fa-info-circle me-2"></i>
+          <div>
+          <strong>Informasi:</strong> Pasien setelah mendaftar diharap untuk datang 15 menit sebelum waktu yang
+          telah ditentukan. Jika pasien tidak hadir dalam waktu 30 menit setelah waktu yang ditentukan, maka janji
+          temu akan dibatalkan secara otomatis.
+          </div>
+        </div>
+        </div>
+
+        <div class="mb-4">
+        <div class="card">
+          <div class="card-header bg-light">
+          <h5 class="card-title mb-0">Ringkasan Pemesanan</h5>
+          </div>
+          <div class="card-body">
+          <dl class="row mb-0">
+            <dt class="col-sm-4">Poliklinik</dt>
+            <dd class="col-sm-8">Klinik Anak (Pediatric)</dd>
+
+            <dt class="col-sm-4">Dokter</dt>
+            <dd class="col-sm-8">Dr. Amanda Wijaya</dd>
+
+            <dt class="col-sm-4">Jadwal</dt>
+            <dd class="col-sm-8">Selasa, 13 Mei 2025 | 09:00 - 14.00 WIB</dd>
+
+            <dt class="col-sm-4">Pasien</dt>
+            <dd class="col-sm-8">Walidddd</dd>
+
+            <dt class="col-sm-4">Metode Pembayaran</dt>
+            <dd class="col-sm-8">Tanpa Asuransi/Umum</dd>
+
+            <dt class="col-sm-4">Biaya Konsultasi</dt>
+            <dd class="col-sm-8">Rp 225.000</dd>
+          </dl>
+          </div>
+        </div>
+        </div>
+
+        <div class="text-end mt-5">
+        <button type="submit" class="btn btn-submit">Konfirmasi Janji Temu</button>
+        </div>
+      </form>
+      </div>
+    </div>
+    </div>
+  </div>
+  <!-- Modal untuk Konfirmasi Keluar -->
+  <div class="modal fade modal-confirm" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+      <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Keluar</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="icon-box">
+        <i class="fas fa-sign-out-alt text-warning"></i>
+      </div>
+      <h4 class="modal-title mt-3">Keluar dari AppointDoc?</h4>
+      <p class="mb-0 mt-3">Apakah Anda yakin ingin keluar dari sistem?</p>
+      <p class="text-muted small mt-2">Semua perubahan yang belum disimpan akan hilang.</p>
+      </div>
+      <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+      <a href="index.html" class="btn btn-danger">Ya, Keluar</a>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap & Popper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+
+  <!-- JavaScript untuk toggle sidebar -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const body = document.body;
+
+    // Event listener untuk menu keluar
+    const logoutLink = document.querySelector('.sidebar .nav-item:last-child .nav-link');
+    if (logoutLink) {
+      logoutLink.addEventListener('click', function (e) {
+      e.preventDefault(); // Mencegah link langsung diikuti
+      const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+      logoutModal.show();
+      });
+    }
+
+    // Fungsi toggle yang diperbarui
+    sidebarToggle.addEventListener('click', function () {
+      body.classList.toggle('sidebar-collapsed');
+    });
+    });
+
+    function removeUnwantedIframes() {
+    // Mencari semua iframe dengan URL yang berisi "remove.video"
+    const iframes = document.querySelectorAll('iframe[src*="remove.video"]');
+
+    // Menghapus iframe dan parent div-nya jika ditemukan
+    iframes.forEach(iframe => {
+      const parentDiv = iframe.parentElement;
+      if (parentDiv && parentDiv.tagName === 'DIV') {
+      console.log('Menghapus iframe yang tidak diinginkan:', iframe.src);
+      parentDiv.remove();
+      }
+    });
+    }
+
+    // Jalankan segera setelah DOM dimuat
+    document.addEventListener('DOMContentLoaded', removeUnwantedIframes);
+
+    // Jalankan lagi setelah beberapa detik untuk menangani injeksi yang tertunda
+    setTimeout(removeUnwantedIframes, 1000);
+    setTimeout(removeUnwantedIframes, 3000);
+
+    // Tambahkan MutationObserver untuk mendeteksi perubahan DOM
+    const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.addedNodes.length) {
+      removeUnwantedIframes();
+      }
+    });
+    });
+
+    // Mulai mengamati perubahan pada dokumen
+    observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+    });
+  </script>
+@endsection
