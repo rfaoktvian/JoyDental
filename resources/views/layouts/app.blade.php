@@ -219,7 +219,7 @@
                                 <div class="sidebar-divider"></div>
                             </div>
 
-                            @if (Auth::check() && $user->role === 'admin')
+                            @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
                                 <div class="sidebar-section">
                                     <div class="sidebar-group-title">DOCTOR</div>
                                     <ul class="nav flex-column sidebar-group">
@@ -236,7 +236,7 @@
                                     <div class="sidebar-divider"></div>
                                 </div>
                             @endif
-                            @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
+                            @if (Auth::check() && $user->role === 'admin')
                                 <div class="sidebar-section">
                                     <div class="sidebar-group-title">Admin</div>
                                     <ul class="nav flex-column sidebar-group">
