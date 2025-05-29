@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>AppointDoc</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Font Awesome -->
@@ -204,7 +204,8 @@
                                         <div class="d-flex align-items-center">
                                             <div class="vr" style="height: 1.25rem;"></div>
                                         </div>
-                                        <p class="mb-0">Dashboard</p>
+                                        <p class="mb-0" id="page-title">AppointDoc</p>
+                                        </p>
                                     </div>
                                     <div class="d-flex align-items-center gap-2">
                                         @guest
@@ -299,6 +300,8 @@
                     const href = new URL(link.href).pathname.replace(/\/+$/, '');
                     link.classList.toggle('active', href === path);
                 });
+
+                console.log('HTMX after swap: Updated sidebar active state');
             });
         </script>
     </body>
