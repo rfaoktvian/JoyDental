@@ -66,51 +66,48 @@
     @endphp
 
     <div class="container">
-
-        <div class="border-bottom mb-3 pb-2 sticky-top pt-3 px-1" style="background: #F5F5F5; ">
-            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                <input type="text" name="q" value="{{ $search }}" class="form-control form-control-sm w-auto"
-                    placeholder="Cari pasien…" hx-get="{{ url()->current() }}" hx-trigger="keyup changed delay:300ms"
-                    hx-target="#page-content" hx-push-url="true">
-                <select name="clinic" class="form-select form-select-sm w-auto" hx-get="{{ url()->current() }}"
-                    hx-trigger="change" hx-target="#page-content" hx-push-url="true">
-                    <option value="">Semua Poliklinik</option>
-                    @foreach ($appointments->pluck('clinic.name')->unique() as $clinicName)
-                        <option value="{{ $clinicName }}" {{ $clinicName == $clinic ? 'selected' : '' }}>
-                            {{ $clinicName }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-
-            <ul class="nav nav-pills small fw-bold align-items-center" id="statusTabs" style="gap:.5rem">
-                <span class="fw-semibold">Status</span>
-
-                @foreach ($tabs as $key => $t)
-                    <li class="nav-item">
-                        <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}" {{-- link fallback (non-JS) --}}
-                            class="nav-link {{ $key === $currentTab ? 'active' : '' }}"
-                            hx-get="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}" {{-- load via HTMX --}}
-                            hx-target="#page-content" hx-push-url="true">
-                            {{ $t['label'] }}
-                            <span class="badge bg-danger border border-1 border-white ms-1">{{ $t['count'] }}</span>
-                        </a>
-                    </li>
-                @endforeach
-
-                <li class="ms-auto">
-                    <button id="refreshBtn"
-                        class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center p-0"
-                        style="width:32px;height:32px" hx-get="{{ request()->fullUrl() }}" {{-- ← pertahankan tab & filter --}}
-                        hx-target="#page-content" hx-swap="outerHTML" hx-indicator="#htmx-indicator" title="Refresh">
-                        <i class="fa fa-sync-alt m-auto"></i>
-                    </button>
-                </li>
-            </ul>
-        </div>
-
         <div class="tab-content">
+            <div class="border-bottom mb-3 pb-2 sticky-top pt-3 px-1" style="background: #F5F5F5; ">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                    <input type="text" name="q" value="{{ $search }}" class="form-control form-control-sm w-auto"
+                        placeholder="Cari pasien…" hx-get="{{ url()->current() }}" hx-trigger="keyup changed delay:300ms"
+                        hx-target="#page-content" hx-push-url="true">
+                    <select name="clinic" class="form-select form-select-sm w-auto" hx-get="{{ url()->current() }}"
+                        hx-trigger="change" hx-target="#page-content" hx-push-url="true">
+                        <option value="">Semua Poliklinik</option>
+                        @foreach ($appointments->pluck('clinic.name')->unique() as $clinicName)
+                            <option value="{{ $clinicName }}" {{ $clinicName == $clinic ? 'selected' : '' }}>
+                                {{ $clinicName }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
+                <ul class="nav nav-pills small fw-bold align-items-center" id="statusTabs" style="gap:.5rem">
+                    <span class="fw-semibold">Status</span>
+
+                    @foreach ($tabs as $key => $t)
+                        <li class="nav-item">
+                            <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}" {{-- link fallback (non-JS) --}}
+                                class="nav-link {{ $key === $currentTab ? 'active' : '' }}"
+                                hx-get="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}"
+                                {{-- load via HTMX --}} hx-target="#page-content" hx-push-url="true">
+                                {{ $t['label'] }}
+                                <span class="badge bg-danger border border-1 border-white ms-1">{{ $t['count'] }}</span>
+                            </a>
+                        </li>
+                    @endforeach
+
+                    <li class="ms-auto">
+                        <button id="refreshBtn"
+                            class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center p-0"
+                            style="width:32px;height:32px" hx-get="{{ request()->fullUrl() }}" {{-- ← pertahankan tab & filter --}}
+                            hx-target="#page-content" hx-swap="outerHTML" hx-indicator="#htmx-indicator" title="Refresh">
+                            <i class="fa fa-sync-alt m-auto"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
             @foreach ($tabs as $key => $tab)
                 <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }} pt-2" id="pane-{{ $key }}"
                     role="tabpanel">

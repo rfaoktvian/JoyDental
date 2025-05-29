@@ -1,9 +1,12 @@
 <div class="d-flex flex-column align-items-end justify-content-center gap-2">
     @if ($appt->status === \App\Enums\AppointmentStatus::Upcoming)
         <div class="d-flex gap-2">
-            <form action="{{ route('doctor.antrian.complete', $appt) }}" method="POST">@csrf
-                <button class="btn btn-sm btn-outline-success">Selesai</button>
-            </form>
+            @unless (Auth::check() && Auth::user()->role !== 'admin' && Auth::user()->role !== 'doctor')
+                <form action="{{ route('doctor.antrian.complete', $appt) }}" method="POST">
+                    @csrf
+                    <button class="btn btn-sm btn-outline-success">Selesai</button>
+                </form>
+            @endunless
             <form action="{{ route('doctor.antrian.cancel', $appt) }}" method="POST">
                 @csrf
                 <button class="btn btn-sm btn-outline-danger">Batalkan</button>

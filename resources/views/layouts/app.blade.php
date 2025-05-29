@@ -295,7 +295,7 @@
                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     <div class="d-flex align-items-center gap-3">
                                                         <div class="fw-semibold text-dark">{{ $user->name }}</div>
-                                                        @if (Auth::check() && $user->role === 'admin')
+                                                        @if (Auth::check() && ($user->role === 'admin' || $user->role === 'doctor'))
                                                             <div class="d-flex align-items-center">
                                                                 <div class="vr text-muted" style="height: 1.25rem;"></div>
                                                             </div>
