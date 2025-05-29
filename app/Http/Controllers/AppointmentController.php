@@ -15,15 +15,8 @@ class AppointmentController extends Controller
         $search = request('q');
         $clinic = request('clinic');
 
-        if ($user->role === 'admin') {
-            $base = Appointment::with(['patient', 'clinic', 'doctor']);
-        } elseif ($user->role === 'doctor') {
-            $base = Appointment::with(['patient', 'clinic'])
-                ->where('doctor_id', $user->id);
-        } else {
-            $base = Appointment::with(['clinic'])
-                ->where('user_id', $user->id);
-        }
+        $base = Appointment::with(['clinic'])
+            ->where('user_id', $user->id);
 
         if ($search) {
             $base->whereHas('patient', fn($q) =>
@@ -45,11 +38,18 @@ class AppointmentController extends Controller
             $listQuery->where('status', AppointmentStatus::fromLabel($currentTab));
         }
 
+        $ongoing = (clone $base)
+            ->where('status', AppointmentStatus::Upcoming)
+            ->latest('appointment_date')
+            ->paginate(3, ['*'], 'ongoing_page')
+            ->withQueryString();
+
         $appointments = $listQuery->latest('appointment_date')
             ->paginate(12)
             ->withQueryString();
 
-        return view('doctor.antrian', compact(
+        return view('tiket-antrian', compact(
+            'ongoing',
             'appointments',
             'statusCount',
             'currentTab',

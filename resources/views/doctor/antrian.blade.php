@@ -118,38 +118,7 @@
                     <div class="row g-4" id="grid-{{ $key }}">
                         @forelse ($appointments->when($key!=='all',fn($q) => $q->where('status',
                         AppointmentStatus::fromLabel($key))) as $appt)
-                        <div class="col-12 col-md-6 col-lg-4 appt-card" data-clinic="{{ $appt->clinic->name }}"
-                            data-name="{{ Str::lower($appt->patient->name) }}">
-                            <div class="card h-100 shadow-sm border-0">
-                                <div class="card-body small">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <div>
-                                            <h6 class="fw-semibold mb-0">{{ $appt->patient->name }}</h6>
-                                            <span class="text-muted">{{ $appt->patient->phone }}</span>
-                                        </div>
-                                        <span
-                                            class="badge bg-{{ $appt->badgeColor }}-subtle text-{{ $appt->badgeColor }}">
-                                            {{ ucfirst($appt->status->label()) }}
-                                        </span>
-                                    </div>
-
-                                    <ul class="list-unstyled mb-3">
-                                        <li class="d-flex align-items-center" style="gap: 0.5rem;">
-                                            <i class="fa fa-clock text-muted"></i>
-                                            <span>
-                                                {{ $appt->appointment_time->format('H:i') }},
-                                                {{ $appt->appointment_date->format('d M Y') }}
-                                            </span>
-                                        </li>
-                                        <li class="d-flex align-items-center" style="gap: 0.5rem;">
-                                            <i class="fa fa-hospital text-muted"></i>
-                                            <span>{{ $appt->clinic?->name }} - {{ $appt->clinic?->location }}</span>
-                                        </li>
-                                    </ul>
-                                    @include('partials.actions')
-                                </div>
-                            </div>
-                        </div>
+                        @include('partials.ticket-card', ['appt' => $appt])
                         @empty
                             <div class="text-center py-5 text-muted w-100">Tidak ada data…</div>
                 @endforelse
