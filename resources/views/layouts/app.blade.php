@@ -77,6 +77,36 @@
         #sidebar .nav-link.active i {
             color: #fff;
         }
+
+        #page-content.custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #d32f2f #f5f5f5;
+            scroll-behavior: smooth;
+        }
+
+        #page-content.custom-scrollbar::-webkit-scrollbar {
+            width: 10px;
+            background: linear-gradient(180deg, #f5f5f5 60%, #ffeaea 100%);
+            border-radius: 8px;
+        }
+
+        #page-content.custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #d32f2f 60%, #b71c1c 100%);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(211, 47, 47, 0.15);
+            border: 2px solid #fff;
+            min-height: 40px;
+            transition: background 0.3s;
+        }
+
+        #page-content.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #b71c1c 60%, #d32f2f 100%);
+            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
+        }
+
+        #page-content.custom-scrollbar::-webkit-scrollbar-corner {
+            background: #f5f5f5;
+        }
     </style>
 </head>
 
@@ -86,7 +116,7 @@
 
 @if (request()->header('HX-Request'))
     <main id="page-content">
-        <div class="container-fluid" style="height:100%;">
+        <div class="custom-container" style="height:100%;">
             <main>
                 @yield('content')
             </main>
@@ -237,44 +267,12 @@
                         </nav>
                         <main id="page-content" class="custom-scrollbar"
                             style="flex:1 1 0; overflow-y:auto; min-height:0;">
-                            <div class="container-fluid" style="height:100%;">
+                            <div class="custom-container" style="height:100%;">
                                 <main>
                                     @yield('content')
                                 </main>
                             </div>
                         </main>
-
-                        <style>
-                            #page-content.custom-scrollbar {
-                                scrollbar-width: thin;
-                                scrollbar-color: #d32f2f #f5f5f5;
-                                scroll-behavior: smooth;
-                            }
-
-                            #page-content.custom-scrollbar::-webkit-scrollbar {
-                                width: 10px;
-                                background: linear-gradient(180deg, #f5f5f5 60%, #ffeaea 100%);
-                                border-radius: 8px;
-                            }
-
-                            #page-content.custom-scrollbar::-webkit-scrollbar-thumb {
-                                background: linear-gradient(135deg, #d32f2f 60%, #b71c1c 100%);
-                                border-radius: 8px;
-                                box-shadow: 0 2px 8px rgba(211, 47, 47, 0.15);
-                                border: 2px solid #fff;
-                                min-height: 40px;
-                                transition: background 0.3s;
-                            }
-
-                            #page-content.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                                background: linear-gradient(135deg, #b71c1c 60%, #d32f2f 100%);
-                                box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
-                            }
-
-                            #page-content.custom-scrollbar::-webkit-scrollbar-corner {
-                                background: #f5f5f5;
-                            }
-                        </style>
                     </div>
                 </div>
             </div>
