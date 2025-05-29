@@ -49,7 +49,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('appointment_ticket', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->string('queue_number');
             $table->string('booking_code')->unique();

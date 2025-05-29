@@ -3,6 +3,7 @@
 use App\Http\Controllers\PoliklinikController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AppointmentController;
 
 // Importing routes from other files
 Route::middleware('web')
@@ -20,7 +21,8 @@ Route::get('/janji-temu', fn() => view('janji-temu'))
 Route::get('/rekam-medis', fn() => view('rekam-medis'))
   ->name('rekam-medis');
 
-Route::get('/tiket-antrian', fn() => view('tiket-antrian'))
+Route::middleware(['auth'])
+  ->get('/tiket-antrian', [AppointmentController::class, 'tiketAntrian'])
   ->name('tiket-antrian');
 
 use App\Http\Controllers\DoctorController;
@@ -30,6 +32,45 @@ Route::get('/poliklinik', [PoliklinikController::class, 'index'])->name('polikli
 
 Route::get('/bantuan', fn() => view('bantuan'))
   ->name('bantuan');
+
+Route::get('/profil', fn() => view('profil'))
+  ->name('profil');
+
+Route::prefix('doctor')
+  ->middleware(['auth', 'doctor'])
+  ->name('doctor.')
+  ->group(function () {
+
+    Route::get('/', fn() => view('doctor.dashboard'))
+      ->name('dashboard');
+
+    Route::get('/antrian', [AppointmentController::class, 'antrianPasien'])
+      ->name('antrian');
+
+    Route::post(
+      '/antrian/{appointment}/start',
+      [AppointmentController::class, 'start']
+    )
+      ->name('antrian.start');
+
+    Route::post(
+      '/antrian/{appointment}/complete',
+      [AppointmentController::class, 'complete']
+    )
+      ->name('antrian.complete');
+
+    Route::post(
+      '/antrian/{appointment}/cancel',
+      [AppointmentController::class, 'cancel']
+    )
+      ->name('antrian.cancel');
+
+    Route::view('/jadwal', 'doctor.jadwal')->name('jadwal');
+    Route::view('/pasien', 'doctor.pasien')->name('pasien');
+    Route::view('/resep', 'doctor.resep')->name('resep');
+    Route::view('/riwayat', 'doctor.riwayat')->name('riwayat');
+    Route::view('/laporan', 'doctor.laporan')->name('laporan');
+  });
 
 Route::prefix('admin')->middleware('admin')->group(function () {
   Route::get('/', fn() => view('admin.dashboard'))->name('admin.dashboard');
@@ -47,16 +88,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
 });
 
-Route::prefix('doctor')->middleware('doctor')->group(function () {
-  Route::get('/', fn() => view('doctor.dashboard'))->name('doctor.dashboard');
-  Route::get('/antrian', fn() => view('doctor.antrian'))->name('doctor.antrian');
-  Route::get('/jadwal', fn() => view('doctor.jadwal'))->name('doctor.jadwal');
-  Route::get('/rekam-medis', fn() => view('doctor.rekam-medis'))->name('doctor.rekam-medis');
-  Route::get('/resep', fn() => view('doctor.resep'))->name('doctor.resep');
-  Route::get('/riwayat', fn() => view('doctor.riwayat'))->name('doctor.riwayat');
-  Route::get('/profil', fn() => view('doctor.profil'))->name('doctor.profil');
-  Route::get('/laporan', fn() => view('doctor.laporan'))->name('doctor.laporan');
-});
 
 
 View::share('hideNavRoutes', value: [

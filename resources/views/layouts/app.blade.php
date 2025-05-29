@@ -7,6 +7,15 @@
     <title>AppointDoc</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <script>
+        document.addEventListener('htmx:configRequest', (e) => {
+
+            console.log('HTMX request config:', e.detail);
+            e.detail.headers['X-CSRF-TOKEN'] =
+                document.querySelector('meta[name="csrf-token"]').content;
+        });
+    </script>
+
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
@@ -14,14 +23,25 @@
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
     <style>
+        #page-content.custom-scrollbar {
+            height: 100vh;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        #page-content.custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
         .sidebar-scrollable {
+            height: 100vh;
+            overflow-y: auto;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
 
         .sidebar-scrollable::-webkit-scrollbar {
-            width: 0;
-            height: 0;
             display: none;
         }
 
@@ -34,9 +54,71 @@
             padding: 0;
         }
 
+        .sidebar-header {
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .sidebar-group-title {
+            font-size: 0.6875rem;
+            color: rgba(255, 255, 255, 0.75);
+            padding: 0.5rem 1rem 0.25rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-group {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.25);
+            margin: 0.5rem 1rem;
+            transition: opacity 0.3s ease;
+        }
+
         #sidebar {
             width: 250px;
             transition: width 0.3s ease;
+            background: #c62828;
+        }
+
+        #sidebar .nav-link {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.8);
+            padding: .85rem 0.85rem;
+            transition: all 0.2s ease;
+
+        }
+
+        #sidebar .nav-link i {
+            width: 1.25rem;
+            text-align: center;
+            margin-right: .75rem;
+            flex-shrink: 0;
+        }
+
+        .nav-link:hover {
+            background: #b71c1c;
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: #b71c1c;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        #sidebar .nav-link.active i {
+            color: #fff;
         }
 
         #sidebar .sidebar-text {
@@ -53,59 +135,29 @@
             opacity: 0;
         }
 
-        #sidebar .nav-link {
-            display: flex;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.8);
-            padding: .85rem 0.85rem;
-            transition: all 0.2s ease;
+        .sidebar-text {
+            opacity: 1;
+            max-height: 100px;
+            overflow: hidden;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
         }
 
-        #sidebar .nav-link i {
-            width: 1.25rem;
-            text-align: center;
-            margin-right: .75rem;
-            flex-shrink: 0;
+        body.sidebar-collapsed .sidebar-text,
+        body.sidebar-collapsed .sidebar-group-title {
+            opacity: 0;
+            max-height: 0;
+            margin: 0;
+            padding: 0;
+            pointer-events: none;
         }
 
-        #sidebar .nav-link.active,
-        #sidebar .nav-link:hover {
-            background: #b71c1c;
-            color: #fff;
+        body.sidebar-collapsed .sidebar-divider {
+            opacity: 1;
         }
 
-        #sidebar .nav-link.active i {
-            color: #fff;
-        }
-
-        #page-content.custom-scrollbar {
-            scrollbar-width: thin;
-            scrollbar-color: #d32f2f #f5f5f5;
-            scroll-behavior: smooth;
-        }
-
-        #page-content.custom-scrollbar::-webkit-scrollbar {
-            width: 10px;
-            background: linear-gradient(180deg, #f5f5f5 60%, #ffeaea 100%);
-            border-radius: 8px;
-        }
-
-        #page-content.custom-scrollbar::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #d32f2f 60%, #b71c1c 100%);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(211, 47, 47, 0.15);
-            border: 2px solid #fff;
-            min-height: 40px;
-            transition: background 0.3s;
-        }
-
-        #page-content.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #b71c1c 60%, #d32f2f 100%);
-            box-shadow: 0 4px 12px rgba(183, 28, 28, 0.25);
-        }
-
-        #page-content.custom-scrollbar::-webkit-scrollbar-corner {
-            background: #f5f5f5;
+        #sidebar,
+        #sidebar * {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
@@ -143,28 +195,18 @@
                 <div
                     style="width: 100vw; height: 100vh; background-color: #F5F5F5; overflow: hidden; justify-content: flex-start; align-items: stretch; display: flex;">
                     <nav id="sidebar">
-                        <div class="sidebar-scrollable bg-danger shadow-sm" style="height: 100vh; overflow-y: auto;">
-                            <div class="d-flex align-items-center justify-content-center"
-                                style="height:3rem; width:100%;">
+                        <div class="sidebar-scrollable">
+                            <div class="sidebar-header">
                                 <i class="fas fa-heart-pulse text-white fs-5"></i>
                             </div>
-                            <ul class="nav flex-column sidebar-group">
-                                @foreach ($sidebarMenu as $item)
-                                    @if (isset($item['auth']) && $item['auth'] && !Auth::check())
-                                        @continue
-                                    @endif
-                                    <li class="nav-item">
-                                        <a href="{{ route($item['route']) }}"
-                                            class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
-                                            <i class="{{ $item['icon'] }}"></i>
-                                            <span class="sidebar-text">{{ $item['label'] }}</span>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                            @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
+                            <div class="sidebar-section">
+                                <div class="sidebar-group-title">CLINIC</div>
                                 <ul class="nav flex-column sidebar-group">
-                                    @foreach ($siderbarAdminMenu as $item)
+                                    @foreach ($sidebarMenu as $item)
+                                        {{-- skip if not authorized --}}
+                                        @if (isset($item['auth']) && $item['auth'] && !Auth::check())
+                                            @continue
+                                        @endif
                                         <li class="nav-item">
                                             <a href="{{ route($item['route']) }}"
                                                 class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
@@ -174,24 +216,48 @@
                                         </li>
                                     @endforeach
                                 </ul>
-                            @endif
+                                <div class="sidebar-divider"></div>
+                            </div>
+
                             @if (Auth::check() && $user->role === 'admin')
-                                <ul class="nav flex-column sidebar-group">
-                                    @foreach ($sidebarDokterMenu as $item)
-                                        <li class="nav-item">
-                                            <a href="{{ route($item['route']) }}"
-                                                class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
-                                                <i class="{{ $item['icon'] }}"></i>
-                                                <span class="sidebar-text">{{ $item['label'] }}</span>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                <div class="sidebar-section">
+                                    <div class="sidebar-group-title">DOCTOR</div>
+                                    <ul class="nav flex-column sidebar-group">
+                                        @foreach ($sidebarDokterMenu as $item)
+                                            <li class="nav-item">
+                                                <a href="{{ route($item['route']) }}"
+                                                    class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                                    <i class="{{ $item['icon'] }}"></i>
+                                                    <span class="sidebar-text">{{ $item['label'] }}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    <div class="sidebar-divider"></div>
+                                </div>
                             @endif
+                            @if (Auth::check() && in_array($user->role, ['doctor', 'admin']))
+                                <div class="sidebar-section">
+                                    <div class="sidebar-group-title">Admin</div>
+                                    <ul class="nav flex-column sidebar-group">
+                                        @foreach ($siderbarAdminMenu as $item)
+                                            <li class="nav-item">
+                                                <a href="{{ route($item['route']) }}"
+                                                    class="nav-link {{ Request::routeIs($item['route']) ? 'active' : '' }}">
+                                                    <i class="{{ $item['icon'] }}"></i>
+                                                    <span class="sidebar-text">{{ $item['label'] }}</span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    <div class="sidebar-divider"></div>
+                                </div>
+                            @endif
+
                         </div>
                     </nav>
                     <div style="flex: 1; display: flex; flex-direction: column; height: 100vh; min-width:0;">
-                        <nav id="navbar">
+                        <nav id="navbar" style="z-index: 1000">
                             <nav class="bg-white shadow-sm border-bottom border-1 border-muted d-flex ms-auto align-items-center"
                                 style="height:3rem;">
                                 <div class="d-flex align-items-center justify-content-between w-100 px-3">
@@ -244,7 +310,8 @@
                                                 <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm"
                                                     aria-labelledby="profileDropdown">
                                                     <li>
-                                                        <a class="dropdown-item" href="#">Profil Saya</a>
+                                                        <a class="dropdown-item" href="{{ route('profil') }}">Profil
+                                                            Saya</a>
                                                     </li>
                                                     <li>
                                                         <hr class="dropdown-divider">
@@ -267,7 +334,7 @@
                             </nav>
                         </nav>
                         <main id="page-content" class="custom-scrollbar"
-                            style="flex:1 1 0; overflow-y:auto; min-height:0;">
+                            style="flex:1 1 0; overflow-y:auto; min-height:0; z-index: 999;">
                             <div class="custom-container" style="height:100%;">
                                 <main>
                                     @yield('content')
