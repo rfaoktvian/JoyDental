@@ -204,5 +204,23 @@ class BaseDataSeed extends Seeder
         ];
 
         DB::table('doctor_reviews')->insert($reviews);
+
+
+        for ($i = 1; $i <= 30; $i++) {
+            DB::table('appointments')->insert([
+                'queue_number' => 'A' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                'booking_code' => Str::random(10),
+                'user_id' => 1,
+                'doctor_id' => 1,
+                'doctor_schedule_id' => 1, // Jadwal dokter Amanda
+                'status' => 1,
+                'appointment_date' => Carbon::now()->addDays(1),
+                'appointment_time' => '10:00',
+                'payment_method' => 'Cash',
+                'consultation_fee' => '25000',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
     }
 }

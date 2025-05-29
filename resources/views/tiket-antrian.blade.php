@@ -33,6 +33,16 @@
             color: white;
             border-color: #d32f2f;
         }
+
+        .pagination-wrapper .page-link {
+            padding: .35rem .65rem;
+            font-size: .825rem;
+        }
+
+        .pagination-wrapper .page-link i {
+            font-size: .65rem;
+            vertical-align: -1px;
+        }
     </style>
 
     @php
@@ -58,6 +68,8 @@
     <div class="container">
 
         <div class="border-bottom mb-3 pb-2 sticky-top pt-3 px-1" style="background: #F5F5F5; ">
+
+
             <ul class="nav nav-pills small fw-bold align-items-center" id="statusTabs" style="gap:.5rem">
                 <span class="fw-semibold">Status</span>
                 @foreach ($tabs as $key => $t)
@@ -131,8 +143,10 @@
 
         </div>
 
-        <div class="mt-4">{{ $appointments->withQueryString()->links() }}</div>
-        </div>
+        @if ($appointments->hasPages())
+            {{ $appointments->withQueryString()->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
+        @endif
+
 
         <script>
             window.filterCards = function(keyword) {

@@ -11,92 +11,99 @@ class AppointmentController extends Controller
     public function tiketAntrian()
     {
         $user = Auth::user();
+        $currentTab = request('tab', 'all');
+        $search = request('q');
+        $clinic = request('clinic');
 
         if ($user->role === 'admin') {
-
-            $appointments = Appointment::with(['patient', 'clinic', 'doctor'])
-                ->latest('appointment_date')
-                ->paginate(15);                           // page lebih besar untuk admin
-
-            $statusCount = Appointment::selectRaw('status, COUNT(*) total')
-                ->groupBy('status')
-                ->pluck('total', 'status');
-
-            return view('tiket-antrian', compact('appointments', 'statusCount'));
+            $base = Appointment::with(['patient', 'clinic', 'doctor']);
+        } elseif ($user->role === 'doctor') {
+            $base = Appointment::with(['patient', 'clinic'])
+                ->where('doctor_id', $user->id);
+        } else {
+            $base = Appointment::with(['clinic'])
+                ->where('user_id', $user->id);
         }
 
-        if ($user->role === 'doctor') {
-
-            $appointments = Appointment::with(['patient', 'clinic'])
-                ->where('doctor_id', $user->id)
-                ->latest('appointment_date')
-                ->paginate(12);
-
-            $statusCount = Appointment::where('doctor_id', $user->id)
-                ->selectRaw('status, COUNT(*) total')
-                ->groupBy('status')
-                ->pluck('total', 'status');
-
-            return view('tiket-antrian', compact('appointments', 'statusCount'));
+        if ($search) {
+            $base->whereHas('patient', fn($q) =>
+                $q->where('name', 'like', "%{$search}%"));
+        }
+        if ($clinic) {
+            $base->whereHas('clinic', fn($q) =>
+                $q->where('name', $clinic));
         }
 
-        $appointments = Appointment::with(['clinic'])
-            ->where('user_id', $user->id)
-            ->latest('appointment_date')
-            ->paginate(12);
-
-        $statusCount = Appointment::where('user_id', $user->id)
+        $statusCount = (clone $base)
+            ->reorder()
             ->selectRaw('status, COUNT(*) total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('tiket-antrian', compact('appointments', 'statusCount'));
+        $listQuery = clone $base;
+        if ($currentTab !== 'all') {
+            $listQuery->where('status', AppointmentStatus::fromLabel($currentTab));
+        }
+
+        $appointments = $listQuery->latest('appointment_date')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('doctor.antrian', compact(
+            'appointments',
+            'statusCount',
+            'currentTab',
+            'search',
+            'clinic'
+        ));
     }
 
 
     public function antrianPasien()
     {
         $user = Auth::user();
+        $currentTab = request('tab', 'all');
+        $search = request('q');
+        $clinic = request('clinic');
 
         if ($user->role === 'admin') {
-
-            $appointments = Appointment::with(['patient', 'clinic', 'doctor'])
-                ->latest('appointment_date')
-                ->paginate(15);                           // page lebih besar untuk admin
-
-            $statusCount = Appointment::selectRaw('status, COUNT(*) total')
-                ->groupBy('status')
-                ->pluck('total', 'status');
-
-            return view('doctor.antrian', compact('appointments', 'statusCount'));
+            $base = Appointment::with(['patient', 'clinic', 'doctor']);
+        } elseif ($user->role === 'doctor') {
+            $base = Appointment::with(['patient', 'clinic'])
+                ->where('doctor_id', $user->id);
         }
 
-        if ($user->role === 'doctor') {
-
-            $appointments = Appointment::with(['patient', 'clinic'])
-                ->where('doctor_id', $user->id)
-                ->latest('appointment_date')
-                ->paginate(12);
-
-            $statusCount = Appointment::where('doctor_id', $user->id)
-                ->selectRaw('status, COUNT(*) total')
-                ->groupBy('status')
-                ->pluck('total', 'status');
-
-            return view('doctor.antrian', compact('appointments', 'statusCount'));
+        if ($search) {
+            $base->whereHas('patient', fn($q) =>
+                $q->where('name', 'like', "%{$search}%"));
+        }
+        if ($clinic) {
+            $base->whereHas('clinic', fn($q) =>
+                $q->where('name', $clinic));
         }
 
-        $appointments = Appointment::with(['clinic'])
-            ->where('user_id', $user->id)
-            ->latest('appointment_date')
-            ->paginate(12);
-
-        $statusCount = Appointment::where('user_id', $user->id)
+        $statusCount = (clone $base)
+            ->reorder()
             ->selectRaw('status, COUNT(*) total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('doctor.antrian', compact('appointments', 'statusCount'));
+        $listQuery = clone $base;
+        if ($currentTab !== 'all') {
+            $listQuery->where('status', AppointmentStatus::fromLabel($currentTab));
+        }
+
+        $appointments = $listQuery->latest('appointment_date')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view('doctor.antrian', compact(
+            'appointments',
+            'statusCount',
+            'currentTab',
+            'search',
+            'clinic'
+        ));
     }
 
 
