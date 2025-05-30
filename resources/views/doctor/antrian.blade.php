@@ -109,6 +109,7 @@
                     </li>
                 </ul>
             </div>
+            
             @foreach ($tabs as $key => $tab)
                 <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }} pt-2" id="pane-{{ $key }}"
                     role="tabpanel">
