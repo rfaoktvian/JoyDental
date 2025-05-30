@@ -69,6 +69,12 @@ $sidebarDokterMenu = [
     'icon' => 'fas fa-file-alt',
     'route' => 'doctor.laporan',
   ],
+  [
+    'auth' => true,
+    'label' => 'Profil Dokter',
+    'icon' => 'fas fa-file-medical-alt',
+    'route' => 'doctor.profile',
+  ],
 ];
 View::share('sidebarDokterMenu', $sidebarDokterMenu);
 

@@ -84,6 +84,7 @@ Route::prefix('doctor')
     )
       ->name('antrian.cancel');
 
+    Route::view('/profile', 'doctor.profile')->name('profile');
     Route::view('/jadwal', 'doctor.jadwal')->name('jadwal');
     Route::view('/pasien', 'doctor.pasien')->name('pasien');
     Route::view('/resep', 'doctor.resep')->name('resep');

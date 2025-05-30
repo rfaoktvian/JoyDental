@@ -49,23 +49,36 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('appointments', function (Blueprint $table) {
+        Schema::create('medical_history', function (Blueprint $table) {
             $table->id();
-            $table->string('queue_number');
-            $table->string('booking_code')->unique();
 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
-            $table->foreignId('doctor_schedule_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')
+                ->constrained()->cascadeOnDelete();
+            $table->foreignId('doctor_id')
+                ->constrained()->cascadeOnDelete();
 
-            $table->enum('status', [1, 2, 3])->default(1);
-            $table->date('appointment_date');
-            $table->time('appointment_time')->nullable();
-            $table->string('payment_method')->nullable();
-            $table->integer('consultation_fee')->nullable();
+            $table->foreignId('appointment_id')
+                ->nullable()
+                ->constrained()->nullOnDelete();
 
-            $table->integer('alasan')->nullable();
-            $table->string('catatan')->nullable();
+            $table->string('queue_number')->nullable();
+            $table->string('booking_code')->nullable();
+
+            $table->date('visit_date');
+            $table->time('visit_time');
+
+            $table->text('chief_complaint')->nullable();
+            $table->text('diagnosis')->nullable();
+            $table->text('treatment')->nullable();
+            $table->text('prescription')->nullable();
+
+            $table->text('doctor_notes')->nullable();
+            $table->date('follow_up_date')->nullable();
+
+            $table->unsignedTinyInteger('status')
+                ->default(1)
+                ->comment('1=Draft,2=Final');
+
             $table->timestamps();
         });
     }
@@ -75,6 +88,11 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointment_ticket');
+        // urutan DROP dibalik agar tidak melanggar FK
+        Schema::dropIfExists('medical_histories');
+        Schema::dropIfExists('doctor_reviews');
+        Schema::dropIfExists('doctor_schedules');
+        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('polyclinics');
     }
 };

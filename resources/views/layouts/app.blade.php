@@ -204,7 +204,6 @@
                                 <div class="sidebar-group-title">CLINIC</div>
                                 <ul class="nav flex-column sidebar-group">
                                     @foreach ($sidebarMenu as $item)
-                                        {{-- skip if not authorized --}}
                                         @if (isset($item['auth']) && $item['auth'] && !Auth::check())
                                             @continue
                                         @endif
