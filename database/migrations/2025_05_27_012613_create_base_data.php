@@ -64,6 +64,8 @@ return new class extends Migration {
             $table->string('payment_method')->nullable();
             $table->integer('consultation_fee')->nullable();
 
+            $table->integer('alasan')->nullable();
+            $table->string('catatan')->nullable();
             $table->timestamps();
         });
     }

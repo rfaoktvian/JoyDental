@@ -4,7 +4,6 @@ use App\Http\Controllers\PoliklinikController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
-use App\Http\Controllers\JanjiTemuController;
 
 // Importing routes from other files
 Route::middleware('web')
@@ -15,9 +14,6 @@ Route::middleware('web')
 Route::view('/', 'dashboard');
 Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])
   ->name('dashboard');
-
-Route::get('/janji-temu', [JanjiTemuController::class, 'create'])->name('janji-temu');
-Route::post('/janji-temu', [JanjiTemuController::class, 'store'])->name('janji-temu.store');
 
 Route::get('/janji-temu', fn() => view('janji-temu'))
   ->name('janji-temu');
