@@ -9,14 +9,12 @@
 
     <script>
         document.addEventListener('htmx:configRequest', (e) => {
-
-            console.log('HTMX request config:', e.detail);
             e.detail.headers['X-CSRF-TOKEN'] =
                 document.querySelector('meta[name="csrf-token"]').content;
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -166,6 +164,8 @@
     $user = Auth::user();
 @endphp
 
+@stack('scripts')
+
 @if (request()->header('HX-Request'))
     <main id="page-content">
         <div class="custom-container" style="height:100%;">
@@ -179,6 +179,7 @@
     <body hx-boost="true" hx-target="#page-content" hx-push-url="true">
         @includeWhen(Route::has('login'), 'partials.login-modal')
 
+        @include('partials.reschedule-modal')
         <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
             <div id="htmx-indicator" class="progress"
                 style="position:fixed;top:0;left:0;width:0;height:3px;background:#d32f2f;z-index:2000;
@@ -355,7 +356,6 @@
                     body.classList.add('sidebar-collapsed');
                 }
                 toggles.forEach(btn => btn.addEventListener('click', () => {
-                    console.log('Sidebar toggle clicked');
                     const state = body.classList.toggle('sidebar-collapsed');
                     localStorage.setItem('sidebar-collapsed', state);
                 }));
@@ -367,8 +367,6 @@
                     const href = new URL(link.href).pathname.replace(/\/+$/, '');
                     link.classList.toggle('active', href === path);
                 });
-
-                console.log('HTMX after swap: Updated sidebar active state');
             });
         </script>
     </body>

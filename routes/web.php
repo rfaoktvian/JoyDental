@@ -36,6 +36,25 @@ Route::get('/bantuan', fn() => view('bantuan'))
 Route::get('/profil', fn() => view('profil'))
   ->name('profil');
 
+Route::get(
+  '/doctor/antrian/{appointment}/reschedule',
+  [AppointmentController::class, 'reschedule']
+)->name('antrian.reschedule');
+
+Route::patch(
+  '/doctor/antrian/{appointment}/reschedule',
+  [AppointmentController::class, 'saveReschedule']
+)->name('antrian.reschedule.simpan');
+
+Route::get('/api/doctor/{doctor}/schedule', function (\App\Models\Doctor $doctor) {
+  return $doctor->schedules
+    ->map(fn($s) => [
+      'day' => $s->day,
+      'from' => $s->time_from,
+      'to' => $s->time_to,
+    ]);
+});
+
 Route::prefix('doctor')
   ->middleware(['auth', 'doctor'])
   ->name('doctor.')

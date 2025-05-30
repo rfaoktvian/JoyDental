@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Enums\AppointmentStatus;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class AppointmentController extends Controller
 {
@@ -58,7 +60,6 @@ class AppointmentController extends Controller
         ));
     }
 
-
     public function antrianPasien()
     {
         $user = Auth::user();
@@ -109,6 +110,50 @@ class AppointmentController extends Controller
         ));
     }
 
+    public function reschedule(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+        $appointment->load(['clinic', 'doctor']);
+
+
+        if (!$request->header('HX-Request')) {
+            return redirect()->route('tiket-antrian');
+        }
+        return view('partials.reschedule-form', [
+            'appt' => $appointment,
+        ]);
+
+    }
+
+    public function saveReschedule(Request $request, Appointment $appointment)
+    {
+        $this->authorize('update', $appointment);
+
+        $data = $request->validate([
+            'date' => ['required', 'date', 'after_or_equal:today'],
+            'time' => ['required', 'date_format:H:i'],
+        ]);
+
+        $exists = Appointment::where('doctor_id', $appointment->doctor_id)
+            ->whereDate('appointment_date', $data['date'])
+            ->whereTime('appointment_time', $data['time'])
+            ->where('status', '!=', AppointmentStatus::Canceled)
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors([
+                'date' => 'Slot tersebut sudah diambil, silakan pilih waktu lain.'
+            ])->withInput();
+        }
+
+        $appointment->update([
+            'appointment_date' => Carbon::parse($data['date']),
+            'appointment_time' => Carbon::parse($data['time']),
+            'status' => AppointmentStatus::Upcoming,
+        ]);
+
+        return response('<div class="text-center p-4 text-success">Jadwal Berhasil Diperbarui</div>', 200);
+    }
 
     public function start(Appointment $appointment)
     {

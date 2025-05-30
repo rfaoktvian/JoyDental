@@ -29,8 +29,8 @@
                 <li class="d-flex align-items-center" style="gap: 0.5rem;">
                     <i class="fa fa-clock text-muted"></i>
                     <span>
-                        {{ $appt->appointment_time->format('H:i') }},
-                        {{ $appt->appointment_date->format('d M Y') }}
+                        {{ $appt->appointment_date->translatedFormat('l, d M Y') }} -
+                        {{ $appt->appointment_time->format('H:i') }}
                     </span>
                 </li>
                 <li class="d-flex align-items-center" style="gap: 0.5rem;">
