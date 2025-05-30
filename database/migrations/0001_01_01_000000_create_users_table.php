@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->enum('role', ['admin', 'doctor', 'user'])->default('user');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('alamat')->nullable();
-            $table->string('no_hp')->nullable();
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

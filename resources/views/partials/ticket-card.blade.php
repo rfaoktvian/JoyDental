@@ -20,6 +20,31 @@
                     </span>
                 </div>
             </div>
+
+            @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'doctor'))
+                <ul class="list-unstyled mt-2 mb-2">
+                    <li class="d-flex align-items-center" style="gap: 0.5rem;">
+                        <i class="fas fa-user"></i>
+                        <span>{{ $appt->patient->name }}</span>
+                    </li>
+                    <li class="d-flex align-items-center" style="gap: 0.5rem;">
+                        <i class="fas fa-envelope"></i>
+                        <span>{{ $appt->patient->email }}</span>
+                    </li>
+                    @if ($appt->patient->phone)
+                        <li class="d-flex align-items-center" style="gap: 0.5rem;">
+                            <i class="fas fa-phone"></i>
+                            <span>{{ $appt->patient->phone }}</span>
+                        </li>
+                    @endif
+                    @if ($appt->patient->address)
+                        <li class="d-flex align-items-center" style="gap: 0.5rem;">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ $appt->patient->address }}</span>
+                        </li>
+                    @endif
+                </ul>
+            @endif
             <ul class="list-unstyled mb-3">
                 <li class="d-flex align-items-center" style="gap: 0.5rem;">
                     <i class="fas fa-user-md"></i>

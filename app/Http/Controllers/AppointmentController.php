@@ -69,8 +69,11 @@ class AppointmentController extends Controller
         if ($user->role === 'admin') {
             $base = Appointment::with(['patient', 'clinic', 'doctor']);
         } elseif ($user->role === 'doctor') {
-            $base = Appointment::with(['patient', 'clinic'])
-                ->where('doctor_id', $user->id);
+            $doctorId = optional($user->doctor)->id;
+            $doctorId = $doctorId ?? 0;
+
+            $base = Appointment::with(['patient', 'clinic', 'doctor'])
+                ->where('doctor_id', $doctorId);
         }
 
         if ($search) {
