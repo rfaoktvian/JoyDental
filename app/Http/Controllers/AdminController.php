@@ -10,6 +10,7 @@ class AdminController extends Controller
 {
     public function editUserForm(Request $request, $id)
     {
+        $user = User::findOrFail($id);
         return view('partials.account-form', data: compact('user'));
     }
     public function addUserForm(Request $request)

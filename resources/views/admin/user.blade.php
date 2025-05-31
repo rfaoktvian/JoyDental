@@ -85,17 +85,14 @@
         </div>
 
         <div class="mb-4">
-            <form method="GET" action="{{ route('admin.users') }}" class="row gx-2 gy-2 align-items-center"
-                hx-get="{{ route('admin.users') }}" hx-target="#page-content" hx-push-url="true"
-                hx-trigger="change delay:300ms from:input, change from:select, submit">
+            <form method="GET" action="{{ route('admin.users') }}" class="row gx-2 gy-2 align-items-center">
                 <div class="col-auto flex-grow-1">
                     <div class="input-group input-group-sm bg-white">
                         <span class="input-group-text bg-transparent">
                             <i class="fas fa-search text-muted"></i>
                         </span>
                         <input type="text" class="form-control border-start-0 ps-0 bg-white" name="search"
-                            placeholder="Cari pengguna..." value="{{ request('search') }}"
-                            hx-trigger="keyup changed delay:300ms">
+                            placeholder="Cari pengguna..." value="{{ request('search') }}">
                     </div>
                 </div>
 
@@ -108,19 +105,17 @@
                     @endphp
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="filter_role[]" id="filter_admin"
-                            value="admin" {{ in_array('admin', $selectedRoles) ? 'checked' : '' }}
-                            hx-trigger="click changed">
+                            value="admin" {{ in_array('admin', $selectedRoles) ? 'checked' : '' }}>
                         <label class="form-check-label" for="filter_admin">Admin</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="filter_role[]" id="filter_doctor"
-                            value="doctor" {{ in_array('doctor', $selectedRoles) ? 'checked' : '' }}
-                            hx-trigger="click changed">
+                            value="doctor" {{ in_array('doctor', $selectedRoles) ? 'checked' : '' }}>
                         <label class="form-check-label" for="filter_doctor">Doctor</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="filter_role[]" id="filter_user" value="user"
-                            {{ in_array('user', $selectedRoles) ? 'checked' : '' }} hx-trigger="click changed">
+                            {{ in_array('user', $selectedRoles) ? 'checked' : '' }}>
                         <label class="form-check-label" for="filter_user">User</label>
                     </div>
                 </div>
@@ -128,30 +123,22 @@
                 <div class="col-auto">
                     <select name="sort_by" class="form-select form-select-sm">
                         <option value="">Urutkan Berdasarkan</option>
-                        <option value="role" {{ request('sort_by') === 'role' ? 'selected' : '' }}>
-                            Role
-                        </option>
-                        <option value="created_at" {{ request('sort_by') === 'created_at' ? 'selected' : '' }}>
-                            Tanggal Dibuat
-                        </option>
-                        <option value="updated_at" {{ request('sort_by') === 'updated_at' ? 'selected' : '' }}>
-                            Update Terakhir
-                        </option>
+                        <option value="role" {{ request('sort_by') === 'role' ? 'selected' : '' }}>Role</option>
+                        <option value="created_at" {{ request('sort_by') === 'created_at' ? 'selected' : '' }}>Tanggal
+                            Dibuat</option>
+                        <option value="updated_at" {{ request('sort_by') === 'updated_at' ? 'selected' : '' }}>Update
+                            Terakhir</option>
                     </select>
                 </div>
 
                 <div class="col-auto">
                     <div class="btn-group btn-group-sm" role="group" aria-label="Urutan">
-                        <button type="button" name="sort_order" value="asc"
-                            class="btn bg-white {{ request('sort_order') === 'asc' ? 'text-danger active' : 'text-secondary border-1 border-muted border' }}"
-                            hx-get="{{ request()->fullUrlWithQuery(['sort_order' => 'asc']) }}" hx-target="#page-content"
-                            hx-push-url="true">
+                        <button type="submit" name="sort_order" value="asc"
+                            class="btn bg-white {{ request('sort_order') === 'asc' ? 'text-danger active' : 'text-secondary border-1 border-muted border' }}">
                             <i class="fas fa-arrow-up"></i>
                         </button>
-                        <button type="button" name="sort_order" value="desc"
-                            class="btn bg-white {{ request('sort_order') === 'desc' ? 'text-danger active' : 'text-secondary border-1 border-muted border' }}"
-                            hx-get="{{ request()->fullUrlWithQuery(['sort_order' => 'desc']) }}" hx-target="#page-content"
-                            hx-push-url="true">
+                        <button type="submit" name="sort_order" value="desc"
+                            class="btn bg-white {{ request('sort_order') === 'desc' ? 'text-danger active' : 'text-secondary border-1 border-muted border' }}">
                             <i class="fas fa-arrow-down"></i>
                         </button>
                     </div>
@@ -159,38 +146,30 @@
 
                 <div class="col-auto view-toggle">
                     <div class="btn-group btn-group-sm" role="group" aria-label="View mode toggle">
-                        <button type="button" name="view" value="cards"
-                            class="btn {{ request('view', 'cards') === 'cards' ? 'active btn-danger' : 'btn-outline-secondary' }}"
-                            hx-get="{{ request()->fullUrlWithQuery(['view' => 'cards']) }}" hx-target="#page-content"
-                            hx-push-url="true">
-                            <i class="fas fa-th-large" style="font-size: 1rem;"></i>
-                        </button>
-
-                        <button type="button" name="view" value="table"
-                            class="btn {{ request('view') === 'table' ? 'active btn-danger' : 'btn-outline-secondary' }}"
-                            hx-get="{{ request()->fullUrlWithQuery(['view' => 'table']) }}" hx-target="#page-content"
-                            hx-push-url="true">
-                            <i class="fas fa-list" style="font-size: 1rem;"></i>
-                        </button>
+                        <a href="{{ request()->fullUrlWithQuery(['view' => 'cards']) }}"
+                            class="btn {{ request('view', 'cards') === 'cards' ? 'active btn-danger' : 'btn-outline-secondary' }}">
+                            <i class="fas fa-th-large"></i>
+                        </a>
+                        <a href="{{ request()->fullUrlWithQuery(['view' => 'table']) }}"
+                            class="btn {{ request('view') === 'table' ? 'active btn-danger' : 'btn-outline-secondary' }}">
+                            <i class="fas fa-list"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div class="col-auto">
-                    <button class="btn btn-danger btn-sm" hx-get="{{ route('admin.users.create') }}"
-                        hx-target="#modalBody" hx-swap="innerHTML" hx-trigger="click"
-                        hx-on="htmx:afterOnLoad: (() => {const modalTitle = document.getElementById('modalTitle'); if(modalTitle){modalTitle.outerHTML = '<h5 class=&quot;modal-title fw-bold&quot; id=&quot;modalTitle&quot;>Tambah Akun</h5>';}})()"
-                        data-bs-toggle="modal" data-bs-target="#commonModal">
+                    <a class="btn btn-danger btn-sm" data-modal-url="{{ route('admin.users.create') }}"
+                        data-modal-title="Tambah Akun">
                         <i class="fas fa-plus"></i> Tambah Akun
-                    </button>
+                    </a>
                 </div>
 
                 <div class="col-auto">
-                    <button id="refreshBtn"
+                    <a href="{{ request()->fullUrl() }}"
                         class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center p-0"
-                        style="width:32px;height:32px" hx-get="{{ request()->fullUrl() }}" hx-target="#page-content"
-                        hx-swap="outerHTML" hx-indicator="#htmx-indicator" title="Refresh">
+                        style="width:32px;height:32px" title="Refresh">
                         <i class="fa fa-sync-alt m-auto"></i>
-                    </button>
+                    </a>
                 </div>
 
                 <input type="hidden" name="page" value="{{ request('page') }}">
@@ -259,12 +238,10 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end" style="margin-left: auto; margin-right: auto;">
-                                    <button class="btn btn-sm btn-outline-secondary"
-                                        hx-get="{{ route('admin.users.edit', ['id' => $user->id]) }}"
-                                        hx-target="#modalBody" hx-swap="innerHTML" hx-trigger="click"
-                                        hx-on="htmx:afterOnLoad: (() => {const modalTitle = document.getElementById('modalTitle'); if(modalTitle){modalTitle.outerHTML = '<h5 class=&quot;modal-title fw-bold&quot; id=&quot;modalTitle&quot;>Pengaturan Akun</h5>';}})()"
-                                        data-bs-toggle="modal" data-bs-target="#commonModal"
-                                        style="width: 36px; height: 36px; padding: 0;">
+                                    <button
+                                        class="btn btn-sm btn-outline-secondary"style="width: 36px; height: 36px; padding: 0;"
+                                        data-modal-url="{{ route('admin.users.edit', ['id' => $user->id]) }}"
+                                        data-modal-title="Konfigurasi Akun">
                                         <i class="fas fa-cog"></i>
                                     </button>
                                 </div>
@@ -427,10 +404,8 @@
 
                                 <div class="col-1 text-end">
                                     <button class="btn btn-sm btn-outline-secondary"
-                                        hx-get="{{ route('admin.users.edit', ['id' => $user->id]) }}"
-                                        hx-target="#modalBody" hx-swap="innerHTML" hx-trigger="click"
-                                        hx-on="htmx:afterOnLoad: (() => {const modalTitle = document.getElementById('modalTitle'); if(modalTitle){modalTitle.outerHTML = '<h5 class=&quot;modal-title fw-bold&quot; id=&quot;modalTitle&quot;>Pengaturan Akun</h5>';}})()"
-                                        data-bs-toggle="modal" data-bs-target="#commonModal">
+                                        data-modal-url="{{ route('admin.users.edit', ['id' => $user->id]) }}"
+                                        data-modal-title="Konfigurasi Akun">
                                         <i class="fas fa-cog"></i>
                                     </button>
                                 </div>
@@ -538,4 +513,6 @@
             </div>
         </div>
     </div>
+
+    @include('partials.modal-loader')
 @endsection

@@ -117,18 +117,18 @@ Route::prefix('admin')->middleware('admin')->group(function () {
   Route::get('/antrian', fn() => view('admin.dashboard'))->name('admin.antrian');
   Route::get('/laporan', fn() => view('admin.dashboard'))->name('admin.laporan');
 
-  Route::fallback(function () {
-    if (request()->is('admin/*') && auth()->check()) {
-      return redirect('/');
-    }
-    abort(404);
-  });
-  app('router')->getMiddleware()['admin'] = function ($request, $next) {
-    if (!auth()->check()) {
-      return redirect('/');
-    }
-    return $next($request);
-  };
+  // Route::fallback(function () {
+  //   if (request()->is('admin/*') && auth()->check()) {
+  //     return redirect('/');
+  //   }
+  //   abort(404);
+  // });
+  // app('router')->getMiddleware()['admin'] = function ($request, $next) {
+  //   if (!auth()->check()) {
+  //     return redirect('/');
+  //   }
+  //   return $next($request);
+  // };
 });
 
 
