@@ -73,10 +73,7 @@
 </style>
 
 <script>
-    function initCalendar(calendarId) {
-
-        console.log('Initializing calendar...');
-
+    function initCalendar() {
         const monthNames = [
             'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
             'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
@@ -100,10 +97,11 @@
         let currentMonth = today.getMonth();
         let currentYear = today.getFullYear();
 
-        const monthLabel = document.getElementById(`calendarMonthLabel-${calendarId}`);
-        const calendarBody = document.getElementById(`calendarBody-${calendarId}`);
-        const prevBtn = document.getElementById(`prevMonth-${calendarId}`);
-        const nextBtn = document.getElementById(`nextMonth-${calendarId}`);
+        const id = '{{ $calendarId }}';
+        const monthLabel = document.getElementById(`calendarMonthLabel-${id}`);
+        const calendarBody = document.getElementById(`calendarBody-${id}`);
+        const prevBtn = document.getElementById(`prevMonth-${id}`);
+        const nextBtn = document.getElementById(`nextMonth-${id}`);
 
         const staticHolidays = {
             '1-1': 'Tahun Baru 2025 Masehi', // New Year 2025
@@ -223,4 +221,5 @@
 
         renderCalendar(currentMonth, currentYear);
     }
+    initCalendar();
 </script>

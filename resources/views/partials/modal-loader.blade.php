@@ -4,7 +4,7 @@
         const modalTitle = document.getElementById('modalTitle');
         const commonModal = new bootstrap.Modal(document.getElementById('commonModal'));
 
-        window.loadModalContent = function(url, title, callback = null) {
+        window.loadModalContent = function(url, title) {
             modalBody.innerHTML = `
                 <div class="text-center py-4">
                     <div class="spinner-border" role="status"></div>
@@ -37,10 +37,6 @@
                         }
                         document.body.appendChild(newScript);
                     });
-
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
                 })
                 .catch(error => {
                     modalBody.innerHTML = `
@@ -51,22 +47,13 @@
             commonModal.show();
         };
 
-        // Generic button loader
         document.querySelectorAll('[data-modal-url]').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const url = this.getAttribute('data-modal-url');
                 const title = this.getAttribute('data-modal-title') || 'Detail';
 
-                loadModalContent(url, title, () => {
-                    // const calendarElement = modalBody.querySelector(
-                    //     '[id^="calendarBody-"]');
-                    // if (calendarElement) {
-                    //     const calendarId = calendarElement.id.replace('calendarBody-',
-                    //         '');
-                    //     initCalendar(calendarId);
-                    // }
-                });
+                loadModalContent(url, title);
             });
         });
     });
