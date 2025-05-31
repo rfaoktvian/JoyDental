@@ -1,82 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    <style>
-        .page-item .page-link {
-            color: #d32f2f;
-            border-radius: 0;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .page-item.active .page-link {
-            background-color: #d32f2f;
-            color: white;
-            border-color: #d32f2f;
-        }
-
-        .pagination-wrapper .page-link {
-            padding: .35rem .65rem;
-            font-size: .825rem;
-        }
-
-        .pagination-wrapper .page-link i {
-            font-size: .65rem;
-            vertical-align: -1px;
-        }
-
-        /* Style untuk ikon View Toggle */
-        .view-toggle .btn {
-            border: 1px solid #ced4da;
-            color: #6c757d;
-            background-color: #fff;
-        }
-
-        .view-toggle .btn.active {
-            color: #d32f2f;
-            border-color: #d32f2f;
-        }
-
-        /* Hover effect untuk baris di table view */
-        .user-row:hover {
-            background-color: #f8f9fa;
-        }
-
-        /* Fokus styling untuk form-control */
-        .form-control:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/manager.css') }}">
 
     <div class="container">
-
-        <div id="notification">
-            @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                    {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-
-            @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            @endif
-        </div>
 
         <div class="mb-3 d-flex align-items-center gap-2">
             <i class="fas fa-users text-muted" style="font-size: 1.5rem; line-height: 1;"></i>
@@ -241,77 +168,9 @@
                                     <button
                                         class="btn btn-sm btn-outline-secondary"style="width: 36px; height: 36px; padding: 0;"
                                         data-modal-url="{{ route('admin.users.edit', ['id' => $user->id]) }}"
-                                        data-modal-title="Konfigurasi Akun">
+                                        data-modal-title="Ubah Data Akun">
                                         <i class="fas fa-cog"></i>
                                     </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal fade" id="settingsUserModal-{{ $user->id }}" tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header border-bottom-0">
-                                    <h5 class="modal-title fw-bold">Pengaturan Akun</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold">Nama</label>
-                                            <input type="text" class="form-control" name="name"
-                                                value="{{ $user->name }}">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold">Email</label>
-                                            <input type="email" class="form-control" name="email"
-                                                value="{{ $user->email }}">
-                                        </div>
-                                        @if ($user->id !== auth()->id())
-                                            <div class="mb-3">
-                                                <label class="form-label fw-semibold">Role</label>
-                                                <select class="form-select" name="role">
-                                                    <option value="user" {{ $user->role === 'user' ? 'selected' : '' }}>
-                                                        User
-                                                    </option>
-                                                    <option value="doctor"
-                                                        {{ $user->role === 'doctor' ? 'selected' : '' }}>
-                                                        Doctor
-                                                    </option>
-                                                    <option value="admin"
-                                                        {{ $user->role === 'admin' ? 'selected' : '' }}>
-                                                        Admin
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        @else
-                                            <input type="hidden" name="role" value="{{ $user->role }}">
-                                        @endif
-
-                                        <div class="d-flex gap-2 justify-content-end">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal">
-                                                Batal
-                                            </button>
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
-                                        </div>
-                                    </form>
-
-                                    @if ($user->id !== auth()->id())
-                                        <hr class="my-3">
-                                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button class="btn btn-outline-danger w-100"
-                                                onclick="return confirm('Hapus akun ini?')">
-                                                <i class="fas fa-trash me-2"></i> Hapus Akun
-                                            </button>
-                                        </form>
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -405,7 +264,7 @@
                                 <div class="col-1 text-end">
                                     <button class="btn btn-sm btn-outline-secondary"
                                         data-modal-url="{{ route('admin.users.edit', ['id' => $user->id]) }}"
-                                        data-modal-title="Konfigurasi Akun">
+                                        data-modal-title="Ubah Data Akun">
                                         <i class="fas fa-cog"></i>
                                     </button>
                                 </div>
@@ -498,20 +357,6 @@
             </nav>
         @endif
 
-    </div>
-
-    <div class="modal fade" id="addUserModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Tambah Pengguna Baru</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="text-muted">Form untuk menambah pengguna baru ditambahkan di sini.</p>
-                </div>
-            </div>
-        </div>
     </div>
 
     @include('partials.modal-loader')

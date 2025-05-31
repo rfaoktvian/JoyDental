@@ -1,0 +1,42 @@
+.page-item .page-link {
+            color: #d32f2f;
+            border-radius: 0;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .page-item.active .page-link {
+            background-color: #d32f2f;
+            color: white;
+            border-color: #d32f2f;
+        }
+
+        .pagination-wrapper .page-link {
+            padding: .35rem .65rem;
+            font-size: .825rem;
+        }
+
+        .pagination-wrapper .page-link i {
+            font-size: .65rem;
+            vertical-align: -1px;
+        }
+
+        .view-toggle .btn {
+            border: 1px solid #ced4da;
+            color: #6c757d;
+            background-color: #fff;
+        }
+
+        .view-toggle .btn.active {
+            color: #d32f2f;
+            border-color: #d32f2f;
+        }
+
+        .user-row:hover {
+            background-color: #f8f9fa;
+        }
+
+        .form-control:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        }

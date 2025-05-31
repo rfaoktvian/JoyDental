@@ -1,172 +1,164 @@
-<form method="POST" action="{{ route('admin.users.store') }}" hx-post="{{ route('admin.users.store') }}"
-    hx-target="#reschedule-body" hx-swap="innerHTML" hx-trigger="submit" id="userForm">
+<form method="POST" action="{{ route('admin.users.store') }}" id="tambahAkun-userForm">
 
     @csrf
 
-    <div class="mb-3">
-        <label for="nik" class="form-label fw-semibold">NIK</label>
-        <input type="text" name="nik" id="nik" class="form-control @error('nik') is-invalid @enderror"
-            value="{{ old('nik') }}" required minlength="16" maxlength="16"
-            data-unique-url="{{ route('check.nik') }}" autocomplete="off" autofocus>
-        @error('nik')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
+    <div class="mb-2">
+        <label for="nik" class="form-label">NIK</label>
+        <input id="tambahAkun-nik" type="text" class="form-control @error('nik') is-invalid @enderror" name="nik"
+            value="{{ old('nik') }}" required placeholder="Masukkan NIK" maxlength="16">
+
+        <div id="nik-error" class="text-danger small d-none">
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label for="name" class="form-label fw-semibold">Nama</label>
-        <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror"
-            value="{{ old('name') }}" minlength="2" maxlength="255" required>
-        @error('name')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
+    <div class="mb-2">
+        <label for="name" class="form-label">Nama Lengkap</label>
+        <input id="tambahAkun-name" type="text" class="form-control @error('name') is-invalid @enderror"
+            name="name" value="{{ old('name') }}" required placeholder="Masukkan nama lengkap" disabled>
     </div>
 
-    <div class="mb-3">
-        <label for="email" class="form-label fw-semibold">Email</label>
-        <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror"
-            value="{{ old('email') }}" required>
-        @error('email')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
+    <div class="mb-2">
+        <label for="email" class="form-label">Email</label>
+        <input id="tambahAkun-email" type="email" class="form-control @error('email') is-invalid @enderror"
+            name="email" value="{{ old('email') }}" required placeholder="Masukkan email" disabled>
     </div>
 
-    <div class="mb-3">
-        <label for="password" class="form-label fw-semibold">Password</label>
-        <input type="password" name="password" id="password"
-            class="form-control @error('password') is-invalid @enderror" minlength="8" required>
-        @error('password')
-            <div class="invalid-feedback">{{ $message }}</div>
-        @enderror
+    <div class="mb-2">
+        <label for="password" class="form-label">Password</label>
+        <input id="tambahAkun-password" type="password" class="form-control @error('password') is-invalid @enderror"
+            name="password" required autocomplete="new-password" placeholder="Masukkan password" disabled>
     </div>
 
-    <div class="mb-3">
-        <label for="password_confirmation" class="form-label fw-semibold">Konfirmasi Password</label>
-        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control"
-            minlength="8" required>
-    </div>
+    <div id="tambahAkun-form-error" class="text-danger small mb-3 d-none"></div>
 
-    <div id="form-error" class="text-danger small mb-3 d-none"></div>
-
-    <button type="submit" id="submit-btn" class="btn btn-primary">
-        Simpan
+    <button id="tambahAkun-submit" type="submit" class="btn btn-danger w-100 mt-1" disabled>
+        Daftar
     </button>
 </form>
 
 <script>
     console.log('Add User Form script loaded');
-    const form = document.getElementById('userForm');
-    const nikInput = document.getElementById('nik');
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const passwordConfirmInput = document.getElementById('password_confirmation');
-    const submitBtn = document.getElementById('submit-btn');
-    const formError = document.getElementById('form-error');
+    const form = document.getElementById('tambahAkun-userForm');
+    const nikInput = document.getElementById('tambahAkun-nik');
+    const nameInput = document.getElementById('tambahAkun-name');
+    const emailInput = document.getElementById('tambahAkun-email');
+    const passwordInput = document.getElementById('tambahAkun-password');
+    const submitBtn = document.getElementById('tambahAkun-submit');
+    const formError = document.getElementById('tambahAkun-form-error');
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const checkNikUrl = "{{ route('check.nik') }}";
 
-    // Enable fields only after NIK validation
-    [nameInput, emailInput, passwordInput, passwordConfirmInput].forEach(input => {
-        input.disabled = true;
-    });
-    submitBtn.disabled = true;
+    let nikIsUnused = false;
 
-    // NIK validation
-    nikInput.addEventListener('blur', async function() {
-        const nik = this.value.trim();
+    async function recheckNik() {
+        const val = nikInput.value.trim();
         formError.classList.add('d-none');
+        formError.textContent = '';
+        nikIsUnused = false;
 
-        if (nik.length !== 16) {
-            formError.textContent = 'NIK harus 16 digit.';
+        if (val.length === 0) {
+            disableAllFields();
+            return;
+        }
+        if (val.length !== 16 || !/^\d+$/.test(val)) {
+            disableAllFields();
+            formError.textContent = 'NIK harus berupa 16 digit angka.';
             formError.classList.remove('d-none');
             return;
         }
 
         try {
-            const response = await fetch(this.dataset.uniqueUrl, {
-                method: 'POST',
+            const res = await fetch(`${checkNikUrl}?nik=${encodeURIComponent(val)}`, {
                 headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nik: nik
-                })
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.exists) {
-                    formError.textContent = 'NIK sudah terdaftar.';
-                    formError.classList.remove('d-none');
-                } else {
-                    // Enable other fields if NIK is valid
-                    [nameInput, emailInput, passwordInput, passwordConfirmInput].forEach(
-                        input => {
-                            input.disabled = false;
-                        });
-                    nameInput.focus();
+                    'X-CSRF-TOKEN': csrfToken
                 }
-            }
-        } catch (error) {
-            formError.textContent = 'Gagal memverifikasi NIK.';
-            formError.classList.remove('d-none');
-        }
-    });
-
-    // Form submission handler
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.innerHTML =
-            '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Memproses...';
-
-        try {
-            const formData = new FormData(form);
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
-                },
-                body: formData
             });
 
-            if (response.ok) {
-                window.location.href = "{{ route('admin.users') }}";
+            if (res.status === 404) {
+                nikIsUnused = true;
+                formError.classList.add('d-none');
+                enableAllFields();
+                nameInput.focus();
+            } else if (res.ok) {
+                disableAllFields();
+                formError.textContent = 'NIK sudah terdaftar. Silakan gunakan NIK lain.';
+                formError.classList.remove('d-none');
             } else {
-                const errors = await response.json();
-                if (response.status === 422) {
-                    // Handle validation errors
-                    Object.keys(errors.errors).forEach(field => {
-                        const input = form.querySelector(`[name="${field}"]`);
-                        const feedback = input.nextElementSibling;
-
-                        input.classList.add('is-invalid');
-                        if (feedback && feedback.classList.contains(
-                                'invalid-feedback')) {
-                            feedback.textContent = errors.errors[field][0];
-                        }
-                    });
-                } else {
-                    formError.textContent = errors.message || 'Terjadi kesalahan.';
-                    formError.classList.remove('d-none');
-                }
+                disableAllFields();
+                formError.textContent = 'Gagal memeriksa NIK. Silakan coba lagi.';
+                formError.classList.remove('d-none');
             }
-        } catch (error) {
+        } catch (err) {
+            disableAllFields();
             formError.textContent = 'Gagal terhubung ke server.';
             formError.classList.remove('d-none');
-        } finally {
+        }
+    }
+
+    function disableAllFields() {
+        nameInput.value = '';
+        emailInput.value = '';
+        passwordInput.value = '';
+
+        nameInput.disabled = true;
+        emailInput.disabled = true;
+        passwordInput.disabled = true;
+        submitBtn.disabled = true;
+    }
+
+    function enableAllFields() {
+        nameInput.disabled = false;
+        emailInput.disabled = false;
+        passwordInput.disabled = false;
+        submitBtn.disabled = false;
+        checkSubmitReady();
+    }
+
+    function checkSubmitReady() {
+        if (
+            nikIsUnused &&
+            nameInput.value.trim().length > 0 &&
+            emailInput.value.trim().length > 0 &&
+            passwordInput.value.length >= 6
+        ) {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Simpan';
+        } else {
+            submitBtn.disabled = true;
+        }
+    }
+
+    nikInput.addEventListener('input', () => {
+        recheckNik();
+    });
+
+    [nameInput, emailInput, passwordInput].forEach(el => {
+        el.addEventListener('input', () => {
+            formError.classList.add('d-none');
+            checkSubmitReady();
+        });
+    });
+
+    document.getElementById('tambahAkun-userForm').addEventListener('submit', e => {
+        if (submitBtn.disabled) {
+            e.preventDefault();
         }
     });
 
-    // Enable submit button when all fields are valid
-    form.addEventListener('input', function() {
-        const allValid = [nikInput, nameInput, emailInput, passwordInput, passwordConfirmInput]
-            .every(input => input.checkValidity());
-        submitBtn.disabled = !allValid;
-    });
+    disableAllFields();
+</script>
+
+<script>
+    function closeModalAndReload(evt) {
+        document.body.classList.remove('modal-open');
+
+        const modalEl = document.getElementById('commonModal');
+        if (modalEl) {
+            modalEl.classList.remove('show');
+            modalEl.style.display = 'none';
+            modalEl.setAttribute('aria-hidden', 'true');
+        }
+
+        document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+        window.location.reload();
+    }
 </script>

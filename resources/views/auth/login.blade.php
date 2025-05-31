@@ -35,13 +35,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Grab references to the inputs/buttons
             const nikInput = document.getElementById('nik');
             const pwdInput = document.getElementById('password');
             const submitBtn = document.getElementById('login-submit');
             const formError = document.getElementById('form-error');
 
-            // Ensure CSRF token is present
             const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
             if (!csrfTokenMeta) {
                 console.error(
@@ -52,18 +50,12 @@
             const csrfToken = csrfTokenMeta.content;
             const checkNikUrl = "{{ route('check.nik') }}";
 
-            // Track whether the NIK has been validated by the server
             let nikIsValid = false;
 
-            /**
-             * Call the server to verify if this NIK is registered.
-             * Enabled only when length == 16.
-             */
             async function verifyNikWithServer(nikValue) {
                 formError.classList.add('d-none');
                 formError.textContent = '';
 
-                // Disable everything until response comes back
                 pwdInput.value = '';
                 pwdInput.disabled = true;
                 submitBtn.disabled = true;
@@ -96,40 +88,29 @@
                 }
             }
 
-            /**
-             * Single listener on NIK input: check length, show error if length != 16,
-             * and only call verifyNikWithServer when length === 16.
-             */
             nikInput.addEventListener('input', () => {
                 const raw = nikInput.value.trim();
                 formError.classList.add('d-none');
                 formError.textContent = '';
 
-                // Whenever NIK changes, reset password & submit state
                 pwdInput.value = '';
                 pwdInput.disabled = true;
                 submitBtn.disabled = true;
                 nikIsValid = false;
 
                 if (raw.length === 0) {
-                    // No input, no need to check
                     return;
                 }
 
                 if (raw.length !== 16) {
-                    // Show length error
                     formError.textContent = 'NIK harus 16 digit.';
                     formError.classList.remove('d-none');
                     return;
                 }
 
-                // If length is exactly 16, call server to check registration
                 verifyNikWithServer(raw);
             });
 
-            /**
-             * Enable submit button only when NIK has been validated and password length > 0
-             */
             pwdInput.addEventListener('input', () => {
                 if (nikIsValid && pwdInput.value.length > 0) {
                     submitBtn.disabled = false;
@@ -138,9 +119,6 @@
                 }
             });
 
-            /**
-             * On form submit, send an AJAX POST to login route.
-             */
             document.getElementById('loginForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
 
@@ -165,12 +143,10 @@
                     });
 
                     if (res.ok) {
-                        // Redirect on successful login
                         window.location.href = "{{ session()->pull('url.intended', url('/')) }}";
                         return;
                     }
 
-                    // If status is 422, likely validation failed (bad NIK or password)
                     formError.textContent = (res.status === 422) ?
                         'NIK atau kata sandi salah.' :
                         'Terjadi kesalahan.';

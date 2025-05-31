@@ -56,5 +56,13 @@
                 loadModalContent(url, title);
             });
         });
+
+        const commonModalElement = document.getElementById('commonModal');
+        commonModalElement.addEventListener('hidden.bs.modal', () => {
+            console.log('Modal closed');
+            document.activeElement.blur();
+            modalBody.innerHTML = '';
+            modalTitle.textContent = '';
+        });
     });
 </script>
