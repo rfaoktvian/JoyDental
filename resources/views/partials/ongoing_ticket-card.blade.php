@@ -4,7 +4,7 @@
 
 <div class="col-12 col-md-6 col-lg-4 appt-card" data-clinic="{{ $appt->clinic->name }}"
     data-name="{{ Str::lower($appt->patient->name) }}">
-    <div class="card h-100 shadow-sm bg-white border border-1 border-mute">
+    <div class="custom_card h-100 shadow-sm bg-white border border-1 border-mute">
         <div class="p-2" style="background:#d32f2f;border-radius:.35rem .35rem 0 0;">
             <div class="text-white">
                 <div class="d-flex align-items-center" style="gap: 0.5rem;">

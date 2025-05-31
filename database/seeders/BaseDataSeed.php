@@ -57,7 +57,6 @@ class BaseDataSeed extends Seeder
 
         DB::table('polyclinics')->insert($polyclinics);
 
-
         DB::table('users')->insert([
             [
                 'name' => 'admin',
@@ -218,6 +217,19 @@ class BaseDataSeed extends Seeder
                 'appointment_time' => '10:00',
                 'payment_method' => 'Cash',
                 'consultation_fee' => '25000',
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+        }
+
+        for ($i = 1; $i <= 20; $i++) {
+            $name = Str::random(10);
+            DB::table('users')->insert([
+                'name' => $name,
+                'nik' => str_pad(mt_rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT),
+                'email' => strtolower($name) . '@example.com',
+                'password' => Hash::make('password'),
+                'email_verified_at' => $now,
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);

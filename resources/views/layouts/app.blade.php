@@ -180,6 +180,8 @@
         @includeWhen(Route::has('login'), 'partials.login-modal')
 
         @include('partials.reschedule-modal')
+        @include('partials.common-modal')
+
         <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
             <div id="htmx-indicator" class="progress"
                 style="position:fixed;top:0;left:0;width:0;height:3px;background:#d32f2f;z-index:2000;

@@ -74,3 +74,19 @@
                 padding-right: 1.5rem;
             }
         }
+
+        
+        /* For WebKit browsers (Chrome, Safari, etc.) */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* For Firefox */
+  html {
+    scrollbar-width: none;
+  }
+  
+  /* For IE/Edge */
+  body {
+    -ms-overflow-style: none;
+  }

@@ -26,6 +26,7 @@ Route::middleware(['auth'])
   ->name('tiket-antrian');
 
 use App\Http\Controllers\DoctorController;
+use Illuminate\Support\Facades\Response;
 Route::get('/dokter', [DoctorController::class, 'index'])->name('dokter');
 
 Route::get('/poliklinik', [PoliklinikController::class, 'index'])->name('poliklinik');
@@ -35,6 +36,8 @@ Route::get('/bantuan', fn() => view('bantuan'))
 
 Route::get('/profil', fn() => view('profil'))
   ->name('profil');
+
+
 
 Route::get(
   '/doctor/antrian/{appointment}/reschedule',
@@ -93,8 +96,9 @@ Route::prefix('doctor')
   });
 
 Route::prefix('admin')->middleware('admin')->group(function () {
-  Route::get('/', fn() => view('admin.dashboard'))->name('admin.dashboard');
+  Route::get('/', fn() => redirect('/'))->name('admin.dashboard');
 
+  Route::get('/users/{id}/edit', [AdminController::class, 'editUserForm'])->name('admin.users.edit');
   Route::get('/users', [AdminController::class, 'manageUsers'])->name('admin.users');
   Route::post('/users', [AdminController::class, 'store'])->name('admin.users.store');
   Route::put('/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
@@ -106,6 +110,18 @@ Route::prefix('admin')->middleware('admin')->group(function () {
   Route::get('/antrian', fn() => view('admin.dashboard'))->name('admin.antrian');
   Route::get('/laporan', fn() => view('admin.dashboard'))->name('admin.laporan');
 
+  Route::fallback(function () {
+    if (request()->is('admin/*') && auth()->check()) {
+      return redirect('/');
+    }
+    abort(404);
+  });
+  app('router')->getMiddleware()['admin'] = function ($request, $next) {
+    if (!auth()->check()) {
+      return redirect('/');
+    }
+    return $next($request);
+  };
 });
 
 

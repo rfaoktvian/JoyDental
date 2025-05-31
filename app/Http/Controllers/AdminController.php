@@ -8,15 +8,41 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    public function editUserForm(Request $request, $id)
+    {
+        if (!$request->header('HX-Request')) {
+            return redirect()->route('admin.users');
+        }
+        $user = User::findOrFail($id);
+        return view('partials.account-form', data: compact('user'));
+    }
+
     public function manageUsers(Request $request)
     {
-        $search = $request->input('search');
+        $query = User::query();
 
-        $users = User::when($search, function ($query, $search) {
-            return $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%")
-                ->orWhere('nik', 'like', "%{$search}%");
-        })->paginate(10);
+        if ($request->filled('filter_role')) {
+            $roles = is_array($request->filter_role)
+                ? $request->filter_role
+                : [$request->filter_role];
+            $query->whereIn('role', $roles);
+        }
+
+        if ($request->filled('search')) {
+            $keyword = "%{$request->search}%";
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', $keyword)
+                    ->orWhere('email', 'like', $keyword)
+                    ->orWhere('nik', 'like', $keyword);
+            });
+        }
+
+        if ($request->filled('sort_by')) {
+            $order = $request->sort_order === 'desc' ? 'desc' : 'asc';
+            $query->orderBy($request->sort_by, $order);
+        }
+
+        $users = $query->paginate(12);
 
         return view('admin.user', compact('users'));
     }
@@ -58,7 +84,7 @@ class AdminController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->route('admin.users')->with('success', 'Akun berhasil diperbarui!');
+        return response()->noContent();
     }
 
     public function destroy($id)
@@ -70,7 +96,6 @@ class AdminController extends Controller
         }
 
         $user->delete();
-
-        return redirect()->route('admin.users')->with('success', 'Akun berhasil dihapus!');
+        return response()->noContent();
     }
 }

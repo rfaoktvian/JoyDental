@@ -123,12 +123,12 @@
                 </div>
 
                 <ul class="nav nav-pills small fw-bold align-items-center" id="statusTabs" style="gap:.5rem">
-                    <span class="fw-semibold">Status</span>
+                    <span class="fw-semibold fs-6">Status</span>
 
                     @foreach ($tabs as $key => $t)
                         <li class="nav-item">
                             <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}" {{-- link fallback (non-JS) --}}
-                                class="nav-link {{ $key === $currentTab ? 'active' : '' }}"
+                                class="nav-link {{ $key === $currentTab ? 'active' : '' }} fs-6"
                                 hx-get="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}"
                                 {{-- load via HTMX --}} hx-target="#page-content" hx-push-url="true">
                                 {{ $t['label'] }}

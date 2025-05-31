@@ -85,12 +85,12 @@
                 </div>
 
                 <ul class="nav nav-pills small fw-bold align-items-center" id="statusTabs" style="gap:.5rem">
-                    <span class="fw-semibold">Status</span>
+                    <span class="fw-semibold fs-6">Status</span>
 
                     @foreach ($tabs as $key => $t)
                         <li class="nav-item">
-                            <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}"
-                                class="nav-link {{ $key === $currentTab ? 'active' : '' }}"
+                            <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}" {{-- link fallback (non-JS) --}}
+                                class="nav-link {{ $key === $currentTab ? 'active' : '' }} fs-6"
                                 hx-get="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}"
                                 {{-- load via HTMX --}} hx-target="#page-content" hx-push-url="true">
                                 {{ $t['label'] }}
@@ -98,7 +98,6 @@
                             </a>
                         </li>
                     @endforeach
-
                     <li class="ms-auto">
                         <button id="refreshBtn"
                             class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center p-0"
