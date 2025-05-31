@@ -176,8 +176,10 @@
                 </div>
 
                 <div class="col-auto">
-                    <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#addUserModal"
-                        type="button">
+                    <button class="btn btn-danger btn-sm" hx-get="{{ route('admin.users.create') }}"
+                        hx-target="#modalBody" hx-swap="innerHTML" hx-trigger="click"
+                        hx-on="htmx:afterOnLoad: (() => {const modalTitle = document.getElementById('modalTitle'); if(modalTitle){modalTitle.outerHTML = '<h5 class=&quot;modal-title fw-bold&quot; id=&quot;modalTitle&quot;>Tambah Akun</h5>';}})()"
+                        data-bs-toggle="modal" data-bs-target="#commonModal">
                         <i class="fas fa-plus"></i> Tambah Akun
                     </button>
                 </div>

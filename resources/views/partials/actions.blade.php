@@ -19,9 +19,9 @@
             </form>
 
             <a class="btn btn-sm btn-outline-primary flex-grow-1" hx-get="{{ route('antrian.reschedule', $appt) }}"
-                hx-target="#reschedule-body" hx-trigger="click" hx-on="htmx:afterSwap: initReschedule()"
-                hx-indicator="#reschedule-body .spinner-border" data-bs-toggle="modal"
-                data-bs-target="#rescheduleModal">
+                hx-target="#modalBody" hx-trigger="click"
+                hx-on="htmx:afterOnLoad: (() => {const modalTitle = document.getElementById('modalTitle'); if(modalTitle){modalTitle.outerHTML = '<h5 class=&quot;modal-title fw-bold&quot; id=&quot;modalTitle&quot;>Jadwal Ulang Tiket</h5>';}})()"
+                hx-indicator="#modalBody .spinner-border" data-bs-toggle="modal" data-bs-target="#commonModal">
                 Jadwal&nbsp;Ulang
             </a>
 
@@ -39,7 +39,6 @@
             </a>
         </div>
     @else
-        {{-- Canceled --}}
         <div class="text-danger text-center small">Dibatalkan</div>
     @endif
 </div>

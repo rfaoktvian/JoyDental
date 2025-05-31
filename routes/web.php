@@ -98,6 +98,7 @@ Route::prefix('doctor')
 Route::prefix('admin')->middleware('admin')->group(function () {
   Route::get('/', fn() => redirect('/'))->name('admin.dashboard');
 
+  Route::get('/users/add', [AdminController::class, 'addUserForm'])->name('admin.users.create');
   Route::get('/users/{id}/edit', [AdminController::class, 'editUserForm'])->name('admin.users.edit');
   Route::get('/users', [AdminController::class, 'manageUsers'])->name('admin.users');
   Route::post('/users', [AdminController::class, 'store'])->name('admin.users.store');

@@ -16,6 +16,14 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         return view('partials.account-form', data: compact('user'));
     }
+    public function addUserForm(Request $request)
+    {
+        if (!$request->header('HX-Request')) {
+            return redirect()->route('admin.users');
+        }
+
+        return view('partials.add-user-form');
+    }
 
     public function manageUsers(Request $request)
     {
@@ -49,22 +57,19 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|email',
             'nik' => 'required|string|unique:users,nik',
-            'password' => 'required|string|min:8',
-            'role' => 'required|in:user,doctor,admin'
+            'password' => 'required|string|min:8'
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'nik' => $request->nik,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'nik' => $validatedData['nik'],
+            'password' => Hash::make($validatedData['password'])
         ]);
-
         return redirect()->route('admin.users')->with('success', 'Akun berhasil ditambahkan!');
     }
 
