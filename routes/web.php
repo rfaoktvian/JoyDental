@@ -39,6 +39,12 @@ Route::get('/profil', fn() => view('profil'))
 
 
 
+Route::get('/doctor/{doctor}/schedule', [DoctorController::class, 'getScheduleForm'])
+  ->name('doctor.get.schedule');
+Route::get('/doctor/{doctor}/reviews', [DoctorController::class, 'getReviews'])
+  ->name('doctor.get.reviews');
+
+
 Route::get(
   '/doctor/antrian/{appointment}/reschedule',
   [AppointmentController::class, 'reschedule']

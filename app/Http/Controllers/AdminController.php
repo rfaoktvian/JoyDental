@@ -10,18 +10,10 @@ class AdminController extends Controller
 {
     public function editUserForm(Request $request, $id)
     {
-        if (!$request->header('HX-Request')) {
-            return redirect()->route('admin.users');
-        }
-        $user = User::findOrFail($id);
         return view('partials.account-form', data: compact('user'));
     }
     public function addUserForm(Request $request)
     {
-        if (!$request->header('HX-Request')) {
-            return redirect()->route('admin.users');
-        }
-
         return view('partials.add-user-form');
     }
 

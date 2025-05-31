@@ -6,20 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AppointDoc</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <script>
-        document.addEventListener('htmx:configRequest', (e) => {
-            e.detail.headers['X-CSRF-TOKEN'] =
-                document.querySelector('meta[name="csrf-token"]').content;
-        });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-
     <style>
         #page-content.custom-scrollbar {
             height: 100vh;
@@ -166,33 +158,15 @@
 
 @stack('scripts')
 
-@if (request()->header('HX-Request'))
-    <main id="page-content">
-        <div class="custom-container" style="height:100%;">
-            <main>
-                @yield('content')
-            </main>
-        </div>
-    </main>
-@else
+<body>
+    @if (!Request::routeIs('login') && !Request::routeIs('register'))
+        @include('partials.login-modal')
+    @endif
 
-    <body hx-boost="true" hx-target="#page-content" hx-push-url="true">
-        @includeWhen(Route::has('login'), 'partials.login-modal')
+    @include('partials.common-modal')
 
-        @include('partials.common-modal')
-
-        <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-            <div id="htmx-indicator" class="progress"
-                style="position:fixed;top:0;left:0;width:0;height:3px;background:#d32f2f;z-index:2000;
-                    transition:width .2s">
-            </div>
-            <script>
-                htmx.on("htmx:configRequest", () =>
-                    document.getElementById("htmx-indicator").style.width = "100%");
-                htmx.on("htmx:afterSwap", () =>
-                    document.getElementById("htmx-indicator").style.width = "0%");
-            </script>
-
+    <div id="app" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        @if ($hideNavbar ?? true)
             <div style="display: flex; height: 100%; width: 100%; overflow: hidden; margin: 0;">
                 <div
                     style="width: 100vw; height: 100vh; background-color: #F5F5F5; overflow: hidden; justify-content: flex-start; align-items: stretch; display: flex;">
@@ -345,31 +319,28 @@
                     </div>
                 </div>
             </div>
-        </div>
+        @else
+            <main>
+                @yield('content')
+            </main>
+        @endif
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const body = document.body;
+    </div>
 
-                const toggles = document.querySelectorAll('#sidebarToggle');
-                if (localStorage.getItem('sidebar-collapsed') === 'true') {
-                    body.classList.add('sidebar-collapsed');
-                }
-                toggles.forEach(btn => btn.addEventListener('click', () => {
-                    const state = body.classList.toggle('sidebar-collapsed');
-                    localStorage.setItem('sidebar-collapsed', state);
-                }));
-            });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
 
-            htmx.on('htmx:afterSwap', () => {
-                const path = window.location.pathname.replace(/\/+$/, '');
-                document.querySelectorAll('#sidebar .nav-link').forEach(link => {
-                    const href = new URL(link.href).pathname.replace(/\/+$/, '');
-                    link.classList.toggle('active', href === path);
-                });
-            });
-        </script>
-    </body>
-@endif
+            const toggles = document.querySelectorAll('#sidebarToggle');
+            if (localStorage.getItem('sidebar-collapsed') === 'true') {
+                body.classList.add('sidebar-collapsed');
+            }
+            toggles.forEach(btn => btn.addEventListener('click', () => {
+                const state = body.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('sidebar-collapsed', state);
+            }));
+        });
+    </script>
+</body>
 
 </html>

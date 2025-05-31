@@ -1,5 +1,5 @@
+{{-- app.blade.php --}}
 @extends('layouts.app')
-
 @section('content')
     <style>
         .doctor-card {
@@ -18,7 +18,6 @@
             padding: 0.3em 0.6em;
         }
     </style>
-
     <div class="banner position-relative p-4 rounded text-white d-flex align-items-center justify-content-between overflow-hidden"
         style="background: linear-gradient(135deg, #d32f2f, #f44336); height: 250px;">
         <div style="z-index: 2; max-width: 60%;">
@@ -32,9 +31,7 @@
         <img src="{{ asset('images/doctors_dashboard.png') }}" alt="Doctors" class="imgdashboard"
             style="max-height: 100%; object-fit: contain;" />
     </div>
-
     <div class="border-bottom mb-3 mt-3"></div>
-
     <div class="container" style="max-width: 1320px;">
         <div class="row gx-4 gy-4">
             <div class="col-xl-8">
@@ -52,14 +49,11 @@
                             </div>
                         </div>
                     </div>
-
                     @php
                         use Illuminate\Support\Carbon;
-
                         $today = ucfirst(Carbon::now()->locale('id')->translatedFormat('l'));
                         $timeNow = Carbon::now();
                     @endphp
-
                     <div class="col-12">
                         <div class="custom_card p-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -67,7 +61,6 @@
                                 <a href="{{ route('dokter') }}" class="text-decoration-none text-danger small">Lihat
                                     Semua</a>
                             </div>
-
                             <div class="row g-3">
                                 @foreach ($doctors as $data)
                                     @php
@@ -77,7 +70,6 @@
                                             : null;
                                         $end = $todaySchedule ? \Carbon\Carbon::parse($todaySchedule->time_to) : null;
                                         $isActive = $todaySchedule ? $timeNow->between($start, $end) : false;
-
                                         $rating = $data->reviews->avg('rating') ?? 0;
                                         $ratingFormatted = number_format($rating, 1);
                                         $badge =
@@ -102,7 +94,6 @@
                                                     @endif
                                                 </div>
                                             </div>
-
                                             <div class="text-muted small text-center text-md-start">
                                                 @if ($todaySchedule)
                                                     <div><i class="fas fa-calendar-alt me-1"></i>{{ $today }}</div>
@@ -113,11 +104,9 @@
                                                         hari ini</div>
                                                 @endif
                                             </div>
-
                                             <div class="text-warning small text-center text-md-start">
                                                 <i class="fas fa-star me-1"></i>{{ $ratingFormatted }} / 5
                                             </div>
-
                                             <div class="d-flex gap-2 justify-content-md-end mt-3 mt-md-0">
                                                 @guest
                                                     <a data-bs-toggle="modal" data-bs-target="#loginModal"
@@ -129,54 +118,40 @@
                                                         Janji
                                                         Temu</a>
                                                 @endguest
-                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#reviewModal-{{ $data->id }}">
+                                                <button class="doctor-reviews-btn btn btn-outline-secondary btn-sm"
+                                                    data-modal-url="/doctor/{{ $data->id }}/reviews"
+                                                    data-modal-title="Hasil Review Pasien">
                                                     <i class="fas fa-comment-dots"></i>
                                                 </button>
-                                                <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-                                                    data-bs-target="#scheduleModal-{{ $data->id }}">
+
+                                                <button class="doctor-schedule-btn btn btn-outline-secondary btn-sm"
+                                                    data-modal-url="/doctor/{{ $data->id }}/schedule"
+                                                    data-modal-title="Jadwal Dokter">
                                                     <i class="fas fa-calendar-alt"></i>
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
-
-                                    @include('partials.review-modal', [
-                                        'id' => $data->id,
-                                        'name' => $data->name,
-                                        'reviews' => $data->reviews,
-                                    ])
-
-                                    @include('partials.schedule-modal', [
-                                        'id' => $data->id,
-                                        'name' => $data->name,
-                                        'schedules' => $data->schedules,
-                                        'today' => $today,
-                                    ])
                                 @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-xl-4">
                 <div class="custom_card p-3 mb-4">
                     @include('partials.calendar', ['calendarId' => 'dashboard'])
                 </div>
-
                 <div class="custom_card p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h2 class="mb-0 fs-5">Daftar Poliklinik</h2>
                         <a href="{{ route('poliklinik') }}" class="text-decoration-none text-danger small">Lihat Semua</a>
                     </div>
-
                     <div class="polyclinic-list">
                         @foreach ($polyclinics as $data)
                             @php
                                 $badge = $poliklinikTypes[$data['type']];
                             @endphp
-
                             <div
                                 class="d-flex align-items-center gap-2 px-2 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                                 <div class="rounded d-flex justify-content-center align-items-center bg-danger text-white"
@@ -195,4 +170,6 @@
             </div>
         </div>
     </div>
+
+    @include('partials.modal-loader')
 @endsection

@@ -146,4 +146,7 @@
                 });
             };
         </script>
+
+
+        @include('partials.modal-loader')
     @endsection
