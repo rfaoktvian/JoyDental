@@ -39,6 +39,11 @@ Route::get('/profil', fn() => view('profil'))
 
 
 
+Route::get('/doctor/{doctor}/schedule', [DoctorController::class, 'getScheduleForm'])
+  ->name('doctor.get.schedule');
+Route::get('/doctor/{doctor}/reviews', [DoctorController::class, 'getReviews'])
+  ->name('doctor.get.reviews');
+
 Route::get(
   '/doctor/antrian/{appointment}/reschedule',
   [AppointmentController::class, 'reschedule']
@@ -105,11 +110,13 @@ Route::prefix('admin')->middleware('admin')->group(function () {
   Route::put('/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
   Route::delete('/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
 
-  Route::get('/dokter', fn() => view('admin.dokter'))->name('admin.dokter');
-  Route::get('/poliklinik', fn() => view('admin.poliklinik'))->name('admin.poliklinik');
-  Route::get('/jadwal', fn() => view('admin.jadwal'))->name('admin.jadwal');
-  Route::get('/antrian', fn() => view('admin.dashboard'))->name('admin.antrian');
-  Route::get('/laporan', fn() => view('admin.dashboard'))->name('admin.laporan');
+  Route::get('/dokter/add', [AdminController::class, 'addDoctorForm'])->name('admin.dokter.create');
+  Route::get('/dokter/{id}/edit', [AdminController::class, 'editDoctorForm'])->name('admin.dokter.edit');
+  Route::get('/dokter', [AdminController::class, 'manageDoctors'])->name('admin.dokter');
+
+  Route::get('/poliklinik/add', [AdminController::class, 'addPolyclinicForm'])->name('admin.poliklinik.create');
+  Route::get('/poliklinik/{id}/edit', [AdminController::class, 'editPolyclinicForm'])->name('admin.poliklinik.edit');
+  Route::get('/poliklinik', [AdminController::class, 'managePolyclinics'])->name('admin.poliklinik');
 
   Route::fallback(function () {
     if (request()->is('admin/*') && auth()->check()) {

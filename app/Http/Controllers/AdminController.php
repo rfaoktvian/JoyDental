@@ -4,25 +4,42 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Polyclinic;
+use App\Models\Doctor;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
     public function editUserForm(Request $request, $id)
     {
-        if (!$request->header('HX-Request')) {
-            return redirect()->route('admin.users');
-        }
         $user = User::findOrFail($id);
         return view('partials.account-form', data: compact('user'));
     }
+
+    public function editDoctorForm(Request $request, $id)
+    {
+        $doctor = Doctor::with(['user', 'schedules', 'reviews'])->findOrFail($id);
+        return view('partials.doctor-form', compact('doctor'));
+    }
+
+    public function editPolyclinicForm(Request $request, $id)
+    {
+        $polyclinic = Polyclinic::findOrFail($id);
+        return view('partials.polyclinic-form', compact('polyclinic'));
+    }
     public function addUserForm(Request $request)
     {
-        if (!$request->header('HX-Request')) {
-            return redirect()->route('admin.users');
-        }
-
         return view('partials.add-user-form');
+    }
+
+    public function addDoctorForm(Request $request)
+    {
+        return view('partials.add-doctor-form');
+    }
+
+    public function addPolyclinicForm(Request $request)
+    {
+        return view('partials.add-polyclinic-form');
     }
 
     public function manageUsers(Request $request)
@@ -53,6 +70,55 @@ class AdminController extends Controller
         $users = $query->paginate(12);
 
         return view('admin.user', compact('users'));
+    }
+
+
+    public function manageDoctors(Request $request)
+    {
+        $query = Doctor::query()->with(['user', 'schedules', 'reviews']);
+
+        if ($request->filled('search')) {
+            $keyword = "%{$request->search}%";
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', $keyword)
+                    ->orWhere('nik', 'like', $keyword)
+                    ->orWhere('specialization', 'like', $keyword);
+            });
+        }
+
+        if ($request->filled('sort_by')) {
+            $order = $request->sort_order === 'desc' ? 'desc' : 'asc';
+            $query->orderBy($request->sort_by, $order);
+        } else {
+            $query->orderBy('name');
+        }
+
+        $doctors = $query->paginate(12);
+
+        return view('admin.dokter', compact('doctors'));
+    }
+
+
+    public function managePolyclinics(Request $request)
+    {
+        $query = Polyclinic::query();
+
+        if ($request->filled('search')) {
+            $keyword = "%{$request->search}%";
+            $query->where('name', 'like', $keyword)
+                ->orWhere('location', 'like', $keyword);
+        }
+
+        if ($request->filled('sort_by')) {
+            $order = $request->sort_order === 'desc' ? 'desc' : 'asc';
+            $query->orderBy($request->sort_by, $order);
+        } else {
+            $query->orderBy('name');
+        }
+
+        $polyclinics = $query->paginate(12);
+
+        return view('admin.poliklinik', compact('polyclinics'));
     }
 
     public function store(Request $request)

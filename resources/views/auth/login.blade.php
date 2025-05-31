@@ -9,14 +9,15 @@
     <p class="text-muted text-center mb-4">
         Belum punya akun?
         <a href="{{ route('register') }}" class="text-danger">Daftar</a>
+    </p>
 
-    <form id="loginForm" method="POST"">
+    <form id="loginForm" method="POST">
         @csrf
 
-        <div class=" mb-2">
+        <div class="mb-2">
             <label for="nik" class="form-label">NIK</label>
             <input type="text" name="nik" id="nik" class="form-control @error('nik') is-invalid @enderror"
-                value="{{ old('nik') }}" required autocomplete="nik" autofocus>
+                value="{{ old('nik') }}" maxlength="16" required autofocus>
         </div>
         <div class="mb-4">
             <label for="password" class="form-label">Password</label>
@@ -31,102 +32,133 @@
             Masuk
         </button>
     </form>
-    </p>
-@endsection
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const nikInput = document.getElementById('nik');
-        const pwdInput = document.getElementById('password');
-        const submitBtn = document.getElementById('login-submit');
-        const formError = document.getElementById('form-error');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-        const checkNikUrl = "{{ route('check.nik') }}";
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nikInput = document.getElementById('nik');
+            const pwdInput = document.getElementById('password');
+            const submitBtn = document.getElementById('login-submit');
+            const formError = document.getElementById('form-error');
 
-        let nikIsValid = false;
-
-        async function recheckNik() {
-            const val = nikInput.value.trim();
-
-            formError.classList.add('d-none');
-            formError.textContent = '';
-            pwdInput.value = '';
-            pwdInput.disabled = true;
-            submitBtn.disabled = true;
-            nikIsValid = false;
-
-            if (val.length === 0) {
+            const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+            if (!csrfTokenMeta) {
+                console.error(
+                    'CSRF token meta tag not found. Make sure <meta name="csrf-token" content="{{ csrf_token() }}"> is in your layout head.'
+                );
                 return;
             }
-            if (val.length != 16) {
-                formError.textContent = 'NIK harus 16 digit.';
-                formError.classList.remove('d-none');
-                return;
-            }
-            try {
-                const res = await fetch(`${checkNikUrl}?nik=${encodeURIComponent(val)}`, {
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken
+            const csrfToken = csrfTokenMeta.content;
+            const checkNikUrl = "{{ route('check.nik') }}";
+
+            let nikIsValid = false;
+
+            async function verifyNikWithServer(nikValue) {
+                formError.classList.add('d-none');
+                formError.textContent = '';
+
+                pwdInput.value = '';
+                pwdInput.disabled = true;
+                submitBtn.disabled = true;
+                nikIsValid = false;
+
+                try {
+                    const res = await fetch(`${checkNikUrl}?nik=${encodeURIComponent(nikValue)}`, {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (res.ok) {
+                        // NIK exists
+                        nikIsValid = true;
+                        pwdInput.disabled = false;
+                        pwdInput.focus();
+                    } else {
+                        // NIK not found
+                        formError.textContent = 'NIK tidak terdaftar.';
+                        formError.classList.remove('d-none');
                     }
-                });
-                if (res.ok) {
-                    nikIsValid = true;
-                    pwdInput.disabled = false;
-                    pwdInput.focus();
-                } else {
-                    formError.textContent = 'NIK tidak terdaftar.';
+                } catch (error) {
+                    console.error('Error checking NIK:', error);
+                    formError.textContent = 'Gagal memeriksa NIK.';
                     formError.classList.remove('d-none');
                 }
-            } catch {
-                formError.textContent = 'Gagal memeriksa NIK.';
-                formError.classList.remove('d-none');
             }
-        }
 
-        nikInput.addEventListener('input', recheckNik);
+            nikInput.addEventListener('input', () => {
+                const raw = nikInput.value.trim();
+                formError.classList.add('d-none');
+                formError.textContent = '';
 
-        nikInput.addEventListener('input', () => {
-            if (pwdInput.value.length > 0) {
                 pwdInput.value = '';
-            }
-        });
+                pwdInput.disabled = true;
+                submitBtn.disabled = true;
+                nikIsValid = false;
 
-        pwdInput.addEventListener('input', () => {
-            submitBtn.disabled = !(nikIsValid && pwdInput.value.length > 0);
-        });
-
-        document.getElementById('loginForm').addEventListener('submit', async e => {
-            e.preventDefault();
-            formError.classList.add('d-none');
-            formError.textContent = '';
-
-            const orig = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Memuat…';
-
-            try {
-                const res = await fetch("{{ route('login') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Accept': 'application/json'
-                    },
-                    body: new FormData(e.target)
-                });
-                if (res.ok) {
-                    window.location.href = "{{ session()->pull('url.intended', url('/')) }}";
+                if (raw.length === 0) {
                     return;
                 }
-                formError.textContent = res.status === 422 ?
-                    'NIK atau kata sandi salah.' :
-                    'Terjadi kesalahan.';
-            } catch {
-                formError.textContent = 'Gagal terhubung ke server.';
-            } finally {
-                formError.classList.remove('d-none');
-                submitBtn.disabled = false;
-                submitBtn.textContent = orig;
-            }
+
+                if (raw.length !== 16) {
+                    formError.textContent = 'NIK harus 16 digit.';
+                    formError.classList.remove('d-none');
+                    return;
+                }
+
+                verifyNikWithServer(raw);
+            });
+
+            pwdInput.addEventListener('input', () => {
+                if (nikIsValid && pwdInput.value.length > 0) {
+                    submitBtn.disabled = false;
+                } else {
+                    submitBtn.disabled = true;
+                }
+            });
+
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                formError.classList.add('d-none');
+                formError.textContent = '';
+
+                const originalButtonText = submitBtn.textContent;
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Memuat…';
+
+                try {
+                    const formData = new FormData(e.target);
+
+                    const res = await fetch("{{ route('login') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: formData
+                    });
+
+                    if (res.ok) {
+                        window.location.href = "{{ session()->pull('url.intended', url('/')) }}";
+                        return;
+                    }
+
+                    formError.textContent = (res.status === 422) ?
+                        'NIK atau kata sandi salah.' :
+                        'Terjadi kesalahan.';
+                } catch (error) {
+                    console.error('Login error:', error);
+                    formError.textContent = 'Gagal terhubung ke server.';
+                } finally {
+                    formError.classList.remove('d-none');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalButtonText;
+                }
+            });
         });
-    });
-</script>
+    </script>
+@endsection

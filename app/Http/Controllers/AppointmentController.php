@@ -115,10 +115,6 @@ class AppointmentController extends Controller
         $this->authorize('update', $appointment);
         $appointment->load(['clinic', 'doctor']);
 
-
-        if (!$request->header('HX-Request')) {
-            return redirect()->route('tiket-antrian');
-        }
         return view('partials.reschedule-form', [
             'appt' => $appointment,
         ]);

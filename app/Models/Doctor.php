@@ -4,16 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\DoctorSchedule;
 
 class Doctor extends Model
 {
     use HasFactory;
+
     protected $fillable = [
+        'nik',
         'name',
         'specialization',
         'description',
+        'photo',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'nik', 'nik');
+    }
 
     public function schedules()
     {
@@ -25,5 +32,8 @@ class Doctor extends Model
         return $this->hasMany(DoctorReview::class);
     }
 
-
+    public function averageRating()
+    {
+        return $this->reviews()->avg('rating');
+    }
 }

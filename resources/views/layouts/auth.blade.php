@@ -1,4 +1,4 @@
-@extends('layouts.app', [($hideNav = false)])
+@extends('layouts.app', [($hideNavbar = false)])
 
 @section('content')
     <style>

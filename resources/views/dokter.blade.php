@@ -115,17 +115,14 @@
                                         Buat Janji Temu
                                     </a>
                                 @endguest
-                                <button
-                                    class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
-                                    style="width: 36px; height: 36px;" data-bs-toggle="modal"
-                                    data-bs-target="#reviewModal-{{ $doctor->id }}" title="Lihat Ulasan">
+                                <button class="doctor-reviews-btn btn btn-outline-secondary btn-sm"
+                                    data-modal-url="/doctor/{{ $doctor->id }}/reviews"
+                                    data-modal-title="Hasil Review Pasien">
                                     <i class="fas fa-comment-dots"></i>
                                 </button>
 
-                                <button
-                                    class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
-                                    style="width: 36px; height: 36px;" data-bs-toggle="modal"
-                                    data-bs-target="#scheduleModal-{{ $doctor->id }}" title="Lihat Jadwal">
+                                <button class="doctor-schedule-btn btn btn-outline-secondary btn-sm"
+                                    data-modal-url="/doctor/{{ $doctor->id }}/schedule" data-modal-title="Jadwal Dokter">
                                     <i class="fas fa-calendar-alt"></i>
                                 </button>
                             </div>
@@ -134,21 +131,10 @@
 
                     </div>
                 </div>
-
-                @include('partials.review-modal', [
-                    'id' => $doctor->id,
-                    'name' => $doctor->name,
-                    'reviews' => $doctor->reviews,
-                ])
-
-                @include('partials.schedule-modal', [
-                    'id' => $doctor->id,
-                    'name' => $doctor->name,
-                    'schedules' => $doctor->schedules,
-                    'today' => $today,
-                ])
             @endforeach
 
         </div>
     </section>
+
+    @include('partials.modal-loader')
 @endsection

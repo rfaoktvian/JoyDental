@@ -40,7 +40,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    function setupLoginForm() {
         const nikInput = document.getElementById('nik');
         const pwdInput = document.getElementById('password');
         const submitBtn = document.getElementById('login-submit');
@@ -133,5 +133,12 @@
                 submitBtn.textContent = orig;
             }
         });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            loginModal.addEventListener('shown.bs.modal', setupLoginForm);
+        }
     });
 </script>
