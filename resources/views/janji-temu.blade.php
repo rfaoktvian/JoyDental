@@ -119,39 +119,10 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="alert alert-info mb-4">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Pasien harap datang 15 menit sebelum jadwal, kehadiran melebihi 30 menit akan dibatalkan otomatis.
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="card border-danger mb-4 shadow-sm">
-                        <div class="card-header bg-danger text-white">
-                            <i class="fas fa-clipboard-list me-2"></i> Ringkasan Pemesanan
-                        </div>
-                        <div class="card-body">
-                            <dl class="row mb-0">
-                                <dt class="col-6">Poliklinik:</dt>
-                                <dd class="col-6" id="summary-polyclinic">–</dd>
-                                <dt class="col-6">Dokter:</dt>
-                                <dd class="col-6" id="summary-doctor">–</dd>
-                                <dt class="col-6">Jadwal:</dt>
-                                <dd class="col-6" id="summary-schedule">–</dd>
-                                <dt class="col-6">Pasien:</dt>
-                                <dd class="col-6" id="summary-patient">{{ Auth::user()->name }}</dd>
-                                <dt class="col-6">Bayar:</dt>
-                                <dd class="col-6" id="summary-payment">–</dd>
-                                <dt class="col-6">Biaya:</dt>
-                                <dd class="col-6 text-success fw-bold" id="summary-cost">–</dd>
-                            </dl>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-danger btn-lg w-100">
-                        <i class="fas fa-check-circle me-2"></i> Konfirmasi Janji Temu
-                    </button>
-                </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-check-circle me-2"></i> Konfirmasi Janji Temu
+                </button>
             </div>
         </form>
     </div>
