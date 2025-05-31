@@ -19,7 +19,25 @@
                     return response.text();
                 })
                 .then(html => {
-                    modalBody.innerHTML = html;
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = html;
+
+                    const scripts = wrapper.querySelectorAll('script');
+                    scripts.forEach(script => script.remove());
+
+                    modalBody.innerHTML = wrapper.innerHTML;
+
+                    scripts.forEach(script => {
+                        const newScript = document.createElement('script');
+                        if (script.src) {
+                            newScript.src = script.src;
+                            newScript.async = false;
+                        } else {
+                            newScript.textContent = script.textContent;
+                        }
+                        document.body.appendChild(newScript);
+                    });
+
                     if (typeof callback === 'function') {
                         callback();
                     }
