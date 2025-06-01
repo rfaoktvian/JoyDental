@@ -1,5 +1,31 @@
-# Use prebuilt base image (with GRPC & dependencies already installed)
-FROM sikancil/backend-base AS app
+FROM php:8.3-fpm AS base
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libicu-dev \
+    zip \
+    unzip \
+    nano \
+    libsodium23 \
+    nginx \
+    cron \
+    supervisor \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo pdo_mysql opcache zip intl
+
+# Install Node.js & npm (latest version)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set Workdir
 WORKDIR /var/www/html
