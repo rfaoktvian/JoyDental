@@ -5,7 +5,8 @@
         "serve": "php artisan serve",
         "watch": "vite",
         "dev-all": "concurrently \"npm:serve\" \"npm:watch\"",
-        "refresh": "php artisan cache:clear && php artisan route:clear && php artisan config:clear && php artisan view:clear"
+        "refresh": "php artisan cache:clear && php artisan route:clear && php artisan config:clear && php artisan view:clear",
+        "build": "vite build"
     },
     "devDependencies": {
         "@hotwired/turbo": "^8.0.4",
