@@ -24,6 +24,23 @@ Route::middleware(['auth'])
   ->post('/janji-temu', [AppointmentController::class, 'store'])
   ->name('janji-temu.store');
 
+
+Route::post(
+  '/antrian/{appointment}/cancel',
+  [AppointmentController::class, 'cancel']
+)
+  ->name('antrian.cancel');
+
+Route::get(
+  '/doctor/antrian/{appointment}/reschedule',
+  [AppointmentController::class, 'reschedule']
+)->name('antrian.reschedule');
+
+Route::patch(
+  '/doctor/antrian/{appointment}/reschedule',
+  [AppointmentController::class, 'saveReschedule']
+)->name('antrian.reschedule.simpan');
+
 Route::get('/rekam-medis', fn() => view('rekam-medis'))
   ->name('rekam-medis');
 
@@ -50,16 +67,6 @@ Route::get('/doctor/{doctor}/schedule', [DoctorController::class, 'getScheduleFo
   ->name('doctor.get.schedule');
 Route::get('/doctor/{doctor}/reviews', [DoctorController::class, 'getReviews'])
   ->name('doctor.get.reviews');
-
-Route::get(
-  '/doctor/antrian/{appointment}/reschedule',
-  [AppointmentController::class, 'reschedule']
-)->name('antrian.reschedule');
-
-Route::patch(
-  '/doctor/antrian/{appointment}/reschedule',
-  [AppointmentController::class, 'saveReschedule']
-)->name('antrian.reschedule.simpan');
 
 Route::get('/api/doctor/{doctor}/schedule', function (\App\Models\Doctor $doctor) {
   return $doctor->schedules
@@ -94,12 +101,6 @@ Route::prefix('doctor')
       [AppointmentController::class, 'complete']
     )
       ->name('antrian.complete');
-
-    Route::post(
-      '/antrian/{appointment}/cancel',
-      [AppointmentController::class, 'cancel']
-    )
-      ->name('antrian.cancel');
 
     Route::view('/profile', 'doctor.profile')->name('profile');
 

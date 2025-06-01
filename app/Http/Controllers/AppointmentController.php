@@ -275,7 +275,7 @@ class AppointmentController extends Controller
             'status' => AppointmentStatus::Upcoming,
         ]);
 
-        return response('<div class="text-center p-4 text-success">Jadwal Berhasil Diperbarui</div>', 200);
+        return back();
     }
 
     public function start(Appointment $appointment)
