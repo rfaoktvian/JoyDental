@@ -76,8 +76,7 @@
                     <div class="d-flex align-items-center gap-2 ms-auto mb-0">
                         <button id="refreshBtn"
                             class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
-                            style="width:32px;height:32px" hx-get="{{ request()->fullUrl() }}" hx-target="#page-content"
-                            hx-swap="outerHTML" hx-indicator="#htmx-indicator" title="Refresh">
+                            style="width:32px;height:32px" onclick="window.location.reload();" title="Refresh">
                             <i class="fa fa-sync-alt"></i>
                         </button>
                         <a href="{{ route('janji-temu') }}" class="btn btn-danger d-flex align-items-center gap-1 px-3"

@@ -100,10 +100,9 @@
                     @endforeach
                     <li class="ms-auto">
                         <button id="refreshBtn"
-                            class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center p-0"
-                            style="width:32px;height:32px" hx-get="{{ request()->fullUrl() }}" hx-target="#page-content"
-                            hx-swap="outerHTML" hx-indicator="#htmx-indicator" title="Refresh">
-                            <i class="fa fa-sync-alt m-auto"></i>
+                            class="btn btn-outline-secondary btn-sm d-flex align-items-center justify-content-center"
+                            style="width:32px;height:32px" onclick="window.location.reload();" title="Refresh">
+                            <i class="fa fa-sync-alt"></i>
                         </button>
                     </li>
                 </ul>

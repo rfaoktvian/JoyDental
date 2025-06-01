@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <section class="container py-2 px-0">
+    <section class="container">
         <div class="row g-3">
             @foreach ($doctors as $doctor)
                 <div class="col-md-4 col-sm-6">

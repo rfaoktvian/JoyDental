@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <section class="container py-2 px-0">
+    <section class="container">
         <div class="row g-3">
             @foreach ($polyclinics as $poliklinik)
                 @php

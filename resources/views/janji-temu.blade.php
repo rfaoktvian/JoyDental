@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container">
         <form id="appointmentForm" action="" method="POST" class="needs-validation" novalidate>
             @csrf
 
