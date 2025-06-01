@@ -7,9 +7,115 @@ use App\Enums\AppointmentStatus;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use App\Models\Polyclinic;
+use App\Models\Doctor;
+use App\Models\DoctorSchedule;
 
 class AppointmentController extends Controller
 {
+    public function janjitemu()
+    {
+        $user = auth()->user();
+
+        $polyclinics = Polyclinic::orderBy('name')->get();
+        return view('janji-temu', compact('polyclinics', 'user'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'polyclinic' => ['required', 'exists:polyclinics,id'],
+            'doctor' => ['required', 'exists:doctors,id'],
+            'visit_date' => ['required', 'date', 'after_or_equal:today'],
+            'time' => ['required', 'date_format:H:i'],
+            'payment_method' => ['required', 'in:cash,credit_card,e_wallet'],
+            'complaint' => ['required', 'string', 'max:1000'],
+        ]);
+
+        $user = Auth::user();
+        $polyclinicId = $request->input('polyclinic');
+        $doctorId = $request->input('doctor');
+        $visitDate = Carbon::parse($request->input('visit_date'))->toDateString();
+        $visitTime = $request->input('time');
+        $payment = $request->input('payment_method');
+        $complaint = $request->input('complaint');
+
+        $dayName = Carbon::parse($visitDate)
+            ->locale('id')
+            ->translatedFormat('l');
+
+        $schedule = DoctorSchedule::where('doctor_id', $doctorId)
+            ->where('polyclinic_id', $polyclinicId)
+            ->where('day', $dayName)
+            ->first();
+
+        if (!$schedule) {
+            return back()
+                ->withInput()
+                ->withErrors(['visit_date' => "Dokter tidak praktik pada hari “{$dayName}”."]);
+        }
+
+        $existingCount = Appointment::where('doctor_schedule_id', $schedule->id)
+            ->whereDate('appointment_date', $visitDate)
+            ->count();
+
+        $queueNumber = 'Q' . str_pad($existingCount + 1, 3, '0', STR_PAD_LEFT);
+
+        $bookingCode = Str::upper(Str::random(8));
+
+        $appt = Appointment::create([
+            'queue_number' => $queueNumber,
+            'booking_code' => $bookingCode,
+            'user_id' => $user->id,
+            'doctor_id' => $doctorId,
+            'doctor_schedule_id' => $schedule->id,
+            'status' => 1,
+            'appointment_date' => $visitDate,
+            'appointment_time' => $visitTime . ':00',
+            'payment_method' => $payment,
+            'consultation_fee' => $schedule->doctor->consultation_fee ?? null,
+            'chief_complaint' => $complaint,
+        ]);
+
+        return redirect()->route('tiket-antrian')
+            ->with('success', "Janji temu berhasil dibuat. Kode Booking: “{$bookingCode}”");
+    }
+
+    public function getDoctorsByPolyclinic(Polyclinic $polyclinic)
+    {
+
+        $doctors = Doctor::whereHas('schedules', function ($q) use ($polyclinic) {
+            $q->where('polyclinic_id', $polyclinic->id);
+        })
+            ->with([
+                'schedules' => function ($q) use ($polyclinic) {
+                    $q->where('polyclinic_id', $polyclinic->id);
+                }
+            ])
+            ->get();
+
+        $result = $doctors->map(function ($doc) {
+            return [
+                'id' => $doc->id,
+                'name' => $doc->name,
+                'specialization' => $doc->specialization,
+                'photo' => $doc->photo,
+                'schedules' => $doc->schedules->map(function ($s) {
+                    return [
+                        'schedule_id' => $s->id,
+                        'day' => $s->day,
+                        'time_from' => substr($s->time_from, 0, 5),
+                        'time_to' => substr($s->time_to, 0, 5),
+                        'max_capacity' => $s->max_capacity,
+                    ];
+                })->values(),
+            ];
+        });
+
+        return response()->json(data: $result);
+    }
+
     public function tiketAntrian()
     {
         $user = Auth::user();
@@ -130,7 +236,6 @@ class AppointmentController extends Controller
             'clinic'
         ));
     }
-
 
     public function reschedule(Request $request, Appointment $appointment)
     {

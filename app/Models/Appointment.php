@@ -19,7 +19,13 @@ class Appointment extends Model
         'appointment_date',
         'appointment_time',
         'payment_method',
-        'consultation_fee'
+        'consultation_fee',
+        'chief_complaint',
+        'diagnosis',
+        'treatment',
+        'prescription',
+        'doctor_notes',
+        'follow_up_date',
     ];
 
     protected $casts = [

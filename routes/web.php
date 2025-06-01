@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 
 // Importing routes from other files
 Route::middleware('web')
+  ->group(base_path('routes/api.php'))
   ->group(base_path('routes/front_end.php'))
   ->group(base_path('routes/auth.php'));
 
@@ -16,8 +17,12 @@ Route::view('/', 'dashboard');
 Route::get('/', [DashboardController::class, 'dashboard'])
   ->name('dashboard');
 
-Route::get('/janji-temu', fn() => view('janji-temu'))
+Route::get('/janji-temu', [AppointmentController::class, 'janjitemu'])
   ->name('janji-temu');
+
+Route::middleware(['auth'])
+  ->post('/janji-temu', [AppointmentController::class, 'store'])
+  ->name('janji-temu.store');
 
 Route::get('/rekam-medis', fn() => view('rekam-medis'))
   ->name('rekam-medis');
@@ -25,6 +30,7 @@ Route::get('/rekam-medis', fn() => view('rekam-medis'))
 Route::middleware(['auth'])
   ->get('/tiket-antrian', [AppointmentController::class, 'tiketAntrian'])
   ->name('tiket-antrian');
+
 
 use App\Http\Controllers\DoctorController;
 use Illuminate\Support\Facades\Response;

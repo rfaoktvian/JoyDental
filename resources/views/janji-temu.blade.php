@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <form id="appointmentForm" action="" method="POST" class="needs-validation" novalidate>
+        <form id="appointmentForm" action="{{ route('janji-temu.store') }}" method="POST" class="needs-validation" novalidate>
             @csrf
 
             <div class="mb-4">
@@ -21,14 +21,15 @@
                 </div>
                 <div class="card-body">
                     <label for="polyclinic" class="form-label">Daftar Poliklinik <span class="text-danger">*</span></label>
-                    <select class="form-select @error('polyclinic') is-invalid @enderror" id="polyclinic" name="polyclinic"
-                        required>
+                    <select class="form-select" id="polyclinic" name="polyclinic" required>
                         <option value="" disabled selected>Pilih Poliklinik</option>
+                        @foreach ($polyclinics as $poly)
+                            <option value="{{ $poly->id }}">
+                                {{ $poly->name }}
+                            </option>
+                        @endforeach
                     </select>
                     <div class="form-text">Pilih poliklinik yang akan Anda kunjungi</div>
-                    @error('polyclinic')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
                 </div>
             </div>
 
@@ -39,46 +40,23 @@
                 <div class="card-body">
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <label for="doctor" class="form-label fw-semibold">Dokter yang Tersedia <span
-                                    class="text-danger">*</span></label>
-                            <select class="form-select @error('doctor') is-invalid @enderror" id="doctor" name="doctor"
-                                required>
+                            <label for="doctor" class="form-label fw-semibold">
+                                Dokter yang Tersedia <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="doctor" name="doctor" required disabled>
                                 <option value="" disabled selected>Pilih Dokter</option>
                             </select>
-                            @error('doctor')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="visit_date" class="form-label fw-semibold">Tanggal Kunjungan <span
-                                    class="text-danger">*</span></label>
-                            <input type="date" class="form-control @error('visit_date') is-invalid @enderror"
-                                id="visit_date" name="visit_date" min="{{ date('Y-m-d') }}" value="{{ old('visit_date') }}"
-                                required>
-                            @error('visit_date')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                            <label for="visit_date" class="form-label fw-semibold">
+                                Tanggal Kunjungan <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" class="form-control" id="visit_date" name="visit_date"
+                                placeholder="Pilih tanggal..." required disabled>
                         </div>
                     </div>
 
-                    <div id="doctor-info" class="card bg-light mt-4 border-0 d-none">
-                        <div class="card-body">
-                            <h6 class="text-danger">Informasi Dokter:</h6>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <p class="mb-1"><strong>Spesialisasi:</strong> <span id="doctor-specialty">–</span>
-                                    </p>
-                                    <p class="mb-1"><strong>Pengalaman:</strong> <span id="doctor-experience">–</span>
-                                        tahun</p>
-                                </div>
-                                <div class="col-sm-6">
-                                    <p class="mb-1"><strong>Jadwal:</strong> <span id="doctor-schedule">–</span></p>
-                                    <p class="mb-0"><strong>Jam:</strong> <span id="doctor-time">–</span></p>
-                                </div>
-                            </div>
-                            <p class="mt-2 text-success"><strong>Biaya:</strong> Rp <span id="doctor-price">–</span></p>
-                        </div>
-                    </div>
+                    <div id="slot-wrap" class="row g-2 my-3"></div>
                 </div>
             </div>
 
@@ -92,15 +70,24 @@
                         <label class="form-check-label" for="otherPatientSwitch">Pasien Lain</label>
                     </div>
                     <div id="selfPatient">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Pasien</label>
+                            <input type="text" class="form-control" value="{{ $user->name }}" disabled>
+                        </div>
                     </div>
                     <div id="otherPatient" class="d-none">
+                        <div class="mb-3">
+                            <label for="other_name" class="form-label">Nama Pasien</label>
+                            <input type="text" name="other_name" id="other_name" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label for="other_email" class="form-label">Email</label>
+                            <input type="email" name="other_email" id="other_email" class="form-control">
+                        </div>
                     </div>
 
                     <label class="form-label fw-semibold mt-4">Keluhan <span class="text-danger">*</span></label>
-                    <textarea class="form-control @error('complaint') is-invalid @enderror" name="complaint" rows="4" required>{{ old('complaint') }}</textarea>
-                    @error('complaint')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <textarea class="form-control" name="complaint" rows="4" required></textarea>
                 </div>
             </div>
 
@@ -109,132 +96,257 @@
                     <i class="fas fa-credit-card me-2"></i> Cara Bayar
                 </div>
                 <div class="card-body">
-                    <label for="payment_method" class="form-label">Metode Pembayaran <span
-                            class="text-danger">*</span></label>
-                    <select class="form-select @error('payment_method') is-invalid @enderror" id="payment_method"
-                        name="payment_method" required>
+                    <label for="payment_method" class="form-label">Metode Pembayaran
+                        <span class="text-danger">*</span>
+                    </label>
+                    <select class="form-select" id="payment_method" name="payment_method" required>
                         <option value="" disabled selected>Pilih Metode Pembayaran</option>
+                        <option value="cash">Tunai</option>
+                        <option value="credit_card">Kartu Kredit</option>
+                        <option value="e_wallet">E‐Wallet</option>
+                        {{-- dll… --}}
                     </select>
-                    @error('payment_method')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-danger">
+            <div class="d-flex justify-content-end mb-5">
+                <button id="submitBtn" type="submit" class="btn btn-danger" disabled>
                     <i class="fas fa-check-circle me-2"></i> Konfirmasi Janji Temu
                 </button>
             </div>
         </form>
     </div>
 
-    <!-- JavaScript -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+    <style>
+        .slot-disabled {
+            background: #f8d7da !important;
+            color: #842029 !important;
+            cursor: not-allowed;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const doctorSelect = document.getElementById('doctor');
-            const doctorInfo = document.getElementById('doctor-info');
-            const otherPatientSwitch = document.getElementById('otherPatientSwitch');
-            const selfPatient = document.getElementById('selfPatient');
-            const otherPatient = document.getElementById('otherPatient');
             const polyclinicSelect = document.getElementById('polyclinic');
-            const paymentSelect = document.getElementById('payment_method');
+            const doctorSelect = document.getElementById('doctor');
             const visitDateInput = document.getElementById('visit_date');
+            const slotWrap = document.getElementById('slot-wrap');
+            const submitBtn = document.getElementById('submitBtn');
 
-            // Handle doctor selection
+            let flatpickrInstance = null;
+
+            const dayMap = {
+                'Minggu': 0,
+                'Senin': 1,
+                'Selasa': 2,
+                'Rabu': 3,
+                'Kamis': 4,
+                'Jumat': 5,
+                'Sabtu': 6
+            };
+
+            polyclinicSelect.addEventListener('change', function() {
+                const polyId = this.value;
+                if (!polyId) return;
+
+                doctorSelect.innerHTML = '<option value="" disabled selected>Loading…</option>';
+                doctorSelect.disabled = true;
+                visitDateInput.value = '';
+                resetFlatpickr();
+                slotWrap.innerHTML = '';
+                submitBtn.disabled = true;
+
+                fetch(`/polyclinic/${polyId}/doctors`)
+                    .then(res => res.json())
+                    .then(doctors => {
+                        if (!doctors.length) {
+                            doctorSelect.innerHTML =
+                                `<option value="" disabled>— Tidak ada dokter —</option>`;
+                            doctorSelect.disabled = true;
+                            return;
+                        }
+
+                        let html = `<option value="" disabled selected>Pilih Dokter</option>`;
+                        doctors.forEach(doc => {
+                            html += `
+                                <option 
+                                    value="${doc.id}"
+                                    data-specialization="${doc.specialization}"
+                                    data-photo="${doc.photo}"
+                                    data-schedules='${JSON.stringify(doc.schedules)}'
+                                >
+                                    ${doc.name} — ${doc.specialization}
+                                </option>`;
+                        });
+                        doctorSelect.innerHTML = html;
+                        doctorSelect.disabled = false;
+                    })
+                    .catch(err => {
+                        console.error('Error fetching doctors:', err);
+                        doctorSelect.innerHTML =
+                            `<option value="" disabled>Error memuat dokter</option>`;
+                        doctorSelect.disabled = true;
+                    });
+            });
+
             doctorSelect.addEventListener('change', function() {
                 const selectedOption = this.options[this.selectedIndex];
-                if (selectedOption.value) {
-                    // Show doctor info
-                    doctorInfo.classList.remove('d-none');
-                    document.getElementById('doctor-specialty').textContent = selectedOption.dataset
-                        .specialty;
-                    document.getElementById('doctor-experience').textContent = selectedOption.dataset
-                        .experience;
-                    document.getElementById('doctor-schedule').textContent = selectedOption.dataset
-                        .schedule;
-                    document.getElementById('doctor-time').textContent = selectedOption.dataset.time;
-                    document.getElementById('doctor-price').textContent = new Intl.NumberFormat('id-ID')
-                        .format(selectedOption.dataset.price);
-
-                    // Update summary
-                    document.getElementById('summary-doctor').textContent = selectedOption.textContent
-                        .split(' - ')[0];
-                    document.getElementById('summary-cost').textContent = 'Rp ' + new Intl.NumberFormat(
-                        'id-ID').format(selectedOption.dataset.price);
-                } else {
-                    doctorInfo.classList.add('d-none');
-                    document.getElementById('summary-doctor').textContent = '-';
-                    document.getElementById('summary-cost').textContent = '-';
+                if (!selectedOption || !selectedOption.value) {
+                    resetFlatpickr();
+                    slotWrap.innerHTML = '';
+                    submitBtn.disabled = true;
+                    return;
                 }
-            });
 
-            // Handle patient toggle
-            otherPatientSwitch.addEventListener('change', function() {
-                if (this.checked) {
-                    selfPatient.classList.add('d-none');
-                    otherPatient.classList.remove('d-none');
-                    // Update summary patient name
-                    document.getElementById('summary-patient').textContent = 'Pasien Lain';
-                } else {
-                    selfPatient.classList.remove('d-none');
-                    otherPatient.classList.add('d-none');
-                    document.getElementById('summary-patient').textContent =
-                        '{{ Auth::user()->name ?? 'Pasien' }}';
+                let rawSchedules;
+                try {
+                    rawSchedules = JSON.parse(selectedOption.dataset.schedules);
+                } catch (e) {
+                    rawSchedules = [];
                 }
-            });
 
-            // Handle polyclinic selection
-            polyclinicSelect.addEventListener('change', function() {
-                const selectedText = this.options[this.selectedIndex].textContent;
-                document.getElementById('summary-polyclinic').textContent = selectedText;
-            });
-
-            // Handle payment method selection
-            paymentSelect.addEventListener('change', function() {
-                const selectedText = this.options[this.selectedIndex].textContent;
-                document.getElementById('summary-payment').textContent = selectedText;
-            });
-
-            // Handle visit date selection
-            visitDateInput.addEventListener('change', function() {
-                if (this.value) {
-                    const date = new Date(this.value);
-                    const options = {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    };
-                    const formattedDate = date.toLocaleDateString('id-ID', options);
-
-                    // Get selected doctor time
-                    const doctorSelect = document.getElementById('doctor');
-                    const selectedDoctor = doctorSelect.options[doctorSelect.selectedIndex];
-                    const time = selectedDoctor.dataset.time || '';
-
-                    document.getElementById('summary-schedule').textContent =
-                        `${formattedDate}${time ? ' | ' + time + ' WIB' : ''}`;
+                if (!Array.isArray(rawSchedules) || rawSchedules.length === 0) {
+                    noValidSchedule();
+                    return;
                 }
-            });
 
-            // Form validation
-            document.getElementById('appointmentForm').addEventListener('submit', function(e) {
-                let isValid = true;
-                const requiredFields = this.querySelectorAll('[required]');
 
-                requiredFields.forEach(field => {
-                    if (!field.value.trim()) {
-                        field.classList.add('is-invalid');
-                        isValid = false;
-                    } else {
-                        field.classList.remove('is-invalid');
+                submitBtn.disabled = true;
+
+                const scheduleMap = {};
+                rawSchedules.forEach(r => {
+                    const idx = dayMap[r.day];
+                    if (typeof idx === 'number' && idx >= 0 && idx <= 6) {
+                        scheduleMap[idx] = {
+                            from: r.time_from,
+                            to: r.time_to,
+                            max_capacity: r.max_capacity || null
+                        };
                     }
                 });
 
-                if (!isValid) {
-                    e.preventDefault();
-                    alert('Mohon lengkapi semua field yang wajib diisi!');
+                initFlatpickr(scheduleMap);
+            });
+
+            function resetFlatpickr() {
+                if (flatpickrInstance) {
+                    flatpickrInstance.destroy();
+                    flatpickrInstance = null;
+                }
+                visitDateInput.value = '';
+                visitDateInput.disabled = true;
+            }
+
+            function initFlatpickr(scheduleMap) {
+                const allowedDayIndexes = Object.keys(scheduleMap).map(n => parseInt(n, 10));
+                const disableDays = [0, 1, 2, 3, 4, 5, 6]
+                    .filter(d => !allowedDayIndexes.includes(d));
+
+                resetFlatpickr();
+
+                flatpickrInstance = flatpickr(visitDateInput, {
+                    dateFormat: 'Y-m-d',
+                    minDate: 'today',
+                    disable: [
+                        function(date) {
+                            return disableDays.includes(date.getDay());
+                        }
+                    ],
+                    onReady: function() {
+                        visitDateInput.disabled = false;
+                    },
+                    onChange: function(selectedDates) {
+                        slotWrap.innerHTML = '';
+
+                        if (!selectedDates.length) {
+                            submitBtn.disabled = true;
+                            return;
+                        }
+                        const picked = selectedDates[0];
+                        const weekday = picked.getDay();
+
+                        const rule = scheduleMap[weekday];
+                        if (!rule) {
+                            return;
+                        }
+
+                        buildSlots(rule.from, rule.to);
+                    }
+                });
+            }
+
+            function buildSlots(from, to) {
+                function toMinutes(str) {
+                    const [hh, mm] = str.split(':').map(Number);
+                    return hh * 60 + mm;
+                }
+
+                function pad(n) {
+                    return n < 10 ? '0' + n : '' + n;
+                }
+
+                const startMin = toMinutes(from);
+                const endMin = toMinutes(to);
+                let current = startMin;
+                let idx = 0;
+
+                while (current + 29 <= endMin) {
+                    const h = Math.floor(current / 60);
+                    const m = current % 60;
+                    const slotLabel = `${pad(h)}:${pad(m)}`;
+
+                    const col = document.createElement('div');
+                    col.className = 'col-4 my-1';
+
+                    col.innerHTML = `
+                        <input 
+                            type="radio" 
+                            class="btn-check" 
+                            name="time" 
+                            id="slot-${idx}" 
+                            value="${slotLabel}"
+                        >
+                        <label 
+                            for="slot-${idx}" 
+                            class="btn w-100 btn-outline-secondary text-center"
+                        >
+                            <div class="fw-semibold">${slotLabel}</div>
+                        </label>`;
+
+                    slotWrap.appendChild(col);
+
+                    col.querySelector('input[type="radio"]').addEventListener('change', function() {
+                        submitBtn.disabled = false;
+                    });
+
+                    current += 30;
+                    idx++;
+                }
+            }
+
+            function noValidSchedule() {
+                visitDateInput.disabled = true;
+                resetFlatpickr();
+                slotWrap.innerHTML = `
+                    <div class="alert alert-warning text-center mt-2 mb-2">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Dokter ini tidak memiliki jadwal praktik.
+                    </div>`;
+                submitBtn.disabled = true;
+            }
+
+
+            document.getElementById('otherPatientSwitch').addEventListener('change', function() {
+                const selfDiv = document.getElementById('selfPatient');
+                const otherDiv = document.getElementById('otherPatient');
+                if (this.checked) {
+                    selfDiv.classList.add('d-none');
+                    otherDiv.classList.remove('d-none');
+                } else {
+                    selfDiv.classList.remove('d-none');
+                    otherDiv.classList.add('d-none');
                 }
             });
         });
