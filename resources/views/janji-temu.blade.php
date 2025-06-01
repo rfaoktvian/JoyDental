@@ -5,13 +5,15 @@
         <form id="appointmentForm" action="" method="POST" class="needs-validation" novalidate>
             @csrf
 
-            <div class="mb-4 border-bottom pb-2">
+            <div class="mb-4">
                 <h2 class="fw-bold mb-1">Janji Temu Online!</h2>
                 <p class="fw-light text-muted mb-0">
                     Janji temu adalah proses penjadwalan pertemuan antara pasien dan dokter
                     di fasilitas kesehatan untuk mendapatkan layanan medis sesuai kebutuhan.
                 </p>
             </div>
+
+            <hr class="my-3" style="opacity: 0.1;">
 
             <div class="card h-100 shadow-sm bg-white border border-1 border-mute mb-4">
                 <div class="card-header bg-danger text-white fw-semibold">

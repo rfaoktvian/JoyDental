@@ -337,11 +337,12 @@
                         </nav>
                         <main id="page-content" class="custom-scrollbar"
                             style="flex:1 1 0; overflow-y:auto; min-height:0; z-index: 999;">
-                            <div class="custom-container" style="height:100%;">
+                            <div class="custom-container">
                                 <main>
                                     @yield('content')
                                 </main>
                             </div>
+                            @yield('footer')
                         </main>
                     </div>
                 </div>
