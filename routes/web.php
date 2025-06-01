@@ -96,7 +96,20 @@ Route::prefix('doctor')
       ->name('antrian.cancel');
 
     Route::view('/profile', 'doctor.profile')->name('profile');
-    Route::view('/pasien', 'doctor.pasien')->name('pasien');
+
+
+    Route::fallback(function () {
+      if (request()->is('doctor/*') && auth()->check()) {
+        return redirect('/');
+      }
+      abort(404);
+    });
+    app('router')->getMiddleware()['doctor'] = function ($request, $next) {
+      if (!auth()->check()) {
+        return redirect('/');
+      }
+      return $next($request);
+    };
   });
 
 Route::prefix('admin')->middleware('admin')->group(function () {
@@ -170,3 +183,19 @@ View::share('poliklinikTypes', [
   29 => ['label' => 'Reproductive Health', 'class' => 'bg-danger-subtle text-danger', 'icon' => 'fa-venus-mars'],
   30 => ['label' => 'Gynecology', 'class' => 'bg-pink-subtle text-pink', 'icon' => 'fa-female'],
 ]);
+
+Route::middleware(['auth'])->group(function () {
+
+  // Main report page (existing route - make sure it exists)
+  Route::get('/laporan', [DoctorController::class, 'laporan'])->name('laporan');
+
+  // Export functionality
+  Route::post('/laporan/export', [DoctorController::class, 'exportReport'])->name('laporan.export');
+
+  // AJAX endpoint for real-time dashboard data
+  Route::get('/api/dashboard-data', [DoctorController::class, 'getDashboardData'])->name('dashboard.data');
+
+  // Additional API endpoints for enhanced functionality
+  Route::get('/api/chart-data', [DoctorController::class, 'getChartData'])->name('chart.data');
+  Route::get('/api/appointments-by-date', [DoctorController::class, 'getAppointmentsByDate'])->name('appointments.by-date');
+});

@@ -3,11 +3,17 @@
     <link rel="stylesheet" href="{{ asset('css/manager.css') }}">
 
     <div class="container">
-
+        <div class="mb-3">
+            <h4 class="fw-bold text-dark mb-1">Manajemen Dokter</h4>
+            <p class="text-muted mb-0">
+                Kelola data dokter, termasuk menambah, mengubah, dan memantau informasi serta
+                aktivitas dokter yang terdaftar di sistem.
+            </p>
+        </div>
         <div class="mb-3 d-flex align-items-center gap-2">
             <i class="fas fa-user-md text-muted" style="font-size: 1.5rem; line-height: 1;"></i>
             <span class="fw-bold" style="font-size: 1.5rem;">{{ $doctors->total() }}</span>
-            <small class="text-secondary">Dokter</small>
+            <small class="fw-bold fs-5 text-muted">Dokter</small>
         </div>
 
         <div class="mb-4">
@@ -127,7 +133,7 @@
                                 <button class="btn btn-sm btn-outline-secondary"
                                     data-modal-url="{{ route('admin.dokter.edit', ['id' => $doctor->id]) }}"
                                     data-modal-title="Ubah Data Dokter" style="width: 36px; height: 36px; padding: 0;">
-                                    <i class="fas fa-cog"></i>
+                                    <i class="fas fa-cog fs-5"></i>
                                 </button>
                             </div>
                         </div>

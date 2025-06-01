@@ -55,11 +55,6 @@ $sidebarDokterMenu = [
     'route' => 'doctor.antrian',
   ],
   [
-    'label' => 'Pasien',
-    'icon' => 'fas fa-file-medical',
-    'route' => 'doctor.pasien',
-  ],
-  [
     'label' => 'Riwayat Konsultasi',
     'icon' => 'fas fa-history',
     'route' => 'doctor.riwayat',

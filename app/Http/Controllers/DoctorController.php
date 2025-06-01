@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Doctor;
+use App\Models\Polyclinic;
 use App\Models\Appointment;
+use App\Models\DoctorReview;
 use Carbon\Carbon;
+use DB;
 
 class DoctorController extends Controller
 {
@@ -33,114 +37,369 @@ class DoctorController extends Controller
         return view('partials.doctor-reviews-modal', compact('doctor'));
     }
 
-    public function laporan()
+    public function laporan(Request $request)
     {
-        $user = auth()->user();
-        $doctorProfile = $user->doctor;
+        $period = $request->get('period', 'daily');
+        $selectedDate = $request->get('date', now()->toDateString());
 
-        $today = now()->toDateString();
-        $nowTime = Carbon::now()->format('H:i:s');
+        $totalDoctors = Doctor::count();
+        $totalPatients = User::where('role', 'user')->count();
+        $totalPolyclinics = Polyclinic::count();
 
-        Appointment::where('status', 1)
-            ->where(function ($query) {
-                $query->where('appointment_date', '<', now()->toDateString())
-                    ->orWhere(function ($q) {
-                        $q->whereDate('appointment_date', now()->toDateString())
-                            ->whereRaw('appointment_time < TIME(NOW())');
-                    });
-            })
-            ->update(['status' => 3]);
+        $baseA = Appointment::with(['user', 'doctor', 'clinic']);
 
-        $baseQuery = Appointment::query();
-        if ($user->role === 'doctor') {
-            $baseQuery->where('doctor_id', optional($doctorProfile)->id);
+        $dateLabels = [];
+        $countPerDay = [];
+        $weeklyLabel = null;
+        $monthLabel = null;
+        $yearLabel = null;
+
+        switch ($period) {
+            case 'weekly':
+                $startOfWeek = now()->startOfWeek();
+                $endOfWeek = now()->endOfWeek();
+                $weeklyLabel = 'Minggu ke-' . now()->isoWeek() . ', ' . now()->year;
+
+                for ($i = 0; $i < 7; $i++) {
+                    $dt = $startOfWeek->copy()->addDays($i);
+                    $dateLabels[] = $dt->translatedFormat('D');
+                    $countPerDay[] = (clone $baseA)
+                        ->whereDate('appointment_date', $dt->toDateString())
+                        ->count();
+                }
+                break;
+
+            case 'monthly':
+                $startOfMonth = now()->startOfMonth();
+                $daysInMonth = now()->daysInMonth;
+                $monthLabel = now()->translatedFormat('F Y');
+
+                for ($i = 0; $i < $daysInMonth; $i++) {
+                    $dt = $startOfMonth->copy()->addDays($i);
+                    $dateLabels[] = $dt->format('d');
+                    $countPerDay[] = (clone $baseA)
+                        ->whereDate('appointment_date', $dt->toDateString())
+                        ->count();
+                }
+                break;
+
+            case 'yearly':
+                $year = now()->year;
+                $yearLabel = $year;
+
+                for ($m = 1; $m <= 12; $m++) {
+                    $dt = Carbon::createFromDate($year, $m, 1);
+                    $dateLabels[] = $dt->translatedFormat('M');
+                    $countPerDay[] = (clone $baseA)
+                        ->whereMonth('appointment_date', $m)
+                        ->whereYear('appointment_date', $year)
+                        ->count();
+                }
+                break;
+
+            case 'daily':
+            default:
+                $dt = Carbon::parse($selectedDate);
+                $dateLabels[] = $dt->translatedFormat('d M Y');
+                $countPerDay[] = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->count();
+                break;
         }
 
-        $activeQueue = (clone $baseQuery)
-            ->where('status', 1)
-            ->where('appointment_date', $today)
-            ->whereRaw("STR_TO_DATE(appointment_time, '%H:%i:%s') >= STR_TO_DATE(?, '%H:%i:%s')", [$nowTime])
-            ->count();
+        switch ($period) {
+            case 'weekly':
+                $appointmentsCount = (clone $baseA)
+                    ->whereBetween('appointment_date', [
+                        $startOfWeek->toDateString(),
+                        $endOfWeek->toDateString()
+                    ])
+                    ->count();
 
-        $todayAppointments = (clone $baseQuery)
-            ->with(['patient', 'clinic'])
-            ->whereDate('appointment_date', $today)
-            ->where('status', 1)
-            ->orderBy('appointment_time')
-            ->paginate(3);
+                $revenue = (clone $baseA)
+                    ->whereBetween('appointment_date', [
+                        $startOfWeek->toDateString(),
+                        $endOfWeek->toDateString()
+                    ])
+                    ->sum('consultation_fee');
+                break;
 
-        $upcomingAppointments = (clone $baseQuery)
-            ->whereDate('appointment_date', '>', $today)
-            ->count();
+            case 'monthly':
+                $appointmentsCount = (clone $baseA)
+                    ->whereMonth('appointment_date', now()->month)
+                    ->whereYear('appointment_date', now()->year)
+                    ->count();
 
-        $recentConsultation = (clone $baseQuery)
-            ->where('status', 2)
-            ->with('user')
-            ->latest('appointment_date')
-            ->first();
+                $revenue = (clone $baseA)
+                    ->whereMonth('appointment_date', now()->month)
+                    ->whereYear('appointment_date', now()->year)
+                    ->sum('consultation_fee');
+                break;
 
-        return view('doctor.laporan', compact(
-            'user',
-            'doctorProfile',
-            'activeQueue',
-            'upcomingAppointments',
-            'recentConsultation',
-            'todayAppointments'
-        ));
+            case 'yearly':
+                $appointmentsCount = (clone $baseA)
+                    ->whereYear('appointment_date', now()->year)
+                    ->count();
+
+                $revenue = (clone $baseA)
+                    ->whereYear('appointment_date', now()->year)
+                    ->sum('consultation_fee');
+                break;
+
+            case 'daily':
+            default:
+                $appointmentsCount = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->count();
+
+                $revenue = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->sum('consultation_fee');
+                break;
+        }
+
+        $formattedRevenue = 'Rp ' . number_format($revenue, 0, ',', '.');
+
+        $averageRatingAllDoctors = DoctorReview::avg('rating') ?: 0;
+        $averageRatingAllDoctors = number_format($averageRatingAllDoctors, 1);
+
+        switch ($period) {
+            case 'weekly':
+                $detailedAppointments = (clone $baseA)
+                    ->whereBetween('appointment_date', [
+                        $startOfWeek->toDateString(),
+                        $endOfWeek->toDateString()
+                    ])
+                    ->orderBy('appointment_date')
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+
+            case 'monthly':
+                $detailedAppointments = (clone $baseA)
+                    ->whereMonth('appointment_date', now()->month)
+                    ->whereYear('appointment_date', now()->year)
+                    ->orderBy('appointment_date')
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+
+            case 'yearly':
+                $detailedAppointments = (clone $baseA)
+                    ->whereYear('appointment_date', now()->year)
+                    ->orderBy('appointment_date')
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+
+            case 'daily':
+            default:
+                $detailedAppointments = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+        }
+
+        return view('doctor.laporan', [
+            'period' => $period,
+            'selectedDate' => $selectedDate,
+            'weeklyLabel' => $weeklyLabel,
+            'monthLabel' => $monthLabel,
+            'yearLabel' => $yearLabel,
+            'dateLabels' => $dateLabels,
+            'countPerDay' => $countPerDay,
+            'totalDoctors' => $totalDoctors,
+            'totalPatients' => $totalPatients,
+            'totalPolyclinics' => $totalPolyclinics,
+            'appointmentsCount' => $appointmentsCount,
+            'formattedRevenue' => $formattedRevenue,
+            'averageRatingAllDoctors' => $averageRatingAllDoctors,
+            // Tabel detail janji temu
+            'todayAppointments' => $detailedAppointments,
+        ]);
     }
-    public function riwayat()
+
+    public function riwayat(Request $request)
     {
-        $user = auth()->user();
-        $doctorProfile = $user->doctor;
+        $period = $request->get('period', 'daily');
+        $selectedDate = $request->get('date', now()->toDateString());
 
-        $today = now()->toDateString();
-        $nowTime = Carbon::now()->format('H:i:s');
+        $totalDoctors = Doctor::count();
+        $totalPatients = User::where('role', 'user')->count();
+        $totalPolyclinics = Polyclinic::count();
 
-        Appointment::where('status', 1)
-            ->where(function ($query) {
-                $query->where('appointment_date', '<', now()->toDateString())
-                    ->orWhere(function ($q) {
-                        $q->whereDate('appointment_date', now()->toDateString())
-                            ->whereRaw('appointment_time < TIME(NOW())');
-                    });
-            })
-            ->update(['status' => 3]);
+        $baseA = Appointment::with(['user', 'doctor', 'clinic']);
 
-        $baseQuery = Appointment::query();
-        if ($user->role === 'doctor') {
-            $baseQuery->where('doctor_id', optional($doctorProfile)->id);
+        $dateLabels = [];
+        $countPerDay = [];
+        $weeklyLabel = null;
+        $monthLabel = null;
+        $yearLabel = null;
+
+        switch ($period) {
+            case 'weekly':
+                $startOfWeek = now()->startOfWeek();
+                $endOfWeek = now()->endOfWeek();
+                $weeklyLabel = 'Minggu ke-' . now()->isoWeek() . ', ' . now()->year;
+
+                for ($i = 0; $i < 7; $i++) {
+                    $dt = $startOfWeek->copy()->addDays($i);
+                    $dateLabels[] = $dt->translatedFormat('D');
+                    $countPerDay[] = (clone $baseA)
+                        ->whereDate('appointment_date', $dt->toDateString())
+                        ->count();
+                }
+                break;
+
+            case 'monthly':
+                $startOfMonth = now()->startOfMonth();
+                $daysInMonth = now()->daysInMonth;
+                $monthLabel = now()->translatedFormat('F Y');
+
+                for ($i = 0; $i < $daysInMonth; $i++) {
+                    $dt = $startOfMonth->copy()->addDays($i);
+                    $dateLabels[] = $dt->format('d');
+                    $countPerDay[] = (clone $baseA)
+                        ->whereDate('appointment_date', $dt->toDateString())
+                        ->count();
+                }
+                break;
+
+            case 'yearly':
+                $year = now()->year;
+                $yearLabel = $year;
+
+                for ($m = 1; $m <= 12; $m++) {
+                    $dt = Carbon::createFromDate($year, $m, 1);
+                    $dateLabels[] = $dt->translatedFormat('M');
+                    $countPerDay[] = (clone $baseA)
+                        ->whereMonth('appointment_date', $m)
+                        ->whereYear('appointment_date', $year)
+                        ->count();
+                }
+                break;
+
+            case 'daily':
+            default:
+                $dt = Carbon::parse($selectedDate);
+                $dateLabels[] = $dt->translatedFormat('d M Y');
+                $countPerDay[] = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->count();
+                break;
         }
 
-        $activeQueue = (clone $baseQuery)
-            ->where('status', 1)
-            ->where('appointment_date', $today)
-            ->whereRaw("STR_TO_DATE(appointment_time, '%H:%i:%s') >= STR_TO_DATE(?, '%H:%i:%s')", [$nowTime])
-            ->count();
+        switch ($period) {
+            case 'weekly':
+                $appointmentsCount = (clone $baseA)
+                    ->whereBetween('appointment_date', [
+                        $startOfWeek->toDateString(),
+                        $endOfWeek->toDateString()
+                    ])
+                    ->count();
 
-        $todayAppointments = (clone $baseQuery)
-            ->with(['patient', 'clinic'])
-            ->whereDate('appointment_date', $today)
-            ->where('status', 1)
-            ->orderBy('appointment_time')
-            ->paginate(3);
+                $revenue = (clone $baseA)
+                    ->whereBetween('appointment_date', [
+                        $startOfWeek->toDateString(),
+                        $endOfWeek->toDateString()
+                    ])
+                    ->sum('consultation_fee');
+                break;
 
-        $upcomingAppointments = (clone $baseQuery)
-            ->whereDate('appointment_date', '>', $today)
-            ->count();
+            case 'monthly':
+                $appointmentsCount = (clone $baseA)
+                    ->whereMonth('appointment_date', now()->month)
+                    ->whereYear('appointment_date', now()->year)
+                    ->count();
 
-        $recentConsultation = (clone $baseQuery)
-            ->where('status', 2)
-            ->with('user')
-            ->latest('appointment_date')
-            ->first();
+                $revenue = (clone $baseA)
+                    ->whereMonth('appointment_date', now()->month)
+                    ->whereYear('appointment_date', now()->year)
+                    ->sum('consultation_fee');
+                break;
 
-        return view('doctor.riwayat', compact(
-            'user',
-            'doctorProfile',
-            'activeQueue',
-            'upcomingAppointments',
-            'recentConsultation',
-            'todayAppointments'
-        ));
+            case 'yearly':
+                $appointmentsCount = (clone $baseA)
+                    ->whereYear('appointment_date', now()->year)
+                    ->count();
+
+                $revenue = (clone $baseA)
+                    ->whereYear('appointment_date', now()->year)
+                    ->sum('consultation_fee');
+                break;
+
+            case 'daily':
+            default:
+                $appointmentsCount = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->count();
+
+                $revenue = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->sum('consultation_fee');
+                break;
+        }
+
+        $formattedRevenue = 'Rp ' . number_format($revenue, 0, ',', '.');
+
+        $averageRatingAllDoctors = DoctorReview::avg('rating') ?: 0;
+        $averageRatingAllDoctors = number_format($averageRatingAllDoctors, 1);
+
+        switch ($period) {
+            case 'weekly':
+                $detailedAppointments = (clone $baseA)
+                    ->whereBetween('appointment_date', [
+                        $startOfWeek->toDateString(),
+                        $endOfWeek->toDateString()
+                    ])
+                    ->orderBy('appointment_date')
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+
+            case 'monthly':
+                $detailedAppointments = (clone $baseA)
+                    ->whereMonth('appointment_date', now()->month)
+                    ->whereYear('appointment_date', now()->year)
+                    ->orderBy('appointment_date')
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+
+            case 'yearly':
+                $detailedAppointments = (clone $baseA)
+                    ->whereYear('appointment_date', now()->year)
+                    ->orderBy('appointment_date')
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+
+            case 'daily':
+            default:
+                $detailedAppointments = (clone $baseA)
+                    ->whereDate('appointment_date', $selectedDate)
+                    ->orderBy('appointment_time')
+                    ->paginate(10);
+                break;
+        }
+
+        return view('doctor.riwayat', [
+            'period' => $period,
+            'selectedDate' => $selectedDate,
+            'weeklyLabel' => $weeklyLabel,
+            'monthLabel' => $monthLabel,
+            'yearLabel' => $yearLabel,
+            'dateLabels' => $dateLabels,
+            'countPerDay' => $countPerDay,
+            'totalDoctors' => $totalDoctors,
+            'totalPatients' => $totalPatients,
+            'totalPolyclinics' => $totalPolyclinics,
+            'appointmentsCount' => $appointmentsCount,
+            'formattedRevenue' => $formattedRevenue,
+            'averageRatingAllDoctors' => $averageRatingAllDoctors,
+            // Tabel detail janji temu
+            'todayAppointments' => $detailedAppointments,
+        ]);
     }
 }

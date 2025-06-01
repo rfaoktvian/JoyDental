@@ -27,12 +27,12 @@
             <div class="col-md-3">
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
-                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
-                            style="width: 40px; height: 40px;">
-                            <i class="fas fa-calendar-alt"></i>
+                        <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            <i class="fas fs-5 fa-calendar-alt text-danger"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-muted small mb-1">Antrian Aktif</div>
+                            <div class="fw-bold fs-6 text-muted small mb-1">Antrian Aktif</div>
                             <div class="fs-5 fw-bold">{{ $activeQueue }}</div>
                         </div>
                     </div>
@@ -41,12 +41,12 @@
             <div class="col-md-3">
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
-                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3"
-                            style="width: 40px; height: 40px;">
-                            <i class="fas fa-calendar-check"></i>
+                        <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            <i class="fas fs-5 fa-calendar-check text-danger"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-muted small mb-1">Konsultasi Hari Ini</div>
+                            <div class="fw-bold fs-6 text-muted small mb-1">Konsultasi Hari Ini</div>
                             <div class="fs-5 fw-bold">{{ $appointmentsToday }}</div>
                         </div>
                     </div>
@@ -55,12 +55,12 @@
             <div class="col-md-3">
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
-                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3"
-                            style="width: 40px; height: 40px;">
-                            <i class="fas fa-calendar-check"></i>
+                        <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            <i class="fas fs-5 fa-calendar-check text-danger"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-muted small mb-1">Janji Temu Mendatang</div>
+                            <div class="fw-bold fs-6 text-muted small mb-1">Janji Temu Mendatang</div>
                             <div class="fs-5 fw-bold">{{ $upcomingAppointments }}</div>
                         </div>
                     </div>
@@ -69,12 +69,12 @@
             <div class="col-md-3">
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
-                        <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center me-3"
-                            style="width: 40px; height: 40px;">
-                            <i class="fas fa-user-clock"></i>
+                        <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            <i class="fas fs-5 fa-user-clock text-danger"></i>
                         </div>
                         <div>
-                            <div class="fw-semibold text-muted small mb-1">Jadwal Hari Ini</div>
+                            <div class="fw-bold fs-6 text-muted small mb-1">Jadwal Hari Ini</div>
                             <div class="fs-5 fw-bold">
                                 @php
                                     $today = ucfirst(\Carbon\Carbon::now()->locale('id')->translatedFormat('l'));

@@ -90,9 +90,7 @@
                     @foreach ($tabs as $key => $t)
                         <li class="nav-item">
                             <a href="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}" {{-- link fallback (non-JS) --}}
-                                class="nav-link {{ $key === $currentTab ? 'active' : '' }} fs-6"
-                                hx-get="{{ request()->fullUrlWithQuery(['tab' => $key, 'page' => 1]) }}"
-                                {{-- load via HTMX --}} hx-target="#page-content" hx-push-url="true">
+                                class="nav-link {{ $key === $currentTab ? 'active' : '' }} fs-6">
                                 {{ $t['label'] }}
                                 <span class="badge bg-danger border border-1 border-white ms-1">{{ $t['count'] }}</span>
                             </a>

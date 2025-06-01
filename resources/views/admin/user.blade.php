@@ -4,11 +4,17 @@
     <link rel="stylesheet" href="{{ asset('css/manager.css') }}">
 
     <div class="container">
-
+        <div class="mb-3">
+            <h4 class="fw-bold text-dark mb-1">Manajemen User</h4>
+            <p class="text-muted mb-0">
+                Kelola data pengguna, termasuk menambah, mengubah, menghapus, serta memantau informasi dan aktivitas akun
+                yang terdaftar di sistem.
+            </p>
+        </div>
         <div class="mb-3 d-flex align-items-center gap-2">
             <i class="fas fa-users text-muted" style="font-size: 1.5rem; line-height: 1;"></i>
             <span class="fw-bold" style="font-size: 1.5rem;">{{ $users->total() }}</span>
-            <small class="text-secondary">Pengguna</small>
+            <small class="fw-bold fs-5 text-muted">Pengguna</small>
         </div>
 
         <div class="mb-4">
@@ -169,7 +175,7 @@
                                         class="btn btn-sm btn-outline-secondary"style="width: 36px; height: 36px; padding: 0;"
                                         data-modal-url="{{ route('admin.users.edit', ['id' => $user->id]) }}"
                                         data-modal-title="Ubah Data Akun">
-                                        <i class="fas fa-cog"></i>
+                                        <i class="fas fa-cog fs-5"></i>
                                     </button>
                                 </div>
                             </div>
@@ -265,7 +271,7 @@
                                     <button class="btn btn-sm btn-outline-secondary"
                                         data-modal-url="{{ route('admin.users.edit', ['id' => $user->id]) }}"
                                         data-modal-title="Ubah Data Akun">
-                                        <i class="fas fa-cog"></i>
+                                        <i class="fas fa-cog fs-5"></i>
                                     </button>
                                 </div>
                             </div>

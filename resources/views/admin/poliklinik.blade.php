@@ -3,11 +3,17 @@
     <link rel="stylesheet" href="{{ asset('css/manager.css') }}">
 
     <div class="container">
-
+        <div class="mb-3">
+            <h4 class="fw-bold text-dark mb-1">Manajemen Poliklinik</h4>
+            <p class="text-muted mb-0">
+                Kelola data poliklinik, termasuk menambah, mengubah, dan memantau informasi serta aktivitas poliklinik yang
+                terdaftar di sistem.
+            </p>
+        </div>
         <div class="mb-3 d-flex align-items-center gap-2">
             <i class="fas fa-hospital-alt text-muted" style="font-size: 1.5rem; line-height: 1;"></i>
             <span class="fw-bold" style="font-size: 1.5rem;">{{ $polyclinics->total() }}</span>
-            <small class="text-secondary">Poliklinik</small>
+            <small class="fw-bold fs-5 text-muted">Poliklinik</small>
         </div>
 
         <div class="mb-4">
@@ -95,7 +101,7 @@
                                 <button class="btn btn-sm btn-outline-secondary"
                                     data-modal-url="{{ route('admin.poliklinik.edit', ['id' => $data->id]) }}"
                                     data-modal-title="Ubah Data Poliklinik" style="width: 36px; height: 36px; padding: 0;">
-                                    <i class="fas fa-cog"></i>
+                                    <i class="fas fa-cog fs-5"></i>
                                 </button>
                             </div>
                         </div>
