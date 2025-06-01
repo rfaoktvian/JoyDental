@@ -18,14 +18,14 @@
             {{ $appt->appointment_date->translatedFormat('l, d M Y') }} - {{ $appt->appointment_time->format('H:i') }}
         </dd>
     </div>
-    <form method="POST" action="{{ route('antrian.reschedule.simpan', $appt) }}"
-        hx-post="{{ route('antrian.reschedule.simpan', $appt) }}" hx-target="#reschedule-body" hx-swap="innerHTML">
+    <form method="POST" action="{{ route('antrian.reschedule.simpan', $appt) }}">
         @csrf
         @method('PATCH')
 
         <input type="hidden" name="doctor_id" value="{{ $appt->doctor_id }}">
 
-        <div id="ubahJadwalForm"><label class="form-label">Tanggal</label>
+        <div id="ubahJadwalForm">
+            <label class="form-label">Tanggal</label>
             <input id="pick-date" type="text" class="form-control" name="date" required>
 
             <label class="form-label mt-3 d-block">Sesi Waktu Tersedia</label>

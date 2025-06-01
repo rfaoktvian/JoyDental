@@ -71,10 +71,8 @@
             <div class="border-bottom mb-3 pb-2 sticky-top pt-3 px-1" style="background: #F5F5F5; ">
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                     <input type="text" name="q" value="{{ $search }}" class="form-control form-control-sm w-auto"
-                        placeholder="Cari pasien…" hx-get="{{ url()->current() }}" hx-trigger="keyup changed delay:300ms"
-                        hx-target="#page-content" hx-push-url="true">
-                    <select name="clinic" class="form-select form-select-sm w-auto" hx-get="{{ url()->current() }}"
-                        hx-trigger="change" hx-target="#page-content" hx-push-url="true">
+                        placeholder="Cari pasien…">
+                    <select name="clinic" class="form-select form-select-sm w-auto">
                         <option value="">Semua Poliklinik</option>
                         @foreach ($appointments->pluck('clinic.name')->unique() as $clinicName)
                             <option value="{{ $clinicName }}" {{ $clinicName == $clinic ? 'selected' : '' }}>

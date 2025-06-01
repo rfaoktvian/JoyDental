@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <div id="modalBody" class="modal-body" hx-target="this" hx-swap="innerHTML">
+            <div id="modalBody" class="modal-body">
                 <div class="placeholder-glow w-100">
                     <div class="mb-3">
                         <span class="placeholder col-8" style="height: 1rem; display: inline-block;"></span><br>
