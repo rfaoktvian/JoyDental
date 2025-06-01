@@ -17,6 +17,10 @@ class Doctor extends Model
         'photo',
     ];
 
+    public function doctor()
+    {
+        return $this->hasOne(Doctor::class, 'nik', 'nik');
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'nik', 'nik');

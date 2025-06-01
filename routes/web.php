@@ -4,6 +4,7 @@ use App\Http\Controllers\PoliklinikController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\DashboardController;
 
 // Importing routes from other files
 Route::middleware('web')
@@ -12,7 +13,7 @@ Route::middleware('web')
 
 // Default route
 Route::view('/', 'dashboard');
-Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])
+Route::get('/', [DashboardController::class, 'index'])
   ->name('dashboard');
 
 Route::get('/janji-temu', fn() => view('janji-temu'))
@@ -67,9 +68,7 @@ Route::prefix('doctor')
   ->middleware(['auth', 'doctor'])
   ->name('doctor.')
   ->group(function () {
-
-    Route::get('/', fn() => view('doctor.dashboard'))
-      ->name('dashboard');
+    Route::get('/', [DashboardController::class, 'doctorDashboard'])->name('dashboard');
 
     Route::get('/antrian', [AppointmentController::class, 'antrianPasien'])
       ->name('antrian');

@@ -20,6 +20,14 @@ return new class extends Migration {
             $table->string('password');
             $table->string('address')->nullable();
             $table->string('phone')->nullable();
+
+            $table->string('age')->nullable();
+            $table->enum('gender', ['man', 'woman'])->nullable();
+            $table->date('birth_date')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('nationality')->nullable();
+            $table->string('emergency_contact_name')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

@@ -9,10 +9,36 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <style>
+        .dropdown>button {
+            cursor: pointer;
+            outline: none;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Remove default button styling */
+        .dropdown>button:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        /* Style the button content */
+        .dropdown>button .d-flex {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+
+        /* Hover effect */
+        .dropdown>button .d-flex:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
         #page-content.custom-scrollbar {
             height: 100vh;
             overflow-y: auto;
@@ -265,40 +291,41 @@
                                             @endif
                                         @else
                                             <div class="dropdown">
-                                                <a class="d-flex align-items-center text-decoration-none rounded gap-3"
-                                                    href="#" role="button" id="profileDropdown"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <div class="d-flex align-items-center gap-3">
-                                                        <div class="fw-semibold text-dark">{{ $user->name }}</div>
+                                                <button
+                                                    class="btn d-flex align-items-center gap-2 p-0 border-0 bg-transparent"
+                                                    type="button" id="profileDropdown" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    <div class="d-flex align-items-center gap-2">
+
+                                                        <span
+                                                            class="fw-semibold">{{ $doctorProfile?->name ?? $user->name }}</span>
+
                                                         @if (Auth::check() && ($user->role === 'admin' || $user->role === 'doctor'))
                                                             <div class="d-flex align-items-center">
                                                                 <div class="vr text-muted" style="height: 1.25rem;"></div>
                                                             </div>
-                                                            <div class="text-muted small">{{ ucfirst($user->role) }}</div>
+                                                            <span
+                                                                class="text-muted small">{{ ucfirst($user->role) }}</span>
                                                         @endif
                                                     </div>
                                                     <img src="{{ asset('images/doctors_login.png') }}" alt="Profile"
                                                         width="32" height="32" class="rounded-circle"
                                                         style="object-fit: cover;">
-                                                </a>
+                                                </button>
 
-                                                <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm"
+                                                <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2"
                                                     aria-labelledby="profileDropdown">
-                                                    <li>
-                                                        <a class="dropdown-item" href="{{ route('profil') }}">Profil
-                                                            Saya</a>
-                                                    </li>
+                                                    <li><a class="dropdown-item" href="{{ route('profil') }}">Profil
+                                                            Saya</a></li>
                                                     <li>
                                                         <hr class="dropdown-divider">
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                                                            Logout
-                                                        </a>
                                                         <form id="logout-form" action="{{ route('logout') }}"
-                                                            method="POST" class="d-none">
+                                                            method="POST">
                                                             @csrf
+                                                            <button type="submit"
+                                                                class="dropdown-item text-danger">Logout</button>
                                                         </form>
                                                     </li>
                                                 </ul>
@@ -339,6 +366,24 @@
                 const state = body.classList.toggle('sidebar-collapsed');
                 localStorage.setItem('sidebar-collapsed', state);
             }));
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            var dropdowns = document.querySelectorAll('.dropdown-toggle');
+            dropdowns.forEach(function(dropdown) {
+                dropdown.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var menu = this.nextElementSibling;
+                    menu.classList.toggle('show');
+                });
+            });
+
+            document.querySelectorAll('.dropdown > button').forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    var dropdown = bootstrap.Dropdown.getInstance(this) || new bootstrap.Dropdown(
+                        this);
+                    dropdown.toggle();
+                });
+            });
         });
     </script>
 </body>
