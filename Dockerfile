@@ -16,7 +16,6 @@ RUN apt-get update && apt-get install -y \
     nginx \
     cron \
     supervisor \
-    && docker-php-ext-configure --with-freetype --with-jpeg \
     && docker-php-ext-install pdo pdo_mysql opcache zip intl
 
 # Install Node.js & npm (latest version)
