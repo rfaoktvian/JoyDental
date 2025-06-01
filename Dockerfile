@@ -38,6 +38,13 @@ RUN composer install --optimize-autoloader
 # Copy Nginx config
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
+# Copy Supervisor config
+COPY ./supervisord.conf /etc/supervisord.conf
+
+# Copy crontab file
+COPY ./crontab /etc/cron.d/laravel-cron
+RUN chmod 0644 /etc/cron.d/laravel-cron && crontab /etc/cron.d/laravel-cron
+
 # Link storage
 RUN php artisan storage:link
 
@@ -45,4 +52,4 @@ RUN php artisan storage:link
 EXPOSE 80
 
 # Start all services using Supervisor
-CMD ["php-fpm"]
+CMD ["sh", "-c", "chown -R www-data:www-data /var/www/html/storage && chmod -R 775 /var/www/html/storage && exec supervisord -c /etc/supervisord.conf"]
