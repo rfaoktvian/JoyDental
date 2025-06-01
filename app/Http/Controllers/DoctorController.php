@@ -37,6 +37,19 @@ class DoctorController extends Controller
         return view('partials.doctor-reviews-modal', compact('doctor'));
     }
 
+    public function profileDoctor(Request $request)
+    {
+        $user = auth()->user();
+        $doctorProfile = $user->doctor;
+
+        // Fetch doctor with schedules
+        if ($doctorProfile) {
+            $doctorProfile->load(['schedules.polyclinic']); // eager load schedules and polyclinic
+        }
+
+        return view('doctor.profile', compact(var_name: 'doctorProfile'));
+    }
+
     public function laporan(Request $request)
     {
         $period = $request->get('period', 'daily');

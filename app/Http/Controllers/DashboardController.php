@@ -52,6 +52,7 @@ class DashboardController extends Controller
             'appointments'
         ));
     }
+
     public function doctorDashboard()
     {
         $user = auth()->user();
