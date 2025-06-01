@@ -89,6 +89,8 @@ Route::prefix('doctor')
       ->name('laporan');
     Route::get('/riwayat', [DoctorController::class, 'riwayat'])
       ->name('riwayat');
+    Route::get('/profile', [DoctorController::class, 'profileDoctor'])
+      ->name('profile');
 
     Route::post(
       '/antrian/{appointment}/start',
@@ -101,8 +103,6 @@ Route::prefix('doctor')
       [AppointmentController::class, 'complete']
     )
       ->name('antrian.complete');
-
-    Route::view('/profile', 'doctor.profile')->name('profile');
 
 
     Route::fallback(function () {

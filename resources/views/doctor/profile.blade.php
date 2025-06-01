@@ -72,16 +72,7 @@
                         <i class="fas fa-calendar-week me-2"></i> Jadwal Praktik
                     </div>
                     <div class="card-body">
-                        <label for="polyclinic" class="form-label">Daftar Poliklinik <span
-                                class="text-danger">*</span></label>
-                        <select class="form-select @error('polyclinic') is-invalid @enderror" id="polyclinic"
-                            name="polyclinic" required>
-                            <option value="" disabled selected>Pilih Poliklinik</option>
-                        </select>
-                        <div class="form-text">Pilih poliklinik yang akan Anda kunjungi</div>
-                        @error('polyclinic')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        @json($doctorProfile)
                     </div>
                 </div>
             </div>
