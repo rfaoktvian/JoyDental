@@ -136,7 +136,7 @@ class AdminController extends Controller
             'nik' => $validatedData['nik'],
             'password' => Hash::make($validatedData['password'])
         ]);
-        return redirect()->route('admin.users')->with('success', 'Akun berhasil ditambahkan!');
+        return back();
     }
 
     public function update(Request $request, $id)
@@ -155,7 +155,7 @@ class AdminController extends Controller
             'role' => $request->role,
         ]);
 
-        return response()->noContent();
+        return back();
     }
 
     public function destroy($id)
@@ -167,6 +167,6 @@ class AdminController extends Controller
         }
 
         $user->delete();
-        return response()->noContent();
+        return back();
     }
 }

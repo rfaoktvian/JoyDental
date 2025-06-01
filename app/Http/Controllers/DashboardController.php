@@ -25,11 +25,32 @@ class DashboardController extends Controller
             ->take(value: 3)
             ->get();
 
+        Appointment::where('status', 1)
+            ->where(function ($query) {
+                $query->where('appointment_date', '<', now()->toDateString())
+                    ->orWhere(function ($q) {
+                        $q->whereDate('appointment_date', now()->toDateString())
+                            ->whereRaw('appointment_time < TIME(NOW())');
+                    });
+            })
+            ->update(['status' => 3]);
+
+        $base = Appointment::with(['clinic'])
+            ->where('user_id', $user->id);
+
+        $listQuery = clone $base;
+
+        $appointments = $listQuery->where('status', 1)
+            ->latest('appointment_date')
+            ->take(value: 3)
+            ->get();
+
         return view('dashboard', compact(
             'user',
             'doctorProfile',
             'polyclinics',
-            'doctors'
+            'doctors',
+            'appointments'
         ));
     }
     public function doctorDashboard()

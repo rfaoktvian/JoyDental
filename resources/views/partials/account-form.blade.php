@@ -1,5 +1,6 @@
-<form hx-put="{{ route('admin.users.update', ['id' => $user->id]) }}" hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}'
-    hx-swap="none" hx-on="htmx:afterRequest: closeModalAndReload()">
+<form method="POST" action="{{ route('admin.users.update', ['id' => $user->id]) }}">
+    @csrf
+    @method('PUT')
     <div class="mb-3">
         <label class="form-label fw-semibold">Nama</label>
         <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
@@ -30,14 +31,13 @@
         <button type="submit" class="btn btn-danger">Simpan</button>
     </div>
 </form>
-
 @if ($user->id !== auth()->id())
     <hr class="my-3">
 
-    <form hx-delete="{{ route('admin.users.destroy', ['id' => $user->id]) }}"
-        hx-headers='{"X-CSRF-TOKEN": "{{ csrf_token() }}"}' hx-swap="none"
-        hx-on="htmx:afterRequest: closeModalAndReload()">
-        <button type="submit" class="btn btn-outline-danger w-100" hx-confirm="Hapus akun ini?">
+    <form action="{{ route('admin.users.destroy', ['id' => $user->id]) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-outline-danger w-100">
             <i class="fas fa-trash me-2"></i> Hapus Akun
         </button>
     </form>

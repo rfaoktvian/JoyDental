@@ -1,4 +1,3 @@
-{{-- app.blade.php --}}
 @extends('layouts.app')
 @section('content')
     <style>
@@ -45,13 +44,16 @@
                             <div class="col-12">
                                 <div class="custom_card shadow-sm bg-white border border-1 border-mute p-3">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h2 class="mb-0">Janji Temu Mendatang</h2>
-                                        <a class="text-decoration-none" href="tiket.html">Lihat Semua</a>
+                                        <h2 class="mb-0 fs-5">Dokter Rekomendasi</h2>
+                                        <a href="{{ route('dokter') }}" class="text-decoration-none text-danger small">Lihat
+                                            Semua</a>
                                     </div>
-                                    <div class="upcoming-appointment text-center py-4">
-                                        <img src="" alt="No appointments" class="mb-3">
-                                        <h3>Belum ada janji temu mendatang</h3>
-                                        <p class="text-muted">Jadwalkan konsultasi dengan dokter sekarang</p>
+                                    <div class="row g-3">
+                                        @forelse ($appointments as $appt)
+                                            @include('partials.ongoing_ticket-card', ['appt' => $appt])
+                                        @empty
+                                            <div class="text-center py-5 text-muted w-100">Tidak ada tiket…</div>
+                                        @endforelse
                                     </div>
                                 </div>
                             </div>
