@@ -35,8 +35,7 @@ class DashboardController extends Controller
             })
             ->update(['status' => 3]);
 
-        $base = Appointment::with(['clinic'])
-            ->where('user_id', $user->id);
+        $base = Appointment::with(['clinic']);
 
         $listQuery = clone $base;
 
