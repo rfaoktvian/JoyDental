@@ -25,6 +25,12 @@ class DashboardController extends Controller
             ->take(value: 3)
             ->get();
 
+        $doctorReviews = DoctorReview::with(['doctor', 'user'])
+            ->orderByDesc('rating')
+            ->latest()
+            ->take(value: 5)
+            ->get();
+
         Appointment::where('status', 1)
             ->where(function ($query) {
                 $query->where('appointment_date', '<', now()->toDateString())
@@ -49,7 +55,8 @@ class DashboardController extends Controller
             'doctorProfile',
             'polyclinics',
             'doctors',
-            'appointments'
+            'appointments',
+            'doctorReviews'
         ));
     }
 

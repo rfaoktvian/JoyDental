@@ -15,4 +15,14 @@ class DoctorReview extends Model
         'rating',
         'comment'
     ];
+
+    public function doctor()
+    {
+        return $this->belongsTo(Doctor::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

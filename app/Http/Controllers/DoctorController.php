@@ -40,14 +40,29 @@ class DoctorController extends Controller
     public function profileDoctor(Request $request)
     {
         $user = auth()->user();
-        $doctorProfile = $user->doctor;
+        $doctor = $user->doctor;
 
-        // Fetch doctor with schedules
-        if ($doctorProfile) {
-            $doctorProfile->load(['schedules.polyclinic']); // eager load schedules and polyclinic
+        if ($doctor) {
+            $doctorSchedules = $doctor->schedules()->with('polyclinic')->get();
+            $completedSchedulesCount = Appointment::where('doctor_id', $doctor->id)
+                ->where('status', '2')
+                ->count();
+
+            $averageRating = DoctorReview::where('doctor_id', $doctor->id)->avg('rating') ?: 0;
+            $averageRating = number_format($averageRating, 1);
+        } else {
+            $doctorSchedules = [];
+            $completedSchedulesCount = 0;
+            $averageRating = 0;
         }
 
-        return view('doctor.profile', compact(var_name: 'doctorProfile'));
+        return view('doctor.profile', compact(
+            'doctor',
+            'doctorSchedules',
+            'user',
+            'completedSchedulesCount',
+            'averageRating'
+        ));
     }
 
     public function laporan(Request $request)

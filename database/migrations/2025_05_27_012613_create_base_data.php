@@ -26,6 +26,7 @@ return new class extends Migration {
             $table->string('description')->nullable();
             $table->string('specialization');
             $table->string('photo')->nullable();
+            $table->date('registered')->nullable();
             $table->timestamps();
 
             $table->foreign('nik')->references('nik')->on('users')->onDelete('cascade');
@@ -47,6 +48,8 @@ return new class extends Migration {
             $table->integer('rating')->default(0);
             $table->text('comment')->nullable();
             $table->timestamps();
+
+            $table->unique(['doctor_id', 'user_id']);
         });
 
 

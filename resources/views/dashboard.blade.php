@@ -183,329 +183,158 @@
                 </div>
             </div>
         @else
+            <section class="container mt-4" id="Dokter">
+                <h4 class="text-center fw-bold text-danger mb-4">Dokter Rekomendasi</h4>
+                <div class="row g-3">
+                    @foreach ($doctors as $doctor)
+                        @php
+                            $rating = $doctor->reviews->avg('rating') ?? 0;
+                            $ratingFormatted = number_format($rating, 1);
+                        @endphp
+                        <div class="col-md-4">
+                            <div class="doctor-card border rounded shadow-sm p-3 text-center">
+                                <img src="{{ asset('images/doctors_dashboard.png') }}" class="rounded-circle mb-2"
+                                    style="width: 80px; height: 80px; object-fit: cover;">
+                                <h6 class="fw-bold mb-1">Dr. {{ $doctor->name }}</h6>
+                                <small class="text-muted">{{ $doctor->specialization }}</small>
+                                <div class="text-warning mt-2">
+                                    <i class="fas fa-star me-1"></i>{{ $ratingFormatted }} / 5
+                                </div>
+                                <a href="{{ route('dokter') }}" class="btn btn-sm btn-danger mt-2">Lihat Detail</a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="container mt-4" id="Poliklinik">
+                <h4 class="text-center fw-bold text-danger mb-4">Daftar Poliklinik</h4>
+                <div class="row g-3">
+                    @foreach ($polyclinics as $clinic)
+                        @php
+                            $badge = $poliklinikTypes[$clinic->type] ?? null;
+                        @endphp
+                        <div class="col-md-4">
+                            <div class="border rounded shadow-sm p-3 text-center bg-white">
+                                <div class="mb-2">
+                                    <i class="fas {{ $badge['icon'] ?? 'fa-hospital' }} fa-2x text-danger"></i>
+                                </div>
+                                <h6 class="fw-semibold">{{ $clinic->name }}</h6>
+                                <p class="text-muted small mb-1">{{ $clinic->location ?? '-' }}</p>
+                                @if ($badge)
+                                    <span class="badge {{ $badge['class'] }}">{{ $badge['label'] }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </section>
             <section class="container mt-4" id="Layanan">
                 <h4 class="text-center fw-bold text-danger mb-4">Kenapa Memilih AppointDoc?</h4>
                 <div class="row text-center g-4">
-
-                    <!-- Keunggulan 1 -->
                     <div class="col-md-4">
-                        <div class="p-4 border rounded shadow-sm h-100">
-                            <img src="https://cdn-icons-png.flaticon.com/512/869/869636.png" alt="Cepat & Mudah"
-                                width="60" class="mb-3">
+                        <div class="p-4 rounded shadow-sm bg-white border border-1 border-mute" style="background: #fff;">
+                            <span class="mb-3 d-inline-block text-danger" style="font-size: 2.5rem;">
+                                <i class="fas fa-bolt"></i>
+                            </span>
                             <h6 class="fw-semibold">Pendaftaran Cepat & Mudah</h6>
                             <p class="text-muted small">Tanpa antre panjang, cukup daftar melalui sistem kami dari mana
                                 saja.</p>
                         </div>
                     </div>
-
-                    <!-- Keunggulan 2 -->
                     <div class="col-md-4">
-                        <div class="p-4 border rounded shadow-sm h-100">
-                            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png" alt="Dokter Profesional"
-                                width="60" class="mb-3">
+                        <div class="p-4 rounded shadow-sm bg-white border border-1 border-mute" style="background: #fff;">
+                            <span class="mb-3 d-inline-block text-danger" style="font-size: 2.5rem;">
+                                <i class="fas fa-user-md"></i>
+                            </span>
                             <h6 class="fw-semibold">Dokter Profesional</h6>
                             <p class="text-muted small">Ditangani oleh dokter berpengalaman dan kompeten di bidangnya.</p>
                         </div>
                     </div>
-
-                    <!-- Keunggulan 3 -->
                     <div class="col-md-4">
-                        <div class="p-4 border rounded shadow-sm h-100">
-                            <img src="https://cdn-icons-png.flaticon.com/512/679/679922.png" alt="Pelayanan Ramah"
-                                width="60" class="mb-3">
+                        <div class="p-4 rounded shadow-sm bg-white border border-1 border-mute" style="background: #fff;">
+                            <span class="mb-3 d-inline-block text-danger" style="font-size: 2.5rem;">
+                                <i class="fas fa-smile-beam"></i>
+                            </span>
                             <h6 class="fw-semibold">Pelayanan Ramah</h6>
                             <p class="text-muted small">Kami mengutamakan kenyamanan pasien dengan pelayanan yang
                                 bersahabat.</p>
                         </div>
                     </div>
-
                 </div>
             </section>
-            <section class="container mt-4" id="testimoni">
-                <h4 class="mb-4 text-center fw-bold text-danger">Apa Kata Mereka Tentang AppointDoc?</h4>
 
-                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel"
-                    style="position: relative;">
-                    <div class="carousel-inner">
-
-                        <!-- Slide 1 -->
-                        <div class="carousel-item active">
-                            <div class="row g-4">
-                                <!-- Testimoni 1 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Rina"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Rina</h6>
-                                                    <small class="text-muted">34 tahun - Ibu Rumah Tangga</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Pelayanannya cepat, dokter ramah, dan sistemnya sangat membantu!"</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimoni 2 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Budi"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Budi</h6>
-                                                    <small class="text-muted">40 tahun - Karyawan Swasta</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Saya bisa booking dokter dari rumah tanpa antri lama. Sangat efisien!"</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimoni 3 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Sari"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Sari</h6>
-                                                    <small class="text-muted">28 tahun - Freelancer</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Platform ini membantu saya mendapatkan dokter yang tepat dengan cepat."</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 2 -->
-                        <div class="carousel-item">
-                            <div class="row g-4">
-                                <!-- Testimoni 4 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Dewi"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Dewi</h6>
-                                                    <small class="text-muted">25 tahun - Mahasiswa</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Sangat terbantu dengan fitur antrian online, tidak perlu datang lebih awal."
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimoni 5 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Andi"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Andi</h6>
-                                                    <small class="text-muted">31 tahun - Pegawai Negeri</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Saya suka desain aplikasinya, simpel dan mudah digunakan."</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimoni 6 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Lina"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Lina</h6>
-                                                    <small class="text-muted">38 tahun - Ibu 2 Anak</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Dokternya profesional dan staffnya sangat membantu. Sangat recommended!"</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Carousel Controls: left and right side -->
-                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel"
-                        data-bs-slide="prev" style="left: -50px; top: 50%; transform: translateY(-50%);">
-                        <span class="carousel-control-prev-icon bg-danger rounded-circle p-2" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel"
-                        data-bs-slide="next" style="right: -50px; top: 50%; transform: translateY(-50%);">
-                        <span class="carousel-control-next-icon bg-danger rounded-circle p-2" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>
-            </section>
 
             <section class="container mt-4" id="testimoni">
                 <h4 class="mb-4 text-center fw-bold text-danger">Apa Kata Mereka Tentang AppointDoc?</h4>
 
-                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel"
-                    style="position: relative;">
-                    <div class="carousel-inner">
+                <style>
+                    .carousel-control-prev,
+                    .carousel-control-next {
+                        width: 45px;
+                        height: 45px;
+                        background-color: #d32f2f;
+                        border-radius: 50%;
+                        opacity: 0.8;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
 
-                        <!-- Slide 1 -->
-                        <div class="carousel-item active">
-                            <div class="row g-4">
-                                <!-- Testimoni 1 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Rina"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Rina</h6>
-                                                    <small class="text-muted">34 tahun - Ibu Rumah Tangga</small>
+                    .carousel-control-prev:hover,
+                    .carousel-control-next:hover {
+                        opacity: 1;
+                        background-color: #b71c1c;
+                    }
+                </style>
+
+                <div class="row">
+                    <div class="col-12 position-relative">
+                        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach ($doctorReviews as $index => $review)
+                                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                        <div class="card mx-auto rounded shadow-sm bg-white border border-1 border-mute"
+                                            style="max-width: 600px;">
+                                            <div class="card-body text-center">
+                                                <div class="mb-2">
+                                                    <i class="fas fa-quote-left fa-2x text-danger"></i>
                                                 </div>
+                                                <p class="card-text text-muted mb-3">
+                                                    {{ $review->comment ?? 'Tidak ada komentar.' }}
+                                                </p>
+                                                <div class="fw-semibold mb-1">
+                                                    {{ optional($review->user)->name ?? 'Pasien Anonim' }}
+                                                </div>
+                                                <div class="text-warning mb-1">
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <i class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
+                                                    @endfor
+                                                </div>
+                                                <small class="text-muted">
+                                                    — Dokter: {{ optional($review->doctor)->name ?? '-' }}
+                                                </small>
                                             </div>
-                                            <hr>
-                                            <p>"Pelayanannya cepat, dokter ramah, dan sistemnya sangat membantu!"</p>
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Testimoni 2 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Budi"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Budi</h6>
-                                                    <small class="text-muted">40 tahun - Karyawan Swasta</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Saya bisa booking dokter dari rumah tanpa antri lama. Sangat efisien!"</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimoni 3 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Sari"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Sari</h6>
-                                                    <small class="text-muted">28 tahun - Freelancer</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Platform ini membantu saya mendapatkan dokter yang tepat dengan cepat."</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
+
+                            <button class="carousel-control-prev d-flex align-items-center justify-content-center"
+                                type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev"
+                                style="left: 0;">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next d-flex align-items-center justify-content-center"
+                                type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next"
+                                style="right: 0;">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
-
-                        <!-- Slide 2 -->
-                        <div class="carousel-item">
-                            <div class="row g-4">
-                                <!-- Testimoni 4 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Dewi"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Dewi</h6>
-                                                    <small class="text-muted">25 tahun - Mahasiswa</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Sangat terbantu dengan fitur antrian online, tidak perlu datang lebih awal."
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimoni 5 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Andi"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Andi</h6>
-                                                    <small class="text-muted">31 tahun - Pegawai Negeri</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Saya suka desain aplikasinya, simpel dan mudah digunakan."</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Testimoni 6 -->
-                                <div class="col-md-4">
-                                    <div class="card shadow-sm h-100">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center mb-2">
-                                                <img src="doctors_login.png" class="rounded-circle me-3" alt="Lina"
-                                                    width="40" height="40">
-                                                <div>
-                                                    <h6 class="mb-0 fw-semibold">Lina</h6>
-                                                    <small class="text-muted">38 tahun - Ibu 2 Anak</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <p>"Dokternya profesional dan staffnya sangat membantu. Sangat recommended!"</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
-
-                    <!-- Carousel Controls: left and right side -->
-                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel"
-                        data-bs-slide="prev" style="left: -50px; top: 50%; transform: translateY(-50%);">
-                        <span class="carousel-control-prev-icon bg-danger rounded-circle p-2" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel"
-                        data-bs-slide="next" style="right: -50px; top: 50%; transform: translateY(-50%);">
-                        <span class="carousel-control-next-icon bg-danger rounded-circle p-2" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
             </section>
-
-            <div class="py-4"></div>
         @endif
     </div>
 
@@ -514,7 +343,7 @@
 
 @section('footer')
     <footer class="bg-danger text-white pt-4">
-        <div class="container">
+        <div class="custom-container">
             <div class="row gy-4">
                 <div class="col-md-4">
                     <h5 class="fw-semibold mb-3">Alamat</h5>
@@ -537,13 +366,16 @@
                     <h5 class="fw-semibold mb-3">Menu Utama</h5>
                     <ul class="list-unstyled small">
                         <li class="mb-2">
-                            <a href="#beranda" class="text-white text-decoration-none">Beranda</a>
+                            <a href="{{ route('dashboard') }}" class="text-white text-decoration-none">Beranda</a>
                         </li>
                         <li class="mb-2">
-                            <a href="#testimoni" class="text-white text-decoration-none">Testimoni</a>
+                            <a href="{{ route('dokter') }}" class="text-white text-decoration-none">Dokter</a>
                         </li>
                         <li class="mb-2">
-                            <a href="#Layanan" class="text-white text-decoration-none">Layanan</a>
+                            <a href="{{ route('poliklinik') }}" class="text-white text-decoration-none">Poliklinik</a>
+                        </li>
+                        <li class="mb-2">
+                            <a href="{{ route('bantuan') }}" class="text-white text-decoration-none">Bantuan</a>
                         </li>
                     </ul>
                 </div>
@@ -555,21 +387,20 @@
                         <li class="d-flex align-items-start mb-2">
                             <span class="me-2 fs-5"><i class="fas fa-phone"></i></span>
                             <div>
-                                <a href="tel:+6212345678" class="text-white text-decoration-none">+62 123-456-78</a><br>
+                                <a class="text-white text-decoration-none">+62 123-456-78</a><br>
                                 <small class="text-white-50">Instalasi Gawat Darurat</small>
                             </div>
                         </li>
                         <li class="d-flex align-items-start mb-2">
                             <span class="me-2 fs-5"><i class="fas fa-envelope"></i></span>
                             <div>
-                                <a href="mailto:admin@siagasedia.com"
-                                    class="text-white text-decoration-none">admin@siagasedia.com</a>
+                                <a class="text-white text-decoration-none">admin@siagasedia.com</a>
                             </div>
                         </li>
                         <li class="d-flex align-items-start mb-2">
                             <span class="me-2 fs-5"><i class="fas fa-comments"></i></span>
                             <div>
-                                <a href="tel:+6212345678" class="text-white text-decoration-none">+62 123-456-78</a><br>
+                                <a>+62 123-456-78</a><br>
                                 <small class="text-white-50">Keluhan & Saran</small>
                             </div>
                         </li>
