@@ -41,10 +41,6 @@ COPY ./nginx.conf /etc/nginx/nginx.conf
 # Copy Supervisor config
 COPY ./supervisord.conf /etc/supervisord.conf
 
-# Copy crontab file
-COPY ./crontab /etc/cron.d/laravel-cron
-RUN chmod 0644 /etc/cron.d/laravel-cron && crontab /etc/cron.d/laravel-cron
-
 # Link storage
 RUN php artisan storage:link
 
