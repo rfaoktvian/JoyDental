@@ -239,7 +239,7 @@
                             @endif
                             @if (Auth::check() && $user->role === 'admin')
                                 <div class="sidebar-section">
-                                    <div class="sidebar-group-title">Admin</div>
+                                    <div class="sidebar-group-title">ADMIN</div>
                                     <ul class="nav flex-column sidebar-group">
                                         @foreach ($siderbarAdminMenu as $item)
                                             <li class="nav-item">

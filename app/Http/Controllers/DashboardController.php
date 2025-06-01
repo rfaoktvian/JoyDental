@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Polyclinic;
 use App\Models\Doctor;
+use App\Models\Appointment;
+use App\Models\DoctorReview;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function dashboard()
     {
         $user = auth()->user();
         $doctorProfile = $user->doctor ?? null;
@@ -32,24 +35,62 @@ class DashboardController extends Controller
     public function doctorDashboard()
     {
         $user = auth()->user();
-        $doctorProfile = $user->doctor ?? null;
+        $doctorProfile = $user->doctor;
 
-        $doctorsCount = Doctor::count();
-        $appointmentsToday = \App\Models\Appointment::whereDate('appointment_date', now())->count();
-        $averageRating = \App\Models\DoctorReview::avg('rating') ?? 0;
+        $today = now()->toDateString();
+        $nowTime = Carbon::now()->format('H:i:s');
 
-        $recentDoctors = Doctor::with(['reviews', 'schedules.polyclinic', 'user'])
-            ->orderBy('updated_at', 'desc')
-            ->take(10)
-            ->get();
+        Appointment::where('status', 1)
+            ->where(function ($query) {
+                $query->where('appointment_date', '<', now()->toDateString())
+                    ->orWhere(function ($q) {
+                        $q->whereDate('appointment_date', now()->toDateString())
+                            ->whereRaw('appointment_time < TIME(NOW())');
+                    });
+            })
+            ->update(['status' => 3]);
+
+        $baseQuery = Appointment::query();
+        if ($user->role === 'doctor') {
+            $baseQuery->where('doctor_id', optional($doctorProfile)->id);
+        }
+
+        $activeQueue = (clone $baseQuery)
+            ->where('status', 1)
+            ->where('appointment_date', $today)
+            ->whereRaw("STR_TO_DATE(appointment_time, '%H:%i:%s') >= STR_TO_DATE(?, '%H:%i:%s')", [$nowTime])
+            ->count();
+
+        $appointmentsToday = (clone $baseQuery)
+            ->whereDate('appointment_date', $today)
+            ->count();
+
+        $todayAppointments = (clone $baseQuery)
+            ->with(['patient', 'clinic'])
+            ->whereDate('appointment_date', $today)
+            ->where('status', 1)
+            ->orderBy('appointment_time')
+            ->paginate(3);
+
+        $upcomingAppointments = (clone $baseQuery)
+            ->whereDate('appointment_date', '>', $today)
+            ->count();
+
+        $recentConsultation = (clone $baseQuery)
+            ->where('status', 2)
+            ->with('user')
+            ->latest('appointment_date')
+            ->first();
 
         return view('doctor.dashboard', compact(
             'user',
             'doctorProfile',
-            'doctorsCount',
+            'activeQueue',
             'appointmentsToday',
-            'averageRating',
-            'recentDoctors'
+            'upcomingAppointments',
+            'recentConsultation',
+            'todayAppointments'
         ));
     }
+
 }

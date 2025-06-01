@@ -13,7 +13,7 @@ Route::middleware('web')
 
 // Default route
 Route::view('/', 'dashboard');
-Route::get('/', [DashboardController::class, 'index'])
+Route::get('/', [DashboardController::class, 'dashboard'])
   ->name('dashboard');
 
 Route::get('/janji-temu', fn() => view('janji-temu'))
@@ -72,6 +72,10 @@ Route::prefix('doctor')
 
     Route::get('/antrian', [AppointmentController::class, 'antrianPasien'])
       ->name('antrian');
+    Route::get('/laporan', [DoctorController::class, 'laporan'])
+      ->name('laporan');
+    Route::get('/riwayat', [DoctorController::class, 'riwayat'])
+      ->name('riwayat');
 
     Route::post(
       '/antrian/{appointment}/start',
@@ -92,11 +96,7 @@ Route::prefix('doctor')
       ->name('antrian.cancel');
 
     Route::view('/profile', 'doctor.profile')->name('profile');
-    Route::view('/jadwal', 'doctor.jadwal')->name('jadwal');
     Route::view('/pasien', 'doctor.pasien')->name('pasien');
-    Route::view('/resep', 'doctor.resep')->name('resep');
-    Route::view('/riwayat', 'doctor.riwayat')->name('riwayat');
-    Route::view('/laporan', 'doctor.laporan')->name('laporan');
   });
 
 Route::prefix('admin')->middleware('admin')->group(function () {

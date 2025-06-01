@@ -37,7 +37,7 @@
             <div class="col-xl-8">
                 <div class="row g-4">
                     <div class="col-12">
-                        <div class="custom_card p-3">
+                        <div class="custom_card shadow-sm bg-white border border-1 border-mute p-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h2 class="mb-0">Janji Temu Mendatang</h2>
                                 <a class="text-decoration-none" href="tiket.html">Lihat Semua</a>
@@ -55,7 +55,7 @@
                         $timeNow = Carbon::now();
                     @endphp
                     <div class="col-12">
-                        <div class="custom_card p-3">
+                        <div class="custom_card shadow-sm bg-white border border-1 border-mute p-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h2 class="mb-0 fs-5">Dokter Rekomendasi</h2>
                                 <a href="{{ route('dokter') }}" class="text-decoration-none text-danger small">Lihat
@@ -139,10 +139,10 @@
                 </div>
             </div>
             <div class="col-xl-4">
-                <div class="custom_card p-3 mb-4">
+                <div class="custom_card shadow-sm bg-white border border-1 border-mute p-3 mb-4">
                     @include('partials.calendar', ['calendarId' => 'dashboard'])
                 </div>
-                <div class="custom_card p-3">
+                <div class="custom_card shadow-sm bg-white border border-1 border-mute p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h2 class="mb-0 fs-5">Daftar Poliklinik</h2>
                         <a href="{{ route('poliklinik') }}" class="text-decoration-none text-danger small">Lihat Semua</a>

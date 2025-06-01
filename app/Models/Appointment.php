@@ -40,6 +40,12 @@ class Appointment extends Model
     {
         return $this->belongsTo(DoctorSchedule::class, 'doctor_schedule_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function clinic(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
     {
         return $this->hasOneThrough(

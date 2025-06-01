@@ -13,6 +13,17 @@ class AppointmentController extends Controller
     public function tiketAntrian()
     {
         $user = Auth::user();
+
+        Appointment::where('status', 1)
+            ->where(function ($query) {
+                $query->where('appointment_date', '<', now()->toDateString())
+                    ->orWhere(function ($q) {
+                        $q->whereDate('appointment_date', now()->toDateString())
+                            ->whereRaw('appointment_time < TIME(NOW())');
+                    });
+            })
+            ->update(['status' => 3]);
+
         $currentTab = request('tab', 'all');
         $search = request('q');
         $clinic = request('clinic');
@@ -63,6 +74,17 @@ class AppointmentController extends Controller
     public function antrianPasien()
     {
         $user = Auth::user();
+
+        Appointment::where('status', 1)
+            ->where(function ($query) {
+                $query->where('appointment_date', '<', now()->toDateString())
+                    ->orWhere(function ($q) {
+                        $q->whereDate('appointment_date', now()->toDateString())
+                            ->whereRaw('appointment_time < TIME(NOW())');
+                    });
+            })
+            ->update(['status' => 3]);
+
         $currentTab = request('tab', 'all');
         $search = request('q');
         $clinic = request('clinic');
@@ -70,9 +92,7 @@ class AppointmentController extends Controller
         if ($user->role === 'admin') {
             $base = Appointment::with(['patient', 'clinic', 'doctor']);
         } elseif ($user->role === 'doctor') {
-            $doctorId = optional($user->doctor)->id;
-            $doctorId = $doctorId ?? 0;
-
+            $doctorId = optional($user->doctor)->id ?? 0;
             $base = Appointment::with(['patient', 'clinic', 'doctor'])
                 ->where('doctor_id', $doctorId);
         }
@@ -81,6 +101,7 @@ class AppointmentController extends Controller
             $base->whereHas('patient', fn($q) =>
                 $q->where('name', 'like', "%{$search}%"));
         }
+
         if ($clinic) {
             $base->whereHas('clinic', fn($q) =>
                 $q->where('name', $clinic));
@@ -109,6 +130,7 @@ class AppointmentController extends Controller
             'clinic'
         ));
     }
+
 
     public function reschedule(Request $request, Appointment $appointment)
     {
