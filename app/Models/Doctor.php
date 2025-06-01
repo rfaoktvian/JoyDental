@@ -16,7 +16,10 @@ class Doctor extends Model
         'description',
         'photo',
     ];
-
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
     public function doctor()
     {
         return $this->hasOne(Doctor::class, 'nik', 'nik');

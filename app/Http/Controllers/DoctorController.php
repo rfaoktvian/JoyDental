@@ -37,6 +37,24 @@ class DoctorController extends Controller
         return view('partials.doctor-reviews-modal', compact('doctor'));
     }
 
+    public function updateProfileDoctor(Request $request, $id)
+    {
+        $doctor = Doctor::findOrFail($id);
+
+        $doctor->name = $request->input('name');
+        $doctor->specialization = $request->input('specialization');
+        $doctor->license_number = $request->input('license_number');
+        $doctor->bio = $request->input('bio');
+        $doctor->save();
+
+        $doctor->user->update([
+            'phone' => $request->input('phone'),
+            'address' => $request->input('address'),
+        ]);
+
+        return back()->with('success', 'Profil dokter berhasil diperbarui.');
+    }
+
     public function profileDoctor(Request $request)
     {
         $user = auth()->user();

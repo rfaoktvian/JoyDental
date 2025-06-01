@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 // Importing routes from other files
 Route::middleware('web')
@@ -58,8 +59,10 @@ Route::get('/poliklinik', [PoliklinikController::class, 'index'])->name('polikli
 Route::get('/bantuan', fn() => view('bantuan'))
   ->name('bantuan');
 
-Route::get('/profil', fn() => view('profil'))
+Route::get('/profil', [UserController::class, 'profileUser'])
   ->name('profil');
+Route::put('/profil', [UserController::class, 'updateProfileUser'])
+  ->name('profil.update');
 
 
 
@@ -89,6 +92,9 @@ Route::prefix('doctor')
       ->name('laporan');
     Route::get('/riwayat', [DoctorController::class, 'riwayat'])
       ->name('riwayat');
+
+    Route::put('/profile/{id}', [DoctorController::class, 'updateProfileDoctor'])
+      ->name('profile.update');
     Route::get('/profile', [DoctorController::class, 'profileDoctor'])
       ->name('profile');
 
