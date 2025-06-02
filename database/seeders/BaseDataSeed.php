@@ -134,7 +134,7 @@ class BaseDataSeed extends Seeder
             $doctorId = DB::table('doctors')->insertGetId([
                 'nik' => $nik,
                 'name' => $name,
-                'description' => $faker->paragraph,
+                'description' => Str::limit($faker->paragraph, 10),
                 'specialization' => $faker->word,
                 'photo' => null,
                 'registered' => $faker->date(),
