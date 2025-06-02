@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->id();
             $table->string('nik')->unique();
             $table->string('name');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->string('specialization');
             $table->string('photo')->nullable();
             $table->date('registered')->nullable();
