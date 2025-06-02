@@ -1,51 +1,41 @@
-<form method="POST" action="{{ route('admin.users.store') }}" id="tambahPoliklinik-userForm">
+<form method="POST" action="{{ route('admin.poliklinik.store') }}">
     @csrf
-    <div class="mb-2">
-        <label for="nik" class="form-label">NIK</label>
-        <input id="tambahPoliklinik-nik" type="text" class="form-control @error('nik') is-invalid @enderror"
-            name="nik" value="{{ old('nik') }}" required placeholder="Masukkan NIK" maxlength="16">
 
-        <div id="nik-error" class="text-danger small d-none">
-        </div>
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Nama Poliklinik</label>
+        <input type="text" class="form-control" name="name" value="{{ old('name') }}" required
+            placeholder="Masukkan nama poliklinik">
     </div>
 
-    <div class="mb-2">
-        <label for="name" class="form-label">Nama Lengkap</label>
-        <input id="tambahPoliklinik-name" type="text" class="form-control @error('name') is-invalid @enderror"
-            name="name" value="{{ old('name') }}" required placeholder="Masukkan nama lengkap" disabled>
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Lokasi</label>
+        <input type="text" class="form-control" name="location" value="{{ old('location') }}" required
+            placeholder="Masukkan lokasi">
     </div>
 
-    <div class="mb-2">
-        <label for="email" class="form-label">Email</label>
-        <input id="tambahPoliklinik-email" type="email" class="form-control @error('email') is-invalid @enderror"
-            name="email" value="{{ old('email') }}" required placeholder="Masukkan email" disabled>
+    <div class="mb-3">
+        <label class="form-label fw-semibold">Kapasitas</label>
+        <input type="number" class="form-control" name="capacity" value="{{ old('capacity') }}" required
+            placeholder="Masukkan kapasitas">
     </div>
 
-    <div class="mb-2">
-        <label for="password" class="form-label">Password</label>
-        <input id="tambahPoliklinik-password" type="password"
-            class="form-control @error('password') is-invalid @enderror" name="password" required
-            autocomplete="new-password" placeholder="Masukkan password" disabled>
+    <div class="d-flex gap-2 justify-content-end">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            Batal
+        </button>
+        <button type="submit" class="btn btn-danger">Simpan</button>
     </div>
-
-    <div id="tambahPoliklinik-form-error" class="text-danger small mb-3 d-none"></div>
-
-    <button id="tambahPoliklinik-submit" type="submit" class="btn btn-danger w-100 mt-1" disabled>
-        Daftar
-    </button>
 </form>
 
 <script>
     function closeModalAndReload(evt) {
         document.body.classList.remove('modal-open');
-
         const modalEl = document.getElementById('commonModal');
         if (modalEl) {
             modalEl.classList.remove('show');
             modalEl.style.display = 'none';
             modalEl.setAttribute('aria-hidden', 'true');
         }
-
         document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
         window.location.reload();
     }

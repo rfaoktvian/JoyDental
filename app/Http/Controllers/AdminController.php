@@ -42,6 +42,110 @@ class AdminController extends Controller
         return view('partials.add-polyclinic-form');
     }
 
+    public function updateDoctor(Request $request, $id)
+    {
+        $doctor = Doctor::with('user', 'schedules')->findOrFail($id);
+
+        $validatedUserData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email'
+        ]);
+
+        $doctor->user->update([
+            'name' => $validatedUserData['name'],
+            'email' => $validatedUserData['email']
+        ]);
+
+        // Update schedules
+        $schedulesInput = $request->input('schedules', []);
+
+        foreach (['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day) {
+            $data = $schedulesInput[$day] ?? null;
+            if ($data && isset($data['active'])) {
+                // Find existing schedule for this day
+                $schedule = $doctor->schedules()->where('day', $day)->first();
+                if (!$schedule) {
+                    // Create a new schedule
+                    $schedule = $doctor->schedules()->create([
+                        'day' => $day,
+                        'time_from' => $data['time_from'] ?? null,
+                        'time_to' => $data['time_to'] ?? null,
+                        'max_capacity' => $data['max_capacity'] ?? 0,
+                        'polyclinic_id' => $data['polyclinic_id'] ?? null
+                    ]);
+                } else {
+                    // Update existing schedule
+                    $schedule->update([
+                        'time_from' => $data['time_from'] ?? null,
+                        'time_to' => $data['time_to'] ?? null,
+                        'max_capacity' => $data['max_capacity'] ?? 0,
+                        'polyclinic_id' => $data['polyclinic_id'] ?? null
+                    ]);
+                }
+            } else {
+                // If inactive, delete schedule if exists
+                $doctor->schedules()->where('day', $day)->delete();
+            }
+        }
+        $doctor->touch();
+
+        return back()->with('success', 'Jadwal dokter berhasil diperbarui.');
+    }
+
+
+    public function destroyDoctor($id)
+    {
+        $doctor = Doctor::findOrFail($id);
+        $doctor->schedules()->delete();
+        $doctor->delete();
+
+        return back()->with('success', 'Dokter berhasil dihapus.');
+    }
+
+    public function updatePolyclinic(Request $request, $id)
+    {
+        $polyclinic = Polyclinic::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1'
+        ]);
+
+        $polyclinic->update($validatedData);
+
+        return back()->with('success', 'Poliklinik berhasil diperbarui.');
+    }
+
+    public function destroyPolyclinic($id)
+    {
+        $polyclinic = Polyclinic::findOrFail($id);
+        $polyclinic->delete();
+
+        return redirect()->route('admin.poliklinik')->with('success', 'Poliklinik berhasil dihapus.');
+    }
+
+    public function storePolyclinic(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        // Auto-increment type field based on current max
+        $maxType = Polyclinic::max('type') ?? 0;
+        $newType = $maxType + 1;
+
+        $polyclinic = Polyclinic::create([
+            'name' => $validatedData['name'],
+            'location' => $validatedData['location'],
+            'type' => $newType,
+            'capacity' => $validatedData['capacity'],
+        ]);
+
+        return back();
+    }
     public function manageUsers(Request $request)
     {
         $query = User::query();

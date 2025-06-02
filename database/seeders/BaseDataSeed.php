@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class BaseDataSeed extends Seeder
 {
@@ -15,9 +16,33 @@ class BaseDataSeed extends Seeder
      */
     public function run(): void
     {
-
         $now = Carbon::now();
+        $faker = Faker::create();
 
+        // 1️⃣ Seed Polyclinics
+        $this->seedPolyclinics($now);
+
+        // 2️⃣ Seed Admin User
+        $this->seedAdminUser($now);
+
+        // 3️⃣ Seed Doctors (Users + Doctors)
+        $doctorIds = $this->seedDoctors($faker, $now);
+
+        // 4️⃣ Seed Doctor Schedules
+        $this->seedDoctorSchedules($faker, $doctorIds, $now);
+
+        // 5️⃣ Seed Additional Users
+        $userIds = $this->seedUsers($faker, $now);
+
+        // 6️⃣ Seed Appointments
+        $this->seedAppointments($faker, $doctorIds, $userIds, $now);
+
+        // 7️⃣ Seed Doctor Reviews
+        $this->seedDoctorReviews($faker, $doctorIds, $userIds, $now);
+    }
+
+    private function seedPolyclinics($now)
+    {
         $polyclinics = [
             ['name' => 'Klinik Umum', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 1, 'capacity' => 30],
             ['name' => 'Klinik Anak', 'location' => 'Gedung Cokro Aminoto Lt.3', 'type' => 2, 'capacity' => 30],
@@ -50,189 +75,182 @@ class BaseDataSeed extends Seeder
             ['name' => 'Klinik Reproduksi', 'location' => 'Gedung Cokro Aminoto Lt.1', 'type' => 29, 'capacity' => 30],
             ['name' => 'Klinik Ginekologi', 'location' => 'Gedung Cokro Aminoto Lt.2', 'type' => 30, 'capacity' => 30],
         ];
+
         foreach ($polyclinics as &$clinic) {
+            $clinic['capacity'] = 30;
             $clinic['created_at'] = $now;
             $clinic['updated_at'] = $now;
         }
 
         DB::table('polyclinics')->insert($polyclinics);
+    }
 
+    private function seedAdminUser($now)
+    {
         DB::table('users')->insert([
-            [
-                'name' => 'admin',
-                'nik' => '1111111111111111',
-                'email' => 'admin@example.com',
-                'role' => 'admin',
-                'password' => Hash::make('admin'),
-                'email_verified_at' => $now,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ]
+            'name' => 'admin',
+            'nik' => '1111111111111111',
+            'email' => 'admin@example.com',
+            'role' => 'admin',
+            'password' => Hash::make('admin'),
+            'email_verified_at' => $now,
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
-
         DB::table('users')->insert([
-            [
-                'name' => 'Amanda Wijaya',
-                'nik' => '1234123412340001',
-                'email' => 'amanda@example.com',
-                'role' => 'doctor',
-                'password' => Hash::make('password'),
-                'email_verified_at' => $now,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Bima Raharja',
-                'nik' => '1234123412340002',
-                'email' => 'bima@example.com',
-                'role' => 'doctor',
-                'password' => Hash::make('password'),
-                'email_verified_at' => $now,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'name' => 'Citra Ayu',
-                'nik' => '1234123412340003',
-                'email' => 'citra@example.com',
-                'role' => 'doctor',
-                'password' => Hash::make('password'),
-                'email_verified_at' => $now,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
+            'name' => 'dokter',
+            'nik' => '2222222222222222',
+            'email' => 'dokter@example.com',
+            'role' => 'doctor',
+            'password' => Hash::make('dokter'),
+            'email_verified_at' => $now,
+            'created_at' => $now,
+            'updated_at' => $now,
         ]);
+    }
 
-        $doctors = [
-            [
-                'nik' => '1234123412340001',
-                'name' => 'dr. Amanda Wijaya',
-                'specialization' => 'Dokter Anak',
-                'photo' => 'amanda.png',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'nik' => '1234123412340002',
-                'name' => 'dr. Bima Raharja',
-                'specialization' => 'Bedah Mulut',
-                'photo' => 'bima.png',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'nik' => '1234123412340003',
-                'name' => 'drg. Citra Ayu',
-                'specialization' => 'Dokter Gigi',
-                'photo' => 'citra.png',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-        ];
+    private function seedDoctors($faker, $now)
+    {
+        $doctorIds = [];
 
-        DB::table('doctors')->insert($doctors);
+        for ($i = 1; $i <= 10; $i++) {
+            $nik = str_pad(mt_rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT);
+            $name = $faker->name;
+            $email = strtolower(Str::slug($name)) . '@example.com';
 
-        $doctorSchedules = [
-            [
-                'doctor_id' => 1, // Amanda Wijaya
-                'day' => 'Senin',
-                'time_from' => '09:00',
-                'time_to' => '14:00',
-                'max_capacity' => 10,
+            // Insert user first
+            DB::table('users')->insert([
+                'name' => $name,
+                'nik' => $nik,
+                'email' => $email,
+                'password' => Hash::make('password'),
+                'role' => 'doctor',
+                'email_verified_at' => $now,
                 'created_at' => $now,
                 'updated_at' => $now,
-                'polyclinic_id' => 2, // Klinik Anak
-            ],
-            [
-                'doctor_id' => 2, // Bima Raharja
-                'day' => 'Selasa',
-                'time_from' => '10:00',
-                'time_to' => '15:00',
-                'max_capacity' => 12,
-                'created_at' => $now,
-                'updated_at' => $now,
-                'polyclinic_id' => 4, // Klinik Bedah
-            ],
-            [
-                'doctor_id' => 3, // Citra Ayu
-                'day' => 'Rabu',
-                'time_from' => '08:00',
-                'time_to' => '12:00',
-                'max_capacity' => 8,
-                'created_at' => $now,
-                'updated_at' => $now,
-                'polyclinic_id' => 3, // Klinik Gigi
-            ],
-        ];
+            ]);
 
-        DB::table('doctor_schedules')->insert($doctorSchedules);
-
-        $reviews = [
-            [
-                'doctor_id' => 1,
-                'user_id' => 1,
-                'rating' => 5,
-                'comment' => 'Dokter sangat ramah dan informatif. Terima kasih!',
+            // Insert doctor
+            $doctorId = DB::table('doctors')->insertGetId([
+                'nik' => $nik,
+                'name' => $name,
+                'description' => $faker->paragraph,
+                'specialization' => $faker->word,
+                'photo' => null,
+                'registered' => $faker->date(),
                 'created_at' => $now,
                 'updated_at' => $now,
-            ],
-            [
-                'doctor_id' => 1,
-                'user_id' => 2,
-                'rating' => 4,
-                'comment' => 'Pelayanan cepat dan jelas, tapi ruang tunggu agak penuh.',
+            ]);
+
+            $doctorIds[] = $doctorId;
+        }
+
+        return $doctorIds;
+    }
+
+    private function seedDoctorSchedules($faker, $doctorIds, $now)
+    {
+        $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+
+        foreach ($doctorIds as $doctorId) {
+            foreach ($days as $day) {
+                DB::table('doctor_schedules')->insert([
+                    'doctor_id' => $doctorId,
+                    'day' => $day,
+                    'time_from' => $faker->time('H:i'),
+                    'time_to' => $faker->time('H:i'),
+                    'max_capacity' => $faker->numberBetween(5, 15),
+                    'polyclinic_id' => $faker->numberBetween(1, 30),
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+            }
+        }
+    }
+
+    private function seedUsers($faker, $now)
+    {
+        $userIds = [];
+
+        for ($i = 1; $i <= 20; $i++) {
+            $name = $faker->name;
+            $nik = str_pad(mt_rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT);
+
+            $userId = DB::table('users')->insertGetId([
+                'name' => $name,
+                'nik' => $nik,
+                'email' => strtolower(Str::slug($name, '.')) . '@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'user',
+                'email_verified_at' => $now,
+                'address' => $faker->address,
+                'phone' => $faker->phoneNumber,
+                'gender' => $faker->randomElement(['man', 'woman']),
+                'birth_date' => $faker->date(),
+                'occupation' => $faker->jobTitle,
                 'created_at' => $now,
                 'updated_at' => $now,
-            ],
-            [
-                'doctor_id' => 2,
-                'user_id' => 3,
-                'rating' => 5,
-                'comment' => 'Sangat puas dengan hasil konsultasi. Rekomendasi!',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-            [
-                'doctor_id' => 3,
-                'user_id' => 3,
-                'rating' => 3,
-                'comment' => 'Dokternya oke, tapi agak terburu-buru menjelaskan.',
-                'created_at' => $now,
-                'updated_at' => $now,
-            ],
-        ];
+            ]);
 
-        DB::table('doctor_reviews')->insert($reviews);
+            $userIds[] = $userId;
+        }
 
+        return $userIds;
+    }
 
-        for ($i = 1; $i <= 30; $i++) {
+    private function seedAppointments($faker, $doctorIds, $userIds, $now)
+    {
+        $scheduleIds = DB::table('doctor_schedules')->pluck('id');
+
+        for ($i = 1; $i <= 50; $i++) {
+            $status = $faker->randomElement([1, 2, 3]);
+
             DB::table('appointments')->insert([
-                'queue_number' => 'A' . str_pad($i, 3, '0', STR_PAD_LEFT),
-                'booking_code' => Str::random(10),
-                'user_id' => 1,
-                'doctor_id' => 1,
-                'doctor_schedule_id' => 1, // Jadwal dokter Amanda
-                'status' => 1,
-                'appointment_date' => Carbon::now()->addDays(1),
-                'appointment_time' => '10:00',
-                'payment_method' => 'Cash',
-                'consultation_fee' => '25000',
+                'queue_number' => strtoupper(Str::random(5)),
+                'booking_code' => strtoupper(Str::random(8)),
+                'user_id' => $faker->randomElement($userIds),
+                'doctor_id' => $faker->randomElement($doctorIds),
+                'doctor_schedule_id' => $faker->randomElement($scheduleIds),
+                'status' => $status,
+                'appointment_date' => $faker->date(),
+                'appointment_time' => $faker->time('H:i'),
+                'payment_method' => $faker->randomElement(['Cash', 'Insurance', 'Transfer']),
+                'consultation_fee' => $faker->numberBetween(50000, 200000),
+                'visit_date' => $status === 2 ? $faker->date() : null,
+                'visit_time' => $status === 2 ? $faker->time('H:i') : null,
+                'chief_complaint' => $faker->sentence,
+                'diagnosis' => $status === 2 ? $faker->sentence : null,
+                'treatment' => $faker->sentence,
+                'prescription' => $faker->sentence,
+                'doctor_notes' => $faker->sentence,
+                'follow_up_date' => $faker->optional()->date(),
                 'created_at' => $now,
                 'updated_at' => $now,
             ]);
         }
+    }
 
-        for ($i = 1; $i <= 20; $i++) {
-            $name = Str::random(10);
-            DB::table('users')->insert([
-                'name' => $name,
-                'nik' => str_pad(mt_rand(0, 9999999999999999), 16, '0', STR_PAD_LEFT),
-                'email' => strtolower($name) . '@example.com',
-                'password' => Hash::make('password'),
-                'email_verified_at' => $now,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ]);
+    private function seedDoctorReviews($faker, $doctorIds, $userIds, $now)
+    {
+        foreach ($doctorIds as $doctorId) {
+            $reviewCount = $faker->numberBetween(3, 10);
+
+            for ($i = 0; $i < $reviewCount; $i++) {
+                $userId = $faker->randomElement($userIds);
+
+                DB::table('doctor_reviews')->updateOrInsert(
+                    [
+                        'doctor_id' => $doctorId,
+                        'user_id' => $userId,
+                    ],
+                    [
+                        'rating' => $faker->numberBetween(1, 5),
+                        'comment' => $faker->sentence,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]
+                );
+            }
         }
     }
 }

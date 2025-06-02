@@ -312,7 +312,9 @@
 
                                 <td class="bg-white">
                                     @php
-                                        $badge = $poliklinikTypes[optional($appt->clinic)->id ?? 1];
+                                        $badge = isset($poliklinikTypes[$poliklinik->type])
+                                            ? $poliklinikTypes[$poliklinik->type]
+                                            : $poliklinikTypes[1];z
                                     @endphp
                                     <span class="badge {{ $badge['class'] }}">
                                         {{ optional($appt->clinic)->name ?? 'N/A' }}

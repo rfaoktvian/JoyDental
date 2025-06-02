@@ -139,9 +139,18 @@ Route::prefix('admin')->middleware('admin')->group(function () {
   Route::get('/dokter/{id}/edit', [AdminController::class, 'editDoctorForm'])->name('admin.dokter.edit');
   Route::get('/dokter', [AdminController::class, 'manageDoctors'])->name('admin.dokter');
 
+  Route::put('/dokter/{id}/update', [AdminController::class, 'updateDoctor'])->name('admin.dokter.update');
+  Route::delete('/dokter/{id}/destroy', [AdminController::class, 'destroyDoctor'])->name('admin.dokter.destroy');
+
+
   Route::get('/poliklinik/add', [AdminController::class, 'addPolyclinicForm'])->name('admin.poliklinik.create');
   Route::get('/poliklinik/{id}/edit', [AdminController::class, 'editPolyclinicForm'])->name('admin.poliklinik.edit');
   Route::get('/poliklinik', [AdminController::class, 'managePolyclinics'])->name('admin.poliklinik');
+
+  Route::put('/poliklinik/{id}/update', [AdminController::class, 'updatePolyclinic'])->name('admin.poliklinik.update');
+  Route::delete('/poliklinik/{id}/destroy', [AdminController::class, 'destroyPolyclinic'])->name('admin.poliklinik.destroy');
+  Route::post('/admin/poliklinik/store', [AdminController::class, 'storePolyclinic'])->name('admin.poliklinik.store');
+
 
   Route::fallback(function () {
     if (request()->is('admin/*') && auth()->check()) {

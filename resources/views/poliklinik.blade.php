@@ -27,7 +27,9 @@
         <div class="row g-3">
             @foreach ($polyclinics as $poliklinik)
                 @php
-                    $badge = $poliklinikTypes[$poliklinik->type];
+                    $badge = isset($poliklinikTypes[$poliklinik->type])
+                        ? $poliklinikTypes[$poliklinik->type]
+                        : $poliklinikTypes[1];
                 @endphp
                 <div class="col-md-3 col-sm-6">
                     <div class="custom_card h-100">

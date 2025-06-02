@@ -137,7 +137,7 @@
                         </span>
                     </div>
                     <div class="card-body">
-                        @forelse ($doctor->reviews->take(5) as $review)
+                        @forelse (optional($doctor)->reviews?->take(5) ?? [] as $review)
                             <div class="mb-3">
                                 <div class="fw-semibold">{{ optional($review->user)->name ?? 'Pasien Anonim' }}</div>
                                 <div class="text-warning mb-1">
@@ -171,29 +171,35 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($doctor->appointments()->latest()->take(5)->get() as $appt)
+                                @if ($doctor)
+                                    @forelse ($doctor->appointments()->latest()->take(5)->get() as $appt)
+                                        <tr>
+                                            <td>{{ optional($appt->user)->name ?? '-' }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($appt->appointment_date)->translatedFormat('d M Y') }}
+                                            </td>
+                                            <td>
+                                                @if ($appt->status == 1)
+                                                    <span class="badge bg-primary"><i
+                                                            class="fas fa-clock me-1"></i>Upcoming</span>
+                                                @elseif ($appt->status == 2)
+                                                    <span class="badge bg-success"><i
+                                                            class="fas fa-check me-1"></i>Completed</span>
+                                                @else
+                                                    <span class="badge bg-secondary"><i
+                                                            class="fas fa-times me-1"></i>Cancelled</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="3" class="text-muted text-center">Belum ada janji temu.</td>
+                                        </tr>
+                                    @endforelse
+                                @else
                                     <tr>
-                                        <td>{{ optional($appt->user)->name ?? '-' }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($appt->appointment_date)->translatedFormat('d M Y') }}
-                                        </td>
-                                        <td>
-                                            @if ($appt->status == 1)
-                                                <span class="badge bg-primary"><i
-                                                        class="fas fa-clock me-1"></i>Upcoming</span>
-                                            @elseif ($appt->status == 2)
-                                                <span class="badge bg-success"><i
-                                                        class="fas fa-check me-1"></i>Completed</span>
-                                            @else
-                                                <span class="badge bg-secondary"><i
-                                                        class="fas fa-times me-1"></i>Cancelled</span>
-                                            @endif
-                                        </td>
+                                        <td colspan="3" class="text-muted text-center">Dokter tidak ditemukan.</td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="3" class="text-muted text-center">Belum ada janji temu.</td>
-                                    </tr>
-                                @endforelse
+                                @endif
                             </tbody>
                         </table>
                     </div>
