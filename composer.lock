@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc7f6d3ca2d9878d7bf1f36953f91d4e",
+    "content-hash": "65cc405aa5f47de2c77394bc710f0b01",
     "packages": [
         {
             "name": "brick/math",
@@ -1056,16 +1056,16 @@
         },
         {
             "name": "hotwired-laravel/turbo-laravel",
-            "version": "2.3.0",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hotwired-laravel/turbo-laravel.git",
-                "reference": "0797231924261236ab110803a99cd00825ddef58"
+                "reference": "2a66e5e56de70554fa28fd995a8b7327c4d07b37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hotwired-laravel/turbo-laravel/zipball/0797231924261236ab110803a99cd00825ddef58",
-                "reference": "0797231924261236ab110803a99cd00825ddef58",
+                "url": "https://api.github.com/repos/hotwired-laravel/turbo-laravel/zipball/2a66e5e56de70554fa28fd995a8b7327c4d07b37",
+                "reference": "2a66e5e56de70554fa28fd995a8b7327c4d07b37",
                 "shasum": ""
             },
             "require": {
@@ -1121,9 +1121,9 @@
             ],
             "support": {
                 "issues": "https://github.com/hotwired-laravel/turbo-laravel/issues",
-                "source": "https://github.com/hotwired-laravel/turbo-laravel/tree/2.3.0"
+                "source": "https://github.com/hotwired-laravel/turbo-laravel/tree/2.5.0"
             },
-            "time": "2025-03-02T18:53:50+00:00"
+            "time": "2025-11-09T15:32:49+00:00"
         },
         {
             "name": "laravel/framework",
@@ -8221,12 +8221,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
