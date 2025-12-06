@@ -16,15 +16,47 @@
             font-size: 0.75rem;
             padding: 0.3em 0.6em;
         }
+
+         .text-danger{
+            color: #6B2C91 !important;
+        }
+        .btn-danger:hover{
+            color: #fff !important;
+            background: #4F206B !important;
+            
+        }
+
+        footer.bg-danger {
+        background-color: #6B2C91 !important; /* Mengganti warna latar belakang menjadi ungu */
+        color: white;  /* Mengubah warna teks menjadi putih */
+        }
+
+        footer .text-white {
+            color: white !important; /* Pastikan semua teks di footer tetap berwarna putih */
+        }
+
+        footer .text-white-50 {
+            color: rgba(255, 255, 255, 0.5) !important; /* Mengubah warna teks dengan opacity */
+        }
+
+        footer .border-light {
+            border-color: rgba(255, 255, 255, 0.1) !important; /* Warna border agar lebih ringan */
+        }
+
+        footer .fw-semibold {
+            font-weight: 600; /* Menebalkan teks dengan font-weight */
+        }
+
+
     </style>
     <div class="container">
         <div class="banner position-relative p-4 rounded text-white d-flex align-items-center justify-content-between overflow-hidden"
-            style="background: linear-gradient(135deg, #6B2C91, #9B5FCB); height: 250px;">
+            style="background: linear-gradient(135deg, #6B2C91, #7f4ea7); height: 250px;">
             <div style="z-index: 2; max-width: 60%;">
                 <h2>Daftar Antrian Lebih Mudah</h2>
                 <h6 class="fw-light">
-                    AppointDoc membantu Anda menemukan dan menjadwalkan<br>
-                    konsultasi dengan dokter profesional di RS Siaga Sedia.
+                    Joy Dental membantu Anda menemukan dan menjadwalkan<br>
+                    konsultasi dengan dokter untuk segala permasalahan gigimu.
                 </h6><br>
                 <h5>Semoga anda lekas sembuh</h5>
             </div>
@@ -230,7 +262,7 @@
                 </div>
             </section>
             <section class="container mt-4" id="Layanan">
-                <h4 class="text-center fw-bold text-danger mb-4">Kenapa Memilih AppointDoc?</h4>
+                <h4 class="text-center fw-bold text-danger mb-4">Kenapa Memilih Joy Dental?</h4>
                 <div class="row text-center g-4">
                     <div class="col-md-4">
                         <div class="p-4 rounded shadow-sm bg-white border border-1 border-mute" style="background: #fff;">
@@ -266,14 +298,14 @@
 
 
             <section class="container mt-4" id="testimoni">
-                <h4 class="mb-4 text-center fw-bold text-danger">Apa Kata Mereka Tentang AppointDoc?</h4>
+                <h4 class="mb-4 text-center fw-bold text-danger">Apa Kata Mereka Tentang Joy Dental?</h4>
 
                 <style>
                     .carousel-control-prev,
                     .carousel-control-next {
                         width: 45px;
                         height: 45px;
-                        background-color: #d32f2f;
+                        background-color: #7f4ea7;
                         border-radius: 50%;
                         opacity: 0.8;
                         top: 50%;
@@ -283,7 +315,7 @@
                     .carousel-control-prev:hover,
                     .carousel-control-next:hover {
                         opacity: 1;
-                        background-color: #b71c1c;
+                        background-color: #7f4ea7;
                     }
                 </style>
 
@@ -342,7 +374,7 @@
 @endsection
 
 @section('footer')
-    <footer class="bg-danger text-white pt-4">
+        <footer class="bg-danger text-white pt-4">
         <div class="custom-container">
             <div class="row gy-4">
                 <div class="col-md-4">
@@ -419,7 +451,8 @@
         <hr class="border-light my-4">
 
         <div class="text-center py-3 small">
-            &copy; {{ date('Y') }} AppointDoc. Hak cipta dilindungi undang-undang.
+            &copy; {{ date('Y') }} Joy Dental. Hak cipta dilindungi undang-undang.
         </div>
     </footer>
+
 @endsection

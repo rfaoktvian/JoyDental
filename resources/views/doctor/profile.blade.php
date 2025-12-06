@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+
+    <style>
+        .bg-danger {
+            --bs-bg-opacity: 1;
+            background-color: #6b2c91 !important;
+        }
+    </style>
+
     <div class="container">
         <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
             <div>

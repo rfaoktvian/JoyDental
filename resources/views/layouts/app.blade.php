@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AppointDoc</title>
+    <title>JoyDental</title>
 
         <!-- Hotjar Tracking Code for Site 6491910 (name missing) -->
     <script>
@@ -116,7 +116,7 @@
         #sidebar {
             width: 250px;
             transition: width 0.3s ease;
-            background: #c62828;
+            background: #6B2C91;
         }
 
         #sidebar .nav-link {
@@ -136,12 +136,12 @@
         }
 
         .nav-link:hover {
-            background: #b71c1c;
+            background: #4F206B;
             color: #fff;
         }
 
         .nav-link.active {
-            background: #b71c1c;
+            background: #7f4ea7;
             color: #fff;
             font-weight: 500;
         }
@@ -188,6 +188,34 @@
         #sidebar * {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .btn-outline-danger {
+            background-color: transparent;
+            color: #6B2C91;
+            border: 2px solid #6B2C91;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #6B2C91;
+            color: white;
+            border-color: #6B2C91;
+        }
+
+        .btn-danger {
+            background-color: #6B2C91 !important;
+            border-color: #6B2C91 !important;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .btn-danger:hover {
+            background-color: #4F206B !important;
+            border-color: #6B2C91 !important;
+            color: white !important;
+        }
+
+        
     </style>
 </head>
 
@@ -284,7 +312,7 @@
                                         <div class="d-flex align-items-center">
                                             <div class="vr" style="height: 1.25rem;"></div>
                                         </div>
-                                        <p class="mb-0" id="page-title">AppointDoc</p>
+                                        <p class="mb-0" id="page-title">JoyDental</p>
                                         </p>
                                     </div>
                                     <div class="d-flex align-items-center gap-2">

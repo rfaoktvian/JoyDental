@@ -15,26 +15,26 @@
         }
 
         .nav-pills .nav-link:hover {
-            color: #d32f2f;
+            color: #6B2C91;
         }
 
         .nav-pills .nav-link.active {
             color: #fff;
-            background-color: #d32f2f;
-            border: 1px solid #d32f2f;
+            background-color: #6B2C91;
+            border: 1px solid #6B2C91;
         }
 
         .page-item .page-link {
-            color: #d32f2f;
+            color: #6B2C91;
             border-radius: 0;
             min-width: 40px;
             text-align: center;
         }
 
         .page-item.active .page-link {
-            background-color: #d32f2f;
+            background-color: #6B2C91;
             color: white;
-            border-color: #d32f2f;
+            border-color: #6B2C91;
         }
 
         .pagination-wrapper .page-link {

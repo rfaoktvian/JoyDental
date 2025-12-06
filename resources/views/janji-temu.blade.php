@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+
+<style>
+    .bg-danger{
+        --bs-bg-opacity: 1;
+        background-color: #6b2c91 !important;    
+    }
+</style>
+
     <div class="container">
         <form id="appointmentForm" action="{{ route('janji-temu.store') }}" method="POST" class="needs-validation" novalidate>
             @csrf

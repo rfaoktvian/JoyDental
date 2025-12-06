@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
+    <style>
+        .bg-danger {
+                    background-color: #6B2C91 !important;
+                }
+    </style>
     <div class="container">
         <h4 class="fw-bold text-dark mb-3">Profil Pengguna</h4>
         <div class="row">

@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
+
     <link rel="stylesheet" href="{{ asset('css/manager.css') }}">
 
     <div class="container">
         <div class="banner position-relative p-4 rounded text-white d-flex align-items-center justify-content-between overflow-hidden"
-            style="background: linear-gradient(135deg, #d32f2f, #f44336); height: 250px;">
+            style="background: linear-gradient(135deg, #6B2C91, #7f4ea7); height: 250px;">
             <div style="z-index: 2; max-width: 60%;">
                 <h2>Selamat Datang, {{ $doctorProfile?->name ?? $user->name }}</h2>
                 <h6 class="fw-light">
@@ -28,7 +29,7 @@
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
                         <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
-                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #eae3eeff;">
                             <i class="fas fs-5 fa-calendar-alt text-danger"></i>
                         </div>
                         <div>
@@ -42,7 +43,7 @@
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
                         <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
-                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #eae3eeff;">
                             <i class="fas fs-5 fa-calendar-check text-danger"></i>
                         </div>
                         <div>
@@ -56,7 +57,7 @@
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
                         <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
-                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #eae3eeff;">
                             <i class="fas fs-5 fa-calendar-check text-danger"></i>
                         </div>
                         <div>
@@ -70,7 +71,7 @@
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
                         <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
-                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #eae3eeff;">
                             <i class="fas fs-5 fa-user-clock text-danger"></i>
                         </div>
                         <div>

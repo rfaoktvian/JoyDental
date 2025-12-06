@@ -13,7 +13,7 @@
         }
 
         .auth-left {
-            background: linear-gradient(to bottom right, #d32f2f, #f44336);
+            background: linear-gradient(to bottom right, #6B2C91, #7f4ea7);
             color: white;
             flex: 1;
             position: relative;

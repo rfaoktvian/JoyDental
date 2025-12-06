@@ -49,7 +49,7 @@
     </style>
 
     <div class="banner d-flex justify-content-center align-items-center text-center text-white mb-2 rounded py-4 px-3"
-        style="background: linear-gradient(135deg, #d32f2f, #f44336);">
+        style="background: linear-gradient(135deg, #6B2C91, #7f4ea7);">
         <div style="z-index: 2;">
             <h2 class="fw-bold mb-2">Daftar Dokter Kami</h2>
             <p class="mb-0">Tim medis profesional dan berdedikasi untuk kesehatan Anda.</p>
@@ -106,12 +106,12 @@
 
                                 @guest
                                     <a data-bs-toggle="modal" data-bs-target="#loginModal"
-                                        class="btn btn-danger btn-sm w-100 fw-semibold rounded">
+                                        class="btn btn-danger btn-sm w-100  rounded">
                                         Buat Janji Temu
                                     </a>
                                 @else
                                     <a href="{{ route('janji-temu') }}"
-                                        class="btn btn-danger btn-sm w-100 fw-semibold rounded">
+                                        class="btn btn-danger btn-sm w-100  rounded">
                                         Buat Janji Temu
                                     </a>
                                 @endguest

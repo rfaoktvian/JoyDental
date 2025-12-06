@@ -13,26 +13,26 @@
         }
 
         .nav-pills .nav-link:hover {
-            color: #d32f2f;
+            color: #6B2C91;
         }
 
         .nav-pills .nav-link.active {
             color: #fff;
-            background-color: #d32f2f;
-            border: 1px solid #d32f2f;
+            background-color: #6B2C91;
+            border: 1px solid #6B2C91;
         }
 
         .page-item .page-link {
-            color: #d32f2f;
+            color: #6B2C91;
             border-radius: 0;
             min-width: 40px;
             text-align: center;
         }
 
         .page-item.active .page-link {
-            background-color: #d32f2f;
+            background-color: #6B2C91;
             color: white;
-            border-color: #d32f2f;
+            border-color: #6B2C91;
         }
 
         .pagination-wrapper .page-link {
@@ -59,7 +59,7 @@
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
                         <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
-                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #eae3eeff;">
                             <i class="fas fs-5 fa-calendar-alt text-danger"></i>
                         </div>
                         <div>
@@ -73,7 +73,7 @@
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
                         <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
-                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #eae3eeff;">
                             <i class="fas fs-5 fa-calendar-alt text-danger"></i>
                         </div>
                         <div>
@@ -87,7 +87,7 @@
                 <div class="custom_card shadow-sm bg-white border border-1 border-mute">
                     <div class="card-body d-flex align-items-center">
                         <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-3 flex-shrink-0"
-                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #ffe6e6;">
+                            style="width: 40px; aspect-ratio: 1 / 1; background-color: #eae3eeff;">
                             <i class="fas fs-5 fa-calendar-alt text-danger"></i>
                         </div>
                         <div>

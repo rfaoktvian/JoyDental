@@ -20,7 +20,7 @@
             left: 0;
             height: 100vh;
             width: 240px;
-            background: #d32f2f;
+            background: #6B2C91;
             color: #fff;
             overflow: hidden;
             transition: width 0.2s ease-in-out;

@@ -15,14 +15,14 @@
         }
 
         .accordion-button:not(.collapsed) {
-            color: #d32f2f;
-            background-color: #fef0f0;
+            color: #6B2C91;
+            background-color: #ebe3f5ff;
             font-weight: bold;
         }
     </style>
 
     <div class="banner d-flex justify-content-center align-items-center text-center text-white mb-4 rounded py-4 px-3"
-        style="background: linear-gradient(135deg, #d32f2f, #f44336);">
+        style="background: linear-gradient(135deg, #6B2C91, #7f4ea7);">
         <div style="z-index: 2;">
             <h2 class="fw-bold mb-2">Pusat Bantuan</h2>
             <p class="mb-0">Temukan jawaban untuk pertanyaan umum Anda dengan cepat.</p>
