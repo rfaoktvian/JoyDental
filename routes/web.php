@@ -6,12 +6,11 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentController;
 
-// Importing routes from other files
-Route::middleware('web')
-  ->group(base_path('routes/api.php'))
-  ->group(base_path('routes/front_end.php'))
-  ->group(base_path('routes/auth.php'));
+require base_path('routes/api.php');
+require base_path('routes/front_end.php');
+require base_path('routes/auth.php');
 
 // Default route
 Route::view('/', 'dashboard');
@@ -124,6 +123,18 @@ Route::prefix('doctor')
       return $next($request);
     };
   });
+
+// Payment Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payment/{order}', [PaymentController::class, 'show'])->name('payment.show');
+    Route::post('/payment/{order}/process', [PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/{order}/finish', [PaymentController::class, 'finish'])->name('payment.finish');
+});
+
+// Webhook dari Midtrans (tidak perlu auth)
+Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
+
+
 
 Route::prefix('admin')->middleware('admin')->group(function () {
   Route::get('/', fn() => redirect('/'))->name('admin.dashboard');

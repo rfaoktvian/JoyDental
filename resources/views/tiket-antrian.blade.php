@@ -71,6 +71,43 @@
     @endphp
 
     <div class="container">
+        @if(request('payment') == 'success')
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Pembayaran Berhasil!</strong> Booking Anda telah dikonfirmasi. 
+                Silakan datang sesuai jadwal yang telah ditentukan.
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @elseif(request('payment') == 'pending')
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="fas fa-clock me-2"></i>
+                <strong>Pembayaran Pending!</strong> 
+                @if(request('method') == 'bank_transfer')
+                    Silakan selesaikan transfer bank Anda. Status akan diperbarui otomatis setelah pembayaran diterima.
+                @elseif(request('method') == 'gopay' || request('method') == 'shopeepay')
+                    Silakan selesaikan pembayaran melalui aplikasi E-Wallet Anda.
+                @else
+                    Silakan selesaikan pembayaran Anda sesuai instruksi yang diberikan.
+                @endif
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        @if(session('info'))
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="fas fa-info-circle me-2"></i>
+                {{ session('info') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
         <div class="tab-content" id="ongoingTabs">
             <div class="tab-pane fade show active" id="pane-upcoming" role="tabpanel">
                 <ul class="nav nav-pills small fw-bold align-items-center justify-content-between mb-2" id="statusTabs"

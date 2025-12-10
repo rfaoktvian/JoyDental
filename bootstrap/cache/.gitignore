@@ -1,8 +1,1 @@
-Inflasi didefinisikan sebagai kenaikan harga barang dan jasa secara umum dalam perekonomian. Berdasarkan tingkat kenaikannya, inflasi dapat dikategorikan ke dalam empat tingkatan:
-
-Inflasi Ringan (Mild Inflation): Inflasi yang terjadi pada tingkat yang relatif rendah, umumnya di bawah 5% per tahun. Meskipun ada kenaikan harga, inflasi ini tidak terlalu merugikan daya beli masyarakat.
-Inflasi Sedang (Moderate Inflation): Inflasi yang meningkat antara 5% hingga 10% per tahun. Inflasi ini mulai terasa oleh konsumen, dan dapat mengurangi daya beli secara bertahap.
-Inflasi Berat (Galloping Inflation): Inflasi yang sangat tinggi, biasanya di atas 10%, dapat mencapai ratusan persen. Inflasi ini menyebabkan penurunan daya beli yang signifikan, dan harga barang serta jasa meningkat dengan cepat.
-Hiperinflasi (Hyperinflation): Inflasi yang sangat ekstrim, sering kali di atas 50% per bulan. Hiperinflasi mengakibatkan hilangnya nilai mata uang, menyebabkan ketidakstabilan ekonomi, dan merusak kepercayaan masyarakat terhadap sistem moneter.
-
-Masing-masing tingkat inflasi memiliki dampak yang berbeda pada perekonomian dan kesejahteraan masyarakat, dari yang paling ringan hingga yang sangat merusak.
+Pengaturan DHCP dilakukan di Server dengan IP 192.168.10.2 dan disesuaikan dengan segmen Kamar Anak (/28), Kamar Utama dan Tamu. Server ini bertugas untuk memberikan alamat IP otomatis kepada perangkat di Kamar Anak dan menetapkan default gateway serta DNS yang diperlukan. 

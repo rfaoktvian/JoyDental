@@ -5,6 +5,7 @@ use App\Enums\AppointmentStatus;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class Appointment extends Model
@@ -38,10 +39,12 @@ class Appointment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(Doctor::class);
     }
+    
     public function schedule(): BelongsTo
     {
         return $this->belongsTo(DoctorSchedule::class, 'doctor_schedule_id');
@@ -62,6 +65,12 @@ class Appointment extends Model
             'doctor_schedule_id',
             'polyclinic_id'
         );
+    }
+
+    // ✅ TAMBAHAN BARU: Relasi ke Order
+    public function order(): HasOne
+    {
+        return $this->hasOne(Order::class);
     }
 
     protected function badgeColor(): Attribute
@@ -89,5 +98,4 @@ class Appointment extends Model
 
         return sprintf('%03d', ($last ? intval($last) : 0) + 1);
     }
-
 }

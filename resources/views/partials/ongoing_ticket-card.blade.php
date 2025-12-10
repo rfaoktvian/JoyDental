@@ -41,6 +41,33 @@
             <div class="mb-2 text-muted small">
                 Dibuat: {{ $appt->created_at->format('d M Y, H:i') }}
             </div>
+            @if($appt->order)
+                <div class="mt-2">
+                    <strong>Status Pembayaran:</strong><br>
+
+                    @if($appt->order->isPaid())
+                        <span class="badge bg-success mt-1">
+                            <i class="fas fa-check-circle me-1"></i> Lunas
+                        </span>
+
+                    @elseif($appt->order->isPending())
+                        <span class="badge bg-warning mt-1">
+                            <i class="fas fa-clock me-1"></i> Menunggu Pembayaran
+                        </span>
+                        <div class="mt-2">
+                            <a href="{{ route('payment.show', $appt->order) }}" class="btn btn-sm btn-primary w-100">
+                                <i class="fas fa-credit-card me-1"></i> Bayar Sekarang
+                            </a>
+                        </div>
+
+                    @else
+                        <span class="badge bg-danger mt-1">
+                            <i class="fas fa-times-circle me-1"></i> Gagal
+                        </span>
+                    @endif
+                </div>
+            @endif
+
             @include('partials.actions')
         </div>
     </div>
