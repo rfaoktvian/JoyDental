@@ -131,7 +131,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment/{order}/finish', [PaymentController::class, 'finish'])->name('payment.finish');
 });
 
-// Webhook dari Midtrans (tidak perlu auth)
+// Webhook dari Midtrans 
 Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
 
 

@@ -14,19 +14,15 @@ class PaymentController extends Controller
 {
     public function __construct()
     {
-        // Set konfigurasi Midtrans
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = config('midtrans.is_sanitized');
         Config::$is3ds = config('midtrans.is_3ds');
     }
 
-    /**
-     * Halaman konfirmasi pembayaran
-     */
     public function show(Order $order)
     {
-        // Load semua relasi yang dibutuhkan
+        
         $order->load([
             'appointment.doctor',
             'appointment.clinic',
@@ -34,7 +30,6 @@ class PaymentController extends Controller
             'appointment.schedule.polyclinic'
         ]);
 
-        // Jika sudah dibayar, redirect ke tiket
         if ($order->isPaid()) {
             return redirect()->route('tiket-antrian')
                 ->with('success', 'Pembayaran sudah berhasil!');
@@ -49,7 +44,7 @@ class PaymentController extends Controller
     public function process(Order $order)
     {
         try {
-            // Jika sudah punya snap_token dan masih pending, gunakan yang lama
+         
             if ($order->snap_token && $order->isPending()) {
                 return response()->json([
                     'snap_token' => $order->snap_token
@@ -59,7 +54,7 @@ class PaymentController extends Controller
             $appointment = $order->appointment;
             $user = $appointment->user;
 
-            // Prepare transaction details
+            
             $params = [
                 'transaction_details' => [
                     'order_id' => $order->order_code,
@@ -85,7 +80,7 @@ class PaymentController extends Controller
 
             $snapToken = Snap::getSnapToken($params);
 
-            // Simpan snap token
+            
             $order->update(['snap_token' => $snapToken]);
 
             return response()->json([

@@ -240,7 +240,7 @@
                     <nav id="sidebar">
                         <div class="sidebar-scrollable">
                             <div class="sidebar-header">
-                                <i class="fas fa-heart-pulse text-white fs-5"></i>
+                                <i class="fas fa-tooth text-white fs-5"></i>
                             </div>
                             <div class="sidebar-section">
                                 <div class="sidebar-group-title">CLINIC</div>
