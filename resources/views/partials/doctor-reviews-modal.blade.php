@@ -9,7 +9,7 @@
                     <div class="small text-muted">{{ $review->created_at->format('d M Y') }}</div>
                 </div>
                 <div class="text-warning d-flex align-items-center">
-                    @for ($i = 1; $i <= 5; $i++)
+                    @for ($i =1; $i <= 5; $i++)
                         <i class="fas fa-star{{ $i <= $review->rating ? '' : '-o' }} me-1"></i>
                     @endfor
                     <span class="ms-1 text-dark fw-semibold">{{ $review->rating }} / 5</span>

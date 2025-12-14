@@ -24,7 +24,7 @@ $sidebarMenu = [
     'route' => 'dokter',
   ],
   [
-    'label' => 'Poliklinik',
+    'label' => 'Layanan',
     'icon' => 'fas fa-hospital',
     'route' => 'poliklinik',
   ],

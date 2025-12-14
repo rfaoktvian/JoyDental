@@ -76,7 +76,7 @@
                             <div class="col-12">
                                 <div class="custom_card shadow-sm bg-white border border-1 border-mute p-3">
                                     <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <h2 class="mb-0 fs-5">Dokter Rekomendasi</h2>
+                                        <h2 class="mb-0 fs-5">Daftar Tiket Antrian</h2>
                                         <a href="{{ route('dokter') }}" class="text-decoration-none text-danger small">Lihat
                                             Semua</a>
                                     </div>
@@ -187,26 +187,45 @@
                         </div>
                         <div class="custom_card shadow-sm bg-white border border-1 border-mute p-3">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h2 class="mb-0 fs-5">Daftar Poliklinik</h2>
+                                <h2 class="mb-0 fs-5">Daftar Layanan</h2>
                                 <a href="{{ route('poliklinik') }}" class="text-decoration-none text-danger small">Lihat
                                     Semua</a>
                             </div>
                             <div class="polyclinic-list">
                                 @foreach ($polyclinics as $data)
                                     @php
-                                        $badge = $poliklinikTypes[$data['type']];
-                                    @endphp
-                                    <div
-                                        class="d-flex align-items-center gap-2 px-2 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                        $serviceBadges = [
+                                            'Scaling' => ['label' => 'Pembersihan', 'class' => 'bg-info', 'icon' => 'fa-tooth'],
+                                            'Tambal Gigi' => ['label' => 'Restorasi', 'class' => 'bg-primary', 'icon' => 'fa-tooth'],
+                                            'Tambal Estetik' => ['label' => 'Estetika', 'class' => 'bg-success', 'icon' => 'fa-smile'],
+                                            'Cabut Gigi' => ['label' => 'Tindakan', 'class' => 'bg-danger', 'icon' => 'fa-procedures'],
+                                            'Behel' => ['label' => 'Ortodonti', 'class' => 'bg-warning text-dark', 'icon' => 'fa-grip-lines'],
+                                            'Bleaching' => ['label' => 'Estetika', 'class' => 'bg-secondary', 'icon' => 'fa-sun'],
+                                            'Veneer' => ['label' => 'Estetika', 'class' => 'bg-dark', 'icon' => 'fa-smile-beam'],
+                                            'Perawatan Saluran Akar' => ['label' => 'Endodonti', 'class' => 'bg-dark', 'icon' => 'fa-stethoscope'],
+                                            'Gigi Tiruan' => ['label' => 'Prostodonti', 'class' => 'bg-secondary', 'icon' => 'fa-teeth'],
+                                            'Konsultasi Gigi' => ['label' => 'Konsultasi', 'class' => 'bg-light text-dark', 'icon' => 'fa-comments'],
+                                        ];
+
+                                        $badge = $serviceBadges[$data->name] ?? [
+                                            'label' => 'Layanan Gigi',
+                                            'class' => 'bg-secondary',
+                                            'icon' => 'fa-tooth'
+                                        ];
+                                @endphp
+
+                                    <div class="d-flex align-items-center gap-2 px-2 py-2 {{ !$loop->last ? 'border-bottom' : '' }}">
                                         <div class="rounded d-flex justify-content-center align-items-center bg-danger text-white"
                                             style="width: 40px; height: 40px; font-size: 1.1rem;">
                                             <i class="fas {{ $badge['icon'] }}"></i>
                                         </div>
+
                                         <div class="flex-grow-1">
-                                            <div class="fw-semibold">{{ $data['name'] }}</div>
-                                            <div class="text-muted small">{{ $data['location'] }}</div>
+                                            <div class="fw-semibold">{{ $data->name }}</div>
+                                            <div class="text-muted small">{{ $data->location }}</div>
                                         </div>
-                                        <span class="badge {{ $badge['class'] }}">{{ $badge['label'] }}</span>
+
+                                        <span class="badge {{ $badge['class'] }}">{{ $badge['label']}}</span>
                                     </div>
                                 @endforeach
                             </div>
@@ -240,11 +259,11 @@
             </section>
 
             <section class="container mt-4" id="Poliklinik">
-                <h4 class="text-center fw-bold text-danger mb-4">Daftar Poliklinik</h4>
+                <h4 class="text-center fw-bold text-danger mb-4">Daftar Layanan</h4>
                 <div class="row g-3">
                     @foreach ($polyclinics as $clinic)
                         @php
-                            $badge = $poliklinikTypes[$clinic->type] ?? null;
+                            $badge = polyclinicBadge($clinic->type);
                         @endphp
                         <div class="col-md-4">
                             <div class="border rounded shadow-sm p-3 text-center bg-white">
@@ -404,7 +423,7 @@
                             <a href="{{ route('dokter') }}" class="text-white text-decoration-none">Dokter</a>
                         </li>
                         <li class="mb-2">
-                            <a href="{{ route('poliklinik') }}" class="text-white text-decoration-none">Poliklinik</a>
+                            <a href="{{ route('poliklinik') }}" class="text-white text-decoration-none">Layanan</a>
                         </li>
                         <li class="mb-2">
                             <a href="{{ route('bantuan') }}" class="text-white text-decoration-none">Bantuan</a>

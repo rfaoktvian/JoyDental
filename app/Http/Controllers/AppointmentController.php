@@ -18,7 +18,7 @@ class AppointmentController extends Controller
     {
         $user = auth()->user();
 
-        $polyclinics = Polyclinic::orderBy('name')->get();
+        $polyclinics = Polyclinic::orderBy('name')->orderBy('location')->get();
         return view('janji-temu', compact('polyclinics', 'user'));
     }
 
@@ -91,10 +91,10 @@ class AppointmentController extends Controller
 
     public function getDoctorsByPolyclinic(Polyclinic $polyclinic)
     {
-
-        $doctors = Doctor::whereHas('schedules', function ($q) use ($polyclinic) {
-            $q->where('polyclinic_id', $polyclinic->id);
-        })
+        $doctors = Doctor::where('specialization', $polyclinic->specialization)
+            ->whereHas('schedules', function ($q) use ($polyclinic) {
+                $q->where('polyclinic_id', $polyclinic->id);
+            })
             ->with([
                 'schedules' => function ($q) use ($polyclinic) {
                     $q->where('polyclinic_id', $polyclinic->id);
@@ -120,8 +120,9 @@ class AppointmentController extends Controller
             ];
         });
 
-        return response()->json(data: $result);
+        return response()->json($result);
     }
+
 
     public function tiketAntrian()
     {

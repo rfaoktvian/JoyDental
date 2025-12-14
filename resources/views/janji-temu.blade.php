@@ -25,7 +25,7 @@
 
             <div class="card h-100 shadow-sm bg-white border border-1 border-mute mb-4">
                 <div class="card-header bg-danger text-white fw-semibold">
-                    <i class="fas fa-hospital me-2"></i> Pilih Poliklinik
+                    <i class="fas fa-hospital me-2"></i> Pilih Layanan
                 </div>
                 <div class="card-body">
                     <label for="polyclinic" class="form-label">Daftar Poliklinik <span class="text-danger">*</span></label>
@@ -33,11 +33,11 @@
                         <option value="" disabled selected>Pilih Poliklinik</option>
                         @foreach ($polyclinics as $poly)
                             <option value="{{ $poly->id }}">
-                                {{ $poly->name }}
+                                {{ $poly->name }} ({{ $poly->location }})
                             </option>
                         @endforeach
                     </select>
-                    <div class="form-text">Pilih poliklinik yang akan Anda kunjungi</div>
+                    <div class="form-text">Pilih layanan yang akan Anda perlukan</div>
                 </div>
             </div>
 

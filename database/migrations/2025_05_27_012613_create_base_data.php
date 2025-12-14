@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('location')->nullable();
+            $table->string('specialization');
             $table->unsignedTinyInteger('type')->default(1);
             $table->integer('capacity')->default(0);
             $table->timestamps();

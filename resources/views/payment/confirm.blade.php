@@ -42,9 +42,9 @@
                         <div class="col-md-8">{{ $order->appointment->doctor->name }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-md-4 fw-semibold">Poliklinik:</div>
+                        <div class="col-md-4 fw-semibold">Layanan:</div>
                         <div class="col-md-8">
-                            {{ $order->appointment->schedule->polyclinic->name ?? $order->appointment->clinic->name ?? '-' }}
+                            {{ $order->appointment->schedule->polyclinic->name ?? $order->appointment->clinic->name->location ?? '-' }}
                         </div>
                     </div>
                     <div class="row mb-3">
