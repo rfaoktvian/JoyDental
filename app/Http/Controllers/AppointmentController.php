@@ -63,14 +63,14 @@ class AppointmentController extends Controller
         $queueNumber = 'Q' . str_pad($existingCount + 1, 3, '0', STR_PAD_LEFT);
         $bookingCode = Str::upper(Str::random(8));
 
-        // Buat appointment dengan status PENDING (belum bayar)
+        // appointment status PENDING (belum bayar)
         $appt = Appointment::create([
             'queue_number' => $queueNumber,
             'booking_code' => $bookingCode,
             'user_id' => $user->id,
             'doctor_id' => $doctorId,
             'doctor_schedule_id' => $schedule->id,
-            'status' => 1, // Status upcoming (nanti bisa diubah kalau payment gagal)
+            'status' => 1, 
             'appointment_date' => $visitDate,
             'appointment_time' => $visitTime . ':00',
             'payment_method' => $payment,
@@ -78,14 +78,12 @@ class AppointmentController extends Controller
             'chief_complaint' => $complaint,
         ]);
 
-        // Buat Order untuk pembayaran
+        // Order Pembayaran
         $order = \App\Models\Order::create([
             'appointment_id' => $appt->id,
             'amount' => 50000, // Rp 50.000
             'status' => 'pending',
         ]);
-
-        // ✅ REDIRECT KE HALAMAN PAYMENT (BUKAN TIKET ANTRIAN!)
         return redirect()->route('payment.show', $order);
     }
 

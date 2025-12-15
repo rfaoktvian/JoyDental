@@ -1,6 +1,36 @@
 @extends('layouts.app')
 
 @section('content')
+
+<script>
+    document.getElementById('pay-button').addEventListener('click', function() {
+        console.log('PAY BUTTON CLICKED'); // 🔥 WAJIB MUNCUL
+
+        const payButton = this;
+        payButton.disabled = true;
+        payButton.innerHTML = 'Memproses...';
+
+        fetch('{{ route("payment.process", $order->id) }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then(res => {
+            console.log('FETCH RESPONSE STATUS:', res.status);
+            return res.json();
+        })
+        .then(data => {
+            console.log('FETCH DATA:', data);
+        })
+        .catch(err => {
+            console.error('FETCH ERROR:', err);
+        });
+    });
+</script>
+
 <style>
     .bg-danger {
         --bs-bg-opacity: 1;
@@ -123,13 +153,15 @@
         payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Memproses...';
 
         // Request snap token ke server
-        fetch('{{ route("payment.process", $order) }}', {
+        fetch('{{ route("payment.process", $order->id) }}', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin'
         })
+
         .then(response => response.json())
         .then(data => {
             if (data.snap_token) {

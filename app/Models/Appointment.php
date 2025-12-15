@@ -67,7 +67,6 @@ class Appointment extends Model
         );
     }
 
-    // ✅ TAMBAHAN BARU: Relasi ke Order
     public function order(): HasOne
     {
         return $this->hasOne(Order::class);

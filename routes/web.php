@@ -124,6 +124,47 @@ Route::prefix('doctor')
     };
   });
 
+
+// Test Midtrans Configuration
+Route::get('/test-midtrans', function() {
+    try {
+        $config = [
+            'merchant_id' => config('midtrans.merchant_id'),
+            'client_key' => config('midtrans.client_key'),
+            'server_key' => config('midtrans.server_key'),
+            'is_production' => config('midtrans.is_production'),
+        ];
+        
+        // Sensor untuk keamanan
+        if ($config['client_key']) {
+            $config['client_key_preview'] = substr($config['client_key'], 0, 20) . '***';
+        }
+        if ($config['server_key']) {
+            $config['server_key_preview'] = substr($config['server_key'], 0, 20) . '***';
+        }
+        
+        // Test koneksi ke Midtrans
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        
+        return response()->json([
+            'status' => 'OK',
+            'config' => [
+                'merchant_id' => $config['merchant_id'],
+                'client_key' => $config['client_key_preview'] ?? 'NOT SET',
+                'server_key' => $config['server_key_preview'] ?? 'NOT SET',
+                'is_production' => $config['is_production'] ? 'true' : 'false',
+            ],
+            'midtrans_class_exists' => class_exists('\Midtrans\Snap'),
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'ERROR',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+  })->middleware('auth');  
+
 // Payment Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/payment/{order}', [PaymentController::class, 'show'])->name('payment.show');

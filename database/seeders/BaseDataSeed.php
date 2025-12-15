@@ -19,25 +19,25 @@ class BaseDataSeed extends Seeder
         $now = Carbon::now();
         $faker = Faker::create();
 
-        // 1️⃣ Seed Polyclinics
+        //  Seed Polyclinics
         $this->seedPolyclinics($now);
 
-        // 2️⃣ Seed Admin User
+        // Seed Admin User
         $this->seedAdminUser($now);
 
-        // 3️⃣ Seed Doctors (Users + Doctors)
+        //  Seed Doctors (Users + Doctors)
         $doctorIds = $this->seedDoctors($faker, $now);
 
-        // 4️⃣ Seed Doctor Schedules
+        //  Seed Doctor Schedules
         $this->seedDoctorSchedules($faker, $doctorIds, $now);
 
-        // 5️⃣ Seed Additional Users
+        //  Seed Additional Users
         $userIds = $this->seedUsers($faker, $now);
 
-        // 6️⃣ Seed Appointments
+        //  Seed Appointments
         $this->seedAppointments($faker, $doctorIds, $userIds, $now);
 
-        // 7️⃣ Seed Doctor Reviews
+        //  Seed Doctor Reviews
         $this->seedDoctorReviews($faker, $doctorIds, $userIds, $now);
     }
 

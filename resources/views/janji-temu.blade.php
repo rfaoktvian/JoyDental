@@ -28,9 +28,9 @@
                     <i class="fas fa-hospital me-2"></i> Pilih Layanan
                 </div>
                 <div class="card-body">
-                    <label for="polyclinic" class="form-label">Daftar Poliklinik <span class="text-danger">*</span></label>
+                    <label for="polyclinic" class="form-label">Daftar Layanan <span class="text-danger">*</span></label>
                     <select class="form-select" id="polyclinic" name="polyclinic" required>
-                        <option value="" disabled selected>Pilih Poliklinik</option>
+                        <option value="" disabled selected>Pilih Layanan</option>
                         @foreach ($polyclinics as $poly)
                             <option value="{{ $poly->id }}">
                                 {{ $poly->name }} ({{ $poly->location }})
