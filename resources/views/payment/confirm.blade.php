@@ -4,8 +4,7 @@
 
 <script>
     document.getElementById('pay-button').addEventListener('click', function() {
-        console.log('PAY BUTTON CLICKED'); // 🔥 WAJIB MUNCUL
-
+        console.log('PAY BUTTON CLICKED'); 
         const payButton = this;
         payButton.disabled = true;
         payButton.innerHTML = 'Memproses...';
@@ -171,7 +170,7 @@
                         console.log('Payment success:', result);
                         
                         // Tampilkan notifikasi sukses
-                        alert('✅ Pembayaran berhasil! Anda akan diarahkan ke Tiket Antrian.');
+                        alert('Pembayaran berhasil!');
                         
                         // Redirect ke tiket antrian
                         window.location.href = '{{ route("tiket-antrian") }}?payment=success';
@@ -191,7 +190,7 @@
                         console.log('Payment error:', result);
                         
                         // Tampilkan notifikasi error
-                        alert('❌ Pembayaran gagal!\n\n' +
+                        alert('Pembayaran gagal!\n\n' +
                               'Alasan: ' + (result.status_message || 'Terjadi kesalahan') + '\n\n' +
                               'Silakan coba lagi atau gunakan metode pembayaran lain.');
                         
@@ -208,13 +207,13 @@
                     }
                 });
             } else {
-                alert('❌ Gagal memproses pembayaran.\n\nSilakan refresh halaman dan coba lagi.');
+                alert('Gagal memproses pembayaran!.\n\nSilakan refresh halaman dan coba lagi.');
                 location.reload();
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('❌ Terjadi kesalahan sistem.\n\nSilakan coba lagi dalam beberapa saat.');
+            alert(' Terjadi kesalahan sistem.\n\nSilakan coba lagi dalam beberapa saat!.');
             
             // Reset button
             payButton.disabled = false;

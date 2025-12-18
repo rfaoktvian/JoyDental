@@ -151,7 +151,7 @@
                     <input type="text" name="q" value="{{ $search }}"
                         class="form-control form-control-sm w-auto" placeholder="Cari pasien…">
                     <select name="clinic" class="form-select form-select-sm w-auto">
-                        <option value="">Semua Poliklinik</option>
+                        <option value="">Semua Layanan</option>
                         @foreach ($appointments->pluck('clinic.name')->unique() as $clinicName)
                             <option value="{{ $clinicName }}" {{ $clinicName == $clinic ? 'selected' : '' }}>
                                 {{ $clinicName }}

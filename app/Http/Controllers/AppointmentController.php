@@ -63,7 +63,7 @@ class AppointmentController extends Controller
         $queueNumber = 'Q' . str_pad($existingCount + 1, 3, '0', STR_PAD_LEFT);
         $bookingCode = Str::upper(Str::random(8));
 
-        // appointment status PENDING (belum bayar)
+        // status PENDING
         $appt = Appointment::create([
             'queue_number' => $queueNumber,
             'booking_code' => $bookingCode,
@@ -81,7 +81,7 @@ class AppointmentController extends Controller
         // Order Pembayaran
         $order = \App\Models\Order::create([
             'appointment_id' => $appt->id,
-            'amount' => 50000, // Rp 50.000
+            'amount' => 50000,
             'status' => 'pending',
         ]);
         return redirect()->route('payment.show', $order);
@@ -126,6 +126,7 @@ class AppointmentController extends Controller
     {
         $user = Auth::user();
 
+        // Auto-update expired appointments
         Appointment::where('status', 1)
             ->where(function ($query) {
                 $query->where('appointment_date', '<', now()->toDateString())
@@ -140,13 +141,20 @@ class AppointmentController extends Controller
         $search = request('q');
         $clinic = request('clinic');
 
-        $base = Appointment::with(['clinic'])
+        $base = Appointment::with([
+                'clinic',
+                'doctor',
+                'order' => function($query) {
+                    $query->with('payment');
+                }
+            ])
             ->where('user_id', $user->id);
 
         if ($search) {
             $base->whereHas('patient', fn($q) =>
                 $q->where('name', 'like', "%{$search}%"));
         }
+        
         if ($clinic) {
             $base->whereHas('clinic', fn($q) =>
                 $q->where('name', $clinic));
@@ -163,7 +171,12 @@ class AppointmentController extends Controller
             $listQuery->where('status', AppointmentStatus::fromLabel($currentTab));
         }
 
-        $ongoing = (clone $base)
+        $ongoing = Appointment::with([
+                'clinic',
+                'doctor',
+                'order.payment' 
+            ])
+            ->where('user_id', $user->id)
             ->where('status', AppointmentStatus::Upcoming)
             ->latest('appointment_date')
             ->paginate(3, ['*'], 'ongoing_page')

@@ -1,5 +1,9 @@
 @php
     /** @var \App\Models\Appointment $appt */
+    // Refresh order untuk memastikan data terbaru
+    if ($appt->order) {
+        $appt->load('order.payment');
+    }
 @endphp
 
 <div class="col-12 col-md-6 col-lg-4 appt-card" data-clinic="{{ $appt->clinic->name }}"
@@ -41,17 +45,27 @@
             <div class="mb-2 text-muted small">
                 Dibuat: {{ $appt->created_at->format('d M Y, H:i') }}
             </div>
+            
             @if($appt->order)
                 <div class="mt-2">
                     <strong>Status Pembayaran:</strong><br>
+                    
+                    @php
+                        // Debug: tampilkan status real dari database
+                        $orderStatus = $appt->order->status;
+                        $paymentStatus = $appt->order->payment?->payment_status ?? 'no_payment';
+                    @endphp
 
                     @if($appt->order->isPaid())
                         <span class="badge bg-success mt-1">
                             <i class="fas fa-check-circle me-1"></i> Lunas
                         </span>
+                        <div class="text-success small mt-1">
+                            Dibayar: {{ $appt->order->payment?->paid_at?->format('d M Y, H:i') ?? '-' }}
+                        </div>
 
                     @elseif($appt->order->isPending())
-                        <span class="badge bg-warning mt-1">
+                        <span class="badge bg-warning text-light mt-1">
                             <i class="fas fa-clock me-1"></i> Menunggu Pembayaran
                         </span>
                         <div class="mt-2">

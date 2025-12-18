@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('payment_method')->nullable();
             $table->enum('payment_status', ['pending', 'success', 'failed', 'expired'])->default('pending');
             $table->timestamp('paid_at')->nullable();
-            $table->text('payment_response')->nullable(); // JSON response dari Midtrans
+            $table->text('payment_response')->nullable();
             $table->timestamps();
             
             $table->index('transaction_id');

@@ -5,9 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('polyclinics', function (Blueprint $table) {
@@ -35,7 +32,7 @@ return new class extends Migration {
         Schema::create('doctor_schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
-            $table->string('day'); // 'Senin', 'Selasa', etc.
+            $table->string('day'); 
             $table->time('time_from');
             $table->time('time_to');
             $table->integer('max_capacity')->default(10);
@@ -89,7 +86,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        // urutan DROP dibalik agar tidak melanggar FK
         Schema::dropIfExists('medical_histories');
         Schema::dropIfExists('doctor_reviews');
         Schema::dropIfExists('doctor_schedules');

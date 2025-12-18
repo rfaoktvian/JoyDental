@@ -16,6 +16,7 @@ class Order extends Model
         'amount',
         'status',
         'snap_token',
+        'midtrans_order_id', 
     ];
 
     protected $casts = [
@@ -49,5 +50,10 @@ class Order extends Model
     public function isPending(): bool
     {
         return $this->status === 'pending';
+    }
+
+    public function isFailed(): bool
+    {
+        return in_array($this->status, ['failed', 'expired']);
     }
 }

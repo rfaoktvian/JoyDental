@@ -4,18 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Payment;
-use App\Models\Appointment;
 use Illuminate\Http\Request;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Midtrans\Notification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
     public function __construct()
     {
-        // Set konfigurasi Midtrans
         Config::$serverKey = config('midtrans.server_key');
         Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = config('midtrans.is_sanitized');
@@ -27,14 +26,12 @@ class PaymentController extends Controller
      */
     public function show(Order $order)
     {
-        // Load semua relasi yang dibutuhkan
         $order->load([
             'appointment.doctor',
             'appointment.user',
-            'appointment.schedule.polyclinic'
+            'appointment.clinic'
         ]);
 
-        // Jika sudah dibayar, redirect ke tiket
         if ($order->isPaid()) {
             return redirect()->route('tiket-antrian')
                 ->with('success', 'Pembayaran sudah berhasil!');
@@ -49,110 +46,72 @@ class PaymentController extends Controller
     public function process(Order $order)
     {
         try {
-            // Log untuk debugging
             Log::info('Payment Process Started', [
-                'order_id' => $order->id,
+                'order_id'   => $order->id,
                 'order_code' => $order->order_code,
-                'amount' => $order->amount
+                'amount'     => $order->amount
             ]);
 
-            // Jika sudah punya snap_token dan masih pending, gunakan yang lama
             if ($order->snap_token && $order->isPending()) {
-                Log::info('Using existing snap token', ['order_id' => $order->id]);
-                return response()->json([
-                    'snap_token' => $order->snap_token
-                ]);
+                return response()->json(['snap_token' => $order->snap_token]);
             }
 
-            // Load appointment dengan relasi
             $order->load('appointment.user');
-            
-            $appointment = $order->appointment;
-            
-            if (!$appointment) {
-                Log::error('Appointment not found', ['order_id' => $order->id]);
-                return response()->json([
-                    'error' => 'Appointment tidak ditemukan'
-                ], 404);
-            }
+            $user = $order->appointment?->user;
 
-            $user = $appointment->user;
-            
             if (!$user) {
-                Log::error('User not found', ['order_id' => $order->id]);
-                return response()->json([
-                    'error' => 'User tidak ditemukan'
-                ], 404);
+                return response()->json(['error' => 'User tidak ditemukan'], 404);
             }
 
-            // Validasi amount
             $amount = (int) $order->amount;
             if ($amount <= 0) {
-                Log::error('Invalid amount', ['amount' => $amount]);
-                return response()->json([
-                    'error' => 'Jumlah pembayaran tidak valid'
-                ], 400);
+                return response()->json(['error' => 'Amount tidak valid'], 400);
             }
 
-            Log::info('Preparing Midtrans params', [
-                'order_code' => $order->order_code,
-                'amount' => $amount,
-                'user' => $user->name
-            ]);
+            // Generate Midtrans Order ID (UNIQUE)
+            $midtransOrderId = $order->order_code . '-' . time();
 
-            // Prepare transaction details
             $params = [
                 'transaction_details' => [
-                    'order_id' => $order->order_code . '-' . time(),
+                    'order_id' => $midtransOrderId,
                     'gross_amount' => $amount,
                 ],
-
-                'enabled_payments' => [
-                    'qris', 'gopay', 'shopeepay'
-                ],
-
                 'customer_details' => [
                     'first_name' => $user->name,
                     'email' => $user->email,
                 ],
-
                 'item_details' => [[
                     'id' => 'BOOKING-FEE',
                     'price' => $amount,
                     'quantity' => 1,
-                    'name' => 'Biaya Booking Konsultasi Gigi',
+                    'name' => 'Biaya Booking Konsultasi',
                 ]],
+                'callbacks' => [
+                    'finish' => route('payment.finish', $order)
+                ]
             ];
 
-
-
-            Log::info('Calling Midtrans Snap API');
-
-            // Get Snap Token dari Midtrans
             $snapToken = Snap::getSnapToken($params);
 
-            Log::info('Snap token generated', [
-                'token' => substr($snapToken, 0, 20) . '...'
+            $order->update([
+                'snap_token' => $snapToken,
+                'midtrans_order_id' => $midtransOrderId,
+                'status' => 'pending'
             ]);
 
-            // Simpan snap token
-            $order->update(['snap_token' => $snapToken]);
-
-            return response()->json([
-                'snap_token' => $snapToken
+            Log::info('Snap Token Generated', [
+                'order_id' => $order->id,
+                'midtrans_order_id' => $midtransOrderId
             ]);
+
+            return response()->json(['snap_token' => $snapToken]);
 
         } catch (\Exception $e) {
-            // Log error lengkap
             Log::error('Payment Process Error', [
-                'order_id' => $order->id ?? null,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-
-            return response()->json([
-                'error' => 'Gagal memproses pembayaran: ' . $e->getMessage()
-            ], 500);
+            return response()->json(['error' => 'Gagal memproses pembayaran: ' . $e->getMessage()], 500);
         }
     }
 
@@ -161,76 +120,138 @@ class PaymentController extends Controller
      */
     public function finish(Order $order)
     {
-        return redirect()->route('tiket-antrian')
-            ->with('info', 'Menunggu konfirmasi pembayaran...');
-    }
+        sleep(2);
+        
+        $order = Order::with('payment')->find($order->id);
+        
+        Log::info('Payment Finish Callback', [
+            'order_id' => $order->id,
+            'status' => $order->status,
+            'payment_status' => $order->payment?->payment_status
+        ]);
 
-    /**
-     * Webhook dari Midtrans (notification handler)
-     */
+        if ($order->isPaid()) {
+            return redirect()->route('tiket-antrian', ['payment' => 'success'])
+                ->with('success', 'Pembayaran berhasil! Tiket Anda sudah aktif.');
+        } elseif ($order->isPending()) {
+            return redirect()->route('tiket-antrian', ['payment' => 'pending'])
+                ->with('info', 'Pembayaran sedang diproses. Mohon tunggu konfirmasi.');
+        } else {
+            return redirect()->route('tiket-antrian', ['payment' => 'failed'])
+                ->with('error', 'Pembayaran gagal. Silakan coba lagi.');
+        }
+    }
     public function webhook(Request $request)
     {
+        $logFile = storage_path('logs/midtrans-webhook.log');
+        file_put_contents($logFile, date('Y-m-d H:i:s') . " - WEBHOOK RECEIVED\n", FILE_APPEND);
+        file_put_contents($logFile, json_encode($request->all(), JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+        
         try {
-            Log::info('Midtrans Webhook Received', $request->all());
+            Log::info('=== MIDTRANS WEBHOOK RECEIVED ===', [
+                'all_data' => $request->all(),
+                'headers' => $request->headers->all()
+            ]);
 
-            $notification = new Notification();
+            // Validasi signature
+            $signatureKey = hash(
+                'sha512',
+                $request->order_id .
+                $request->status_code .
+                $request->gross_amount .
+                config('midtrans.server_key')
+            );
 
-            $orderCode = $notification->order_id;
-            $transactionStatus = $notification->transaction_status;
-            $fraudStatus = $notification->fraud_status ?? null;
-            $transactionId = $notification->transaction_id;
-            $paymentType = $notification->payment_type;
+            if ($signatureKey !== $request->signature_key) {
+                Log::warning('Invalid Midtrans Signature', [
+                    'expected' => $signatureKey,
+                    'received' => $request->signature_key
+                ]);
+                return response()->json(['message' => 'Invalid signature'], 403);
+            }
 
-            Log::info('Webhook Details', [
-                'order_code' => $orderCode,
-                'status' => $transactionStatus,
+            // Cari order berdasarkan midtrans_order_id
+            $order = Order::where('midtrans_order_id', $request->order_id)->first();
+
+            if (!$order) {
+                Log::error('Order not found in webhook', [
+                    'midtrans_order_id' => $request->order_id,
+                    'all_orders' => Order::pluck('midtrans_order_id', 'id')
+                ]);
+                return response()->json(['message' => 'Order not found'], 404);
+            }
+
+            $transactionStatus = $request->transaction_status;
+            $fraudStatus = $request->fraud_status ?? 'accept';
+            $paymentType = $request->payment_type;
+            $transactionId = $request->transaction_id;
+
+            Log::info('Processing Webhook Status', [
+                'order_id' => $order->id,
+                'order_code' => $order->order_code,
+                'transaction_status' => $transactionStatus,
+                'fraud_status' => $fraudStatus,
                 'payment_type' => $paymentType
             ]);
 
-            $order = Order::where('order_code', $orderCode)->firstOrFail();
-
-            // Handle transaction status
-            if ($transactionStatus == 'capture') {
-                if ($fraudStatus == 'accept') {
-                    $this->setOrderPaid($order, $transactionId, $paymentType, $notification);
+            DB::beginTransaction();
+            
+            try {
+                // Update status order berdasarkan transaction status
+                if ($transactionStatus == 'capture') {
+                    if ($fraudStatus == 'accept') {
+                        $this->setOrderPaid($order, $transactionId, $paymentType, $request->all());
+                    }
+                } 
+                elseif ($transactionStatus == 'settlement') {
+                    $this->setOrderPaid($order, $transactionId, $paymentType, $request->all());
+                } 
+                elseif ($transactionStatus == 'pending') {
+                    $order->update(['status' => 'pending']);
+                    $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'pending', $request->all());
+                } 
+                elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+                    $order->update(['status' => 'failed']);
+                    $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'failed', $request->all());
                 }
-            } elseif ($transactionStatus == 'settlement') {
-                $this->setOrderPaid($order, $transactionId, $paymentType, $notification);
-            } elseif ($transactionStatus == 'pending') {
-                $order->update(['status' => 'pending']);
-                $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'pending', $notification);
-            } elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
-                $order->update(['status' => 'failed']);
-                $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'failed', $notification);
+
+                DB::commit();
+
+                Log::info('Webhook Processed Successfully', [
+                    'order_id' => $order->id,
+                    'new_status' => $order->status
+                ]);
+
+                return response()->json(['message' => 'OK']);
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                throw $e;
             }
 
-            return response()->json(['status' => 'success']);
-
         } catch (\Exception $e) {
-            Log::error('Midtrans Webhook Error', [
+            Log::error('Webhook Processing Error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Server error'], 500);
         }
     }
 
-    /**
-     * Set order sebagai paid
-     */
-    private function setOrderPaid($order, $transactionId, $paymentType, $notification)
+
+    private function setOrderPaid($order, $transactionId, $paymentType, $notificationData)
     {
-        Log::info('Setting order as paid', ['order_id' => $order->id]);
+        Log::info('Setting Order as PAID', [
+            'order_id' => $order->id,
+            'transaction_id' => $transactionId
+        ]);
         
         $order->update(['status' => 'paid']);
         
-        $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'success', $notification);
+        $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'success', $notificationData);
     }
 
-    /**
-     * Update or create payment record
-     */
-    private function updateOrCreatePayment($order, $transactionId, $paymentType, $status, $notification)
+    private function updateOrCreatePayment($order, $transactionId, $paymentType, $status, $notificationData)
     {
         Payment::updateOrCreate(
             ['order_id' => $order->id],
@@ -239,8 +260,13 @@ class PaymentController extends Controller
                 'payment_method' => $paymentType,
                 'payment_status' => $status,
                 'paid_at' => $status === 'success' ? now() : null,
-                'payment_response' => json_encode($notification),
+                'payment_response' => json_encode($notificationData),
             ]
         );
+
+        Log::info('Payment Record Updated', [
+            'order_id' => $order->id,
+            'payment_status' => $status
+        ]);
     }
 }
