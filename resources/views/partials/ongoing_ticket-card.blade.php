@@ -6,6 +6,12 @@
     }
 @endphp
 
+<style>
+    .bg-danger1{
+        background: red;
+    }
+</style>
+
 <div class="col-12 col-md-6 col-lg-4 appt-card" data-clinic="{{ $appt->clinic->name }}"
     data-name="{{ Str::lower($appt->patient->name) }}">
     <div class="custom_card h-100 shadow-sm bg-white border border-1 border-mute">
@@ -73,16 +79,28 @@
                                 <i class="fas fa-credit-card me-1"></i> Bayar Sekarang
                             </a>
                         </div>
-
                     @else
-                        <span class="badge bg-danger mt-1">
+                        <span class="badge bg-danger1 mt-1">
                             <i class="fas fa-times-circle me-1"></i> Gagal
                         </span>
                     @endif
                 </div>
             @endif
 
-            @include('partials.actions')
+            @if ($appt->order && $appt->order->isPaid())
+                {{-- Tombol hanya muncul jika PAID --}}
+                @include('partials.actions')
+
+            @elseif ($appt->order && $appt->order->isPending())
+                {{-- Pending: boleh bayar --}}
+                @include('partials.actions')
+
+            @elseif ($appt->order && $appt->order->status === 'failed')
+                {{-- GAGAL: TIDAK ADA TOMBOL --}}
+                <div class="mt-2 text-danger small fw-semibold">
+                    Tiket otomatis dibatalkan karena pembayaran gagal.
+                </div>
+            @endif
         </div>
     </div>
 </div>

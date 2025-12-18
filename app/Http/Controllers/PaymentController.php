@@ -211,8 +211,25 @@ class PaymentController extends Controller
                     $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'pending', $request->all());
                 } 
                 elseif (in_array($transactionStatus, ['deny', 'expire', 'cancel'])) {
+
+                    // 1. Update order → failed
                     $order->update(['status' => 'failed']);
-                    $this->updateOrCreatePayment($order, $transactionId, $paymentType, 'failed', $request->all());
+
+                    // 2. Batalkan appointment secara sistem
+                    if ($order->appointment) {
+                        $order->appointment->update([
+                            'status' => \App\Enums\AppointmentStatus::Canceled
+                        ]);
+                    }
+
+                    // 3. Update / create payment record
+                    $this->updateOrCreatePayment(
+                        $order,
+                        $transactionId,
+                        $paymentType,
+                        'failed',
+                        $request->all()
+                    );
                 }
 
                 DB::commit();
